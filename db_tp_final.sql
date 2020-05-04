@@ -25,7 +25,7 @@ CREATE TABLE line_types (
 
 CREATE  TABLE users (
 	dni int not null,
-    user_name varchar(50) not null,
+    name varchar(50) not null,
     surname varchar(50),
     pass varchar(50) not null,
 	constraint pk_dni primary key (dni)

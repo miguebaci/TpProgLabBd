@@ -8,7 +8,7 @@ import utn.edu.tpfinal.services.UserService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/users")
 public class UserController {
 
     private final UserService userService;

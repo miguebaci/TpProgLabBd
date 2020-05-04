@@ -26,5 +26,5 @@ public class Users {
     private String surname;
 
     @NotNull
-    private String password;
+    private String pass;
 }
