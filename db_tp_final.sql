@@ -10,7 +10,7 @@ CREATE TABLE provinces (
 );
 
 CREATE TABLE localities (
-	prefix int not null,
+	prefix int unique not null,
     id_prov int not null,
     locality_name varchar(50) not null,
     constraint pk_prefix primary key (prefix),
@@ -23,37 +23,31 @@ CREATE TABLE line_types (
     constraint pk_id_type primary key (id_line_type)
 );
 
-CREATE  TABLE users (
-	dni int not null,
-    name varchar(50) not null,
-    surname varchar(50),
-    pass varchar(50) not null,
-	constraint pk_dni primary key (dni)
-);
-
-CREATE TABLE user_type (
+CREATE TABLE user_types (
 	id_user_type int auto_increment not null,
     usertype_name varchar(50) not null,
     constraint pk_id_user_type primary key (id_user_type)
 );
 
-CREATE TABLE user_per_type (
-	id_user_per_type int auto_increment not null,
-    id_user int not null,
-    id_user_type int not null,
-    constraint id_user_per_type primary key (id_user_per_type),
-    constraint id_user foreign key (id_user) references users (dni),
-    constraint id_user_type foreign key (id_user_type) references user_type (id_user_type)
+CREATE TABLE users (
+    id int auto_increment not null,
+    user_type int not null,
+	dni int not null,
+    name varchar(50) not null,
+    surname varchar(50) not null,
+    pass varchar(50) not null,
+	constraint pk_id primary key (id),
+	constraint fk_id_user_type foreign key (user_type) references user_types (id_user_type)
 );
 	
-CREATE TABLE line (
+CREATE TABLE phone_lines (
 	id_line int auto_increment not null,
     id_user int not null,
     id_locality int not null,
     id_line_type int not null,
     line_number varchar(50),
     constraint pk_id_line primary key (id_line),
-    constraint fk_id_user_for_line foreign key (id_user) references users (dni),
+    constraint fk_id_line_user foreign key (id_user) references users (id),
 	constraint fk_id_locality foreign key (id_locality) references localities (prefix),
 	constraint fk_id_line_type foreign key (id_line_type) references line_types (id_line_type)
 );
@@ -68,7 +62,7 @@ CREATE TABLE bills (
     total_cost float,
     total_profit float,
     constraint pk_id_bill primary key (id_bill),
-	constraint fk_id_user_for_bill foreign key (id_user) references users (dni)
+	constraint fk_id_user_for_bill foreign key (id_user) references users (id)
 );
 
 CREATE TABLE rates (
@@ -97,8 +91,8 @@ CREATE TABLE calls(
     hour_call_finish time,
     duration int,
     constraint pk_id_call primary key (id_call),
-    constraint fk_line_origin foreign key (line_origin) references line (id_line),
-	constraint fk_line_destiny foreign key (line_destiny) references line (id_line),
+    constraint fk_line_origin foreign key (line_origin) references phone_lines (id_line),
+	constraint fk_line_destiny foreign key (line_destiny) references phone_lines (id_line),
 	constraint fk_id_bill foreign key (id_bill) references bills (id_bill),
 	constraint fk_id_rate foreign key (id_rate) references rates (id_rate)
 );
