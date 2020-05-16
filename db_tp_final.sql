@@ -1,6 +1,7 @@
-/*CREATE DATABASE db_tp_final;
+CREATE DATABASE db_tp_final;
 USE db_tp_final;
-DROP DATABASE db_tp_final;*/
+SET GLOBAL event_scheduler = ON;
+DROP DATABASE db_tp_final;
 
 CREATE TABLE provinces (
 	id_prov int auto_increment not null,
@@ -39,7 +40,7 @@ CREATE TABLE users (
 	constraint pk_id primary key (id),
 	constraint fk_id_user_type foreign key (user_type) references user_types (id_user_type)
 );
-	
+
 CREATE TABLE phone_lines (
 	id_line int auto_increment not null,
     id_user int not null,
@@ -81,7 +82,7 @@ CREATE TABLE calls(
 	id_call int auto_increment not null,
 	line_origin int not null,
     line_destiny int not null,
-    id_bill int not null,
+    id_bill int,
     id_rate int not null,
     price float,
     cost float,
@@ -97,9 +98,47 @@ CREATE TABLE calls(
 	constraint fk_id_rate foreign key (id_rate) references rates (id_rate)
 );
 
+drop procedure billing_sp;
+DELIMITER //
+CREATE PROCEDURE billing_sp ()
+begin
+	declare vFinished int default 0;
+	declare vIdUser int;
+	declare vIdCall int;
+	declare vPrice int default 0;
+	declare vCost int default 0;
+	declare vProfit int default 0;
+	declare cursor_calls cursor for select l.id_user, l.id_line, c.id_call, sum (c.price) as totalprice , sum(c.cost) as totalcost, sum(c.profit) as totalprofit
+	from calls c inner join phone_lines l where l.id_line = c.line_origin group by l.id_user;
+	declare continue HANDLER for not found set vFinished = 1;
+	open cursor_calls;
+    start transaction;
+	fetch cursor_calls into vIdUser, vIdCall, vPrice, vCost, vProfit;
+	while(vFinished = 0) do
+	insert into bills (id_user, total_price, emittion_date, expiration_date, bill_status, total_cost, total_profit)
+	values(vIdUser, vPrice, now(), now() + INTERVAL 15 DAY, false, vCost, vProfit);
+	update calls c set id_bill = last_insert_id() where c.id_call = vIdCall;
+	fetch cursor_calls into vIdUser, vIdCall, vPrice, vCost, vProfit;
 
+	end while;
 
+	close cursor_calls;
 
+	COMMIT;
+
+END //
+
+DELIMITER $$
+CREATE EVENT IF NOT EXISTS call_billing
+ON SCHEDULE EVERY '1' MONTH
+STARTS '2020-05-1 00:00:00'
+ON COMPLETION PRESERVE
+DO
+call billing_sp ();
+$$
+
+drop EVENT call_billing;
+show procedure status
 
 
 
