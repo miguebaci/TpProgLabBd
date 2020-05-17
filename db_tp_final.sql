@@ -100,70 +100,26 @@ CREATE TABLE calls(
 	constraint fk_id_rate foreign key (id_rate) references rates (id_rate)
 );
 
-
-INSERT INTO provinces (province_name) VALUES ('Buenos Aires');
-INSERT INTO provinces (province_name) VALUES ('Cordoba');
-
-INSERT INTO localities (prefix, id_prov, locality_name) VALUES ('223', 1, 'Mar del Plata'); 
-INSERT INTO localities (prefix, id_prov, locality_name) VALUES ('3541', 2, 'Carlos Paz'); 
-
-INSERT INTO rates (prefix_origin, prefix_destiny, price_per_minute, start_date, expiration_date, cost) 
-VALUES ('223', '3541', 2.5,null,null, 0.5); 
-
-INSERT INTO rates (prefix_origin, prefix_destiny, price_per_minute, start_date, expiration_date, cost) 
-VALUES ('3541', '223', 3.5, null, null, 1); 
-
-
-INSERT INTO line_types (line_type_name) VALUES ('cellphone');
-
-INSERT INTO user_types (usertype_name) VALUES ('Client'); 
-
-INSERT INTO users (user_type, dni, name, surname, pass) 
-VALUES (1, '37867266', 'Felipe', 'Demaria', '221901');
-
-INSERT INTO users (user_type, dni, name, surname, pass) 
-VALUES (1, '10204050', 'Miguel', 'Demaria', '221902');
-
-INSERT INTO phone_lines (id_user, prefix, id_line_type, line_number)
-VALUES (1, '223', 1, '155210762');
-
-INSERT INTO phone_lines (id_user, prefix, id_line_type, line_number)
-VALUES (2, '3541', 1, '1552010304');
-
-INSERT INTO calls (number_origin, number_destiny, date_call, duration) 
-VALUES ('155210762', '1552010304', now(), 15);
-
-INSERT INTO calls (number_origin, number_destiny, date_call, duration) 
-VALUES ('155210762', '1552010304', now(), 40);
-
-INSERT INTO calls (number_origin, number_destiny, date_call, duration) 
-VALUES ('1552010304',  '155210762', now(), 15);
-
-INSERT INTO calls (number_origin, number_destiny, date_call, duration) 
-VALUES ('1552010304',  '155210762', now(), 40);
-
-
-
 DELIMITER //
 CREATE TRIGGER ai_calls BEFORE INSERT ON calls FOR EACH ROW
 BEGIN
 	declare locality_origin int;
     declare locality_destiny int;
     declare temp_price float;
-    
+
     # Get the locality from each number
     SET locality_origin = (SELECT prefix from phone_lines where line_number = new.number_origin);
 	SET locality_destiny = (SELECT prefix from phone_lines where line_number = new.number_destiny);
 
-	# Getting price x minute	
+	# Getting price x minute
     set temp_price = (select r.price_per_minute
 					 from rates r
 					 where r.prefix_origin = locality_origin AND r.prefix_destiny = locality_destiny);
-	
+
     # We calculate the price of the call.
     # We also set the id of the line_origin and id of the line_destiny
     # Finally  we set the id of the rate.
-    SET new.price = (temp_price * new.duration); 
+    SET new.price = (temp_price * new.duration);
     SET new.line_origin = (select id_line from phone_lines where line_number = new.number_origin);
     SET new.line_destiny = (select id_line from phone_lines where line_number = new.number_destiny);
     SET new.id_rate = (select r.id_rate from rates r where r.prefix_origin = locality_origin AND r.prefix_destiny = locality_destiny);
@@ -176,7 +132,11 @@ DELIMITER ;
 DROP TRIGGER ai_calls;
 SHOW TRIGGERS;
 
+# After insert en bill trigger  : que hace un update de la tabla calls , se busca el id de la bill dependiendo del
+# valor new.usuario que sacamos de bill.
+
 drop procedure billing_sp;
+
 DELIMITER //
 CREATE PROCEDURE billing_sp ()
 begin
@@ -184,76 +144,23 @@ begin
 	declare vFinishedTwo int default 0;
 	declare vIdUser int;
 	declare vIdCall int;
-	declare vPrice int default 0;
-	declare vCost int default 0;
-	declare vProfit int default 0;
-    
-	declare cursor_bills cursor for 
-    select l.id_user, l.id_line, c.id_call , sum(c.price), sum(c.cost), sum(c.profit)
-	from calls c
-    inner join phone_lines l 
-    where l.id_line = c.line_origin
-    AND c.id_bill IS NULL
-    group by l.id_user;
-	declare continue HANDLER for not found set  vFinished = 1;
-
-    start transaction;
-	open cursor_bills;
-	fetch cursor_calls into vIdUser, vIdCall, vPrice, vCost, vProfit;
-    
-	while(vFinished = 0) do
-
-    insert into bills (id_user, total_price, emittion_date, expiration_date, bill_status, total_cost, total_profit)
-	values(vIdUser, vPrice, now(), now() + INTERVAL 15 DAY, false, vCost, vProfit);
-    
-
-	end while;
-	close cursor_bills;
-
-	COMMIT;
-
-END //
-
-# After insert en bill trigger  : que hace un update de la tabla calls , se busca el id de la bill dependiendo del
-# valor new.usuario que sacamos de bill.
-
-select c.id_call, l.line_number
-from calls c
-inner join phone_lines l
-where l.id_line = c.line_origin
-group by c.id_call;
-
-
-
-
-
-
-drop procedure billing_sp_two;
-
-DELIMITER //
-CREATE PROCEDURE billing_sp_two ()
-begin
-	declare vFinished int default 0;
-	declare vFinishedTwo int default 0;
-	declare vIdUser int;
-	declare vIdCall int;
-	declare vPrice int default 0;
-	declare vCost int default 0;
-	declare vProfit int default 0;
+	declare vPrice float default 0;
+	declare vCost float default 0;
+	declare vProfit float default 0;
     declare vLineNumber int;
 	declare vLineNumberTwo int;
 
-	declare cursor_bills cursor for 
+	declare cursor_bills cursor for
     select l.id_user, l.line_number, sum(c.price), sum(c.cost), sum(c.profit)
 	from calls c
-    inner join phone_lines l 
+    inner join phone_lines l
     where l.id_line = c.line_origin
     AND c.id_bill IS NULL
     group by l.id_user;
 	declare continue HANDLER for not found set  vFinished = 1;
-    
+
     start transaction;
-    open cursor_bills;    
+    open cursor_bills;
 	setBills : LOOP
 		fetch cursor_bills into vIdUser, vLineNumber, vPrice, vCost, vProfit;
 
@@ -261,36 +168,37 @@ begin
 			close cursor_bills;
 			LEAVE setBills;
 		END IF;
-    
+
 		insert into bills (id_user, total_price, emittion_date, expiration_date, bill_status, total_cost, total_profit)
 		values(vIdUser, vPrice, now(), now() + INTERVAL 15 DAY, false, vCost, vProfit);
-    
+
     BLOCK2: BEGIN
     declare cursor_calls cursor for
     select c.id_call, l.line_number
 	from calls c
 	inner join phone_lines l
-	where l.id_line = c.line_origin
+	where l.id_line = c.line_origin and c.id_bill IS NULL
 	group by c.id_call;
 	declare continue HANDLER for not found set  vFinishedTwo = 1;
 	open cursor_calls;
-    
-    setIdCall : LOOP
+
+    setIdCall: LOOP
 	fetch cursor_calls into vIdCall, vLineNumberTwo;
-    
-    if vFinished = 1 THEN
-		close cursor_calls;
+
+    if vFinishedTwo = 1 THEN
+		set vFinishedTwo = 0;
+        close cursor_calls;
 		LEAVE setIdCall;
 	END IF;
-    
+
     if( vLineNumber = vLineNumberTwo) then
-		update calls
-		set id_call = last_insert_id()
-		where id_call = vIdCall;
+		update calls c
+		set c.id_bill = last_insert_id()
+		where c.id_call = vIdCall;
 	end if;
-    
+
     end loop setIdCall;
-    end block2;
+    END BLOCK2;
     end loop setBills;
     COMMIT;
 END //
@@ -299,18 +207,53 @@ drop table bills;
 
 DELIMITER $$
 CREATE EVENT IF NOT EXISTS call_billing
-ON SCHEDULE EVERY '1' MINUTE
+ON SCHEDULE EVERY '1' MONTH
 STARTS '2020-05-1 00:00:00'
 ON COMPLETION PRESERVE
 DO
-call billing_sp_two ();
+call billing_sp ();
 $$
 
 drop EVENT call_billing;
 show procedure status
 
+INSERT INTO provinces (province_name) VALUES ('Buenos Aires');
+INSERT INTO provinces (province_name) VALUES ('Cordoba');
+
+INSERT INTO localities (prefix, id_prov, locality_name) VALUES ('223', 1, 'Mar del Plata');
+INSERT INTO localities (prefix, id_prov, locality_name) VALUES ('3541', 2, 'Carlos Paz');
+
+INSERT INTO rates (prefix_origin, prefix_destiny, price_per_minute, start_date, expiration_date, cost)
+VALUES ('223', '3541', 2.5,null,null, 0.5);
+
+INSERT INTO rates (prefix_origin, prefix_destiny, price_per_minute, start_date, expiration_date, cost)
+VALUES ('3541', '223', 3.5, null, null, 1);
 
 
+INSERT INTO line_types (line_type_name) VALUES ('cellphone');
 
+INSERT INTO user_types (usertype_name) VALUES ('Client');
 
+INSERT INTO users (user_type, dni, name, surname, pass)
+VALUES (1, '37867266', 'Felipe', 'Demaria', '221901');
 
+INSERT INTO users (user_type, dni, name, surname, pass)
+VALUES (1, '10204050', 'Miguel', 'Demaria', '221902');
+
+INSERT INTO phone_lines (id_user, prefix, id_line_type, line_number)
+VALUES (1, '223', 1, '155210762');
+
+INSERT INTO phone_lines (id_user, prefix, id_line_type, line_number)
+VALUES (2, '3541', 1, '1552010304');
+
+INSERT INTO calls (number_origin, number_destiny, date_call, duration)
+VALUES ('155210762', '1552010304', now(), 15);
+
+INSERT INTO calls (number_origin, number_destiny, date_call, duration)
+VALUES ('155210762', '1552010304', now(), 40);
+
+INSERT INTO calls (number_origin, number_destiny, date_call, duration)
+VALUES ('1552010304',  '155210762', now(), 15);
+
+INSERT INTO calls (number_origin, number_destiny, date_call, duration)
+VALUES ('1552010304',  '155210762', now(), 40);
