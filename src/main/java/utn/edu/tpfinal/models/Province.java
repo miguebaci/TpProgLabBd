@@ -1,20 +1,23 @@
 package utn.edu.tpfinal.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-@Entity
+@ToString
 @Table(name="provinces")
-
-
+@Entity
 public class Province {
     @Id
     @Column(name = "id_prov")
@@ -22,7 +25,6 @@ public class Province {
     private Integer idProv;
 
     @Column(name = "province_name")
-    @NotNull
     private String provinceName;
 
     @OneToMany(mappedBy = "province")
