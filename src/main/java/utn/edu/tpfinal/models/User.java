@@ -1,12 +1,14 @@
 package utn.edu.tpfinal.models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 
 @AllArgsConstructor
@@ -20,8 +22,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JsonBackReference
+    @ManyToOne(optional = false)
     @JoinColumn(name="user_type")
     private UserType userType;
 
@@ -36,4 +37,10 @@ public class User {
 
     @NotNull
     private String pass;
+
+    @Transient
+    private List<PhoneLine> phoneLines;
+
+    @Transient
+    private List<Bill> bills;
 }

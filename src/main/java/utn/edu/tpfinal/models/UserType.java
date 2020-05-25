@@ -1,5 +1,7 @@
 package utn.edu.tpfinal.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -24,6 +26,6 @@ public class UserType {
     @NotNull
     private String userTypeName;
 
-    @OneToMany(mappedBy = "userType")
+    @Transient
     private List<User> users;
 }

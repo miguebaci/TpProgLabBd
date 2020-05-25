@@ -1,13 +1,9 @@
 package utn.edu.tpfinal.models;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import java.util.List;
@@ -27,6 +23,18 @@ public class Province {
     @Column(name = "province_name")
     private String provinceName;
 
-    @OneToMany(mappedBy = "province")
+    //If you annotate a field with @Transient it will not be persisted.
+    @Transient
     private List<Locality> localities;
+
+    /*@JsonManagedReference
+    @OneToMany(mappedBy = "province",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true)
+    private List<Locality> localities;
+
+    @Override public String toString() {
+        return "";
+    }
+    */
 }

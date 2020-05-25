@@ -36,6 +36,4 @@ public class UserController {
         // Saving the user with the user type Employee
         userService.addUser(newUser);
     }
-
-
 }
