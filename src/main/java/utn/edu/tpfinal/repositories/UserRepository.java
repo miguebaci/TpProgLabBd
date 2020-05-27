@@ -10,6 +10,9 @@ import java.util.List;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer> {
+
+
+
   List<User> findByDni(Integer dni);
   @Query(value = "select * from users where id = ?1", nativeQuery = true)
   List<User> getById(Integer id);

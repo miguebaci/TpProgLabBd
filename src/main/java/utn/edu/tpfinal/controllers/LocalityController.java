@@ -3,7 +3,6 @@ package utn.edu.tpfinal.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import utn.edu.tpfinal.models.Locality;
-import utn.edu.tpfinal.models.Province;
 import utn.edu.tpfinal.services.LocalityService;
 
 import java.util.List;
@@ -26,8 +25,7 @@ public class LocalityController {
     }
 
     @GetMapping("/")
-    public List<Locality> getLocalities(@RequestParam(required = false) String name){
+    public List<Locality> getAllLocalities(@RequestParam(required = false) String name){
         return localityService.getAll(name);
     }
-
 }

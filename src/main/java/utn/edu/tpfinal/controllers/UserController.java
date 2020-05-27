@@ -44,5 +44,4 @@ public class UserController {
             throw new RuntimeException("username and password must have a value");
         }
     }
-
 }

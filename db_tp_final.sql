@@ -77,7 +77,7 @@ CREATE TABLE rates (
     cost float,
     constraint pk_id_rate primary key (id_rate),
     constraint fk_prefix_origin foreign key (prefix_origin) references localities (prefix),
-	constraint fk_prefix_destiny foreign key (prefix_origin) references localities (prefix)
+	constraint fk_prefix_destiny foreign key (prefix_destiny) references localities (prefix)
 );
 
 CREATE TABLE calls(
