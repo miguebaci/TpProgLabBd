@@ -37,6 +37,7 @@ public class UserController {
         userService.addUser(newUser);
     }
 
+
     public User login(String username, String password) {
         if ((username != null) && (password != null)) {
             return userService.login(username, password);
@@ -44,4 +45,6 @@ public class UserController {
             throw new RuntimeException("username and password must have a value");
         }
     }
+
+
 }
