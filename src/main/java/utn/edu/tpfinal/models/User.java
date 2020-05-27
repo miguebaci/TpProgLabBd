@@ -29,6 +29,9 @@ public class User {
     private Integer dni;
 
     @NotNull
+    private String username;
+
+    @NotNull
     private String name;
 
     @NotNull

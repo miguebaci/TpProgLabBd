@@ -34,6 +34,7 @@ CREATE TABLE users (
     id int auto_increment not null,
     user_type int not null,
 	dni int not null,
+	username varchar(50) not null,
     name varchar(50) not null,
     surname varchar(50) not null,
     pass varchar(50) not null,

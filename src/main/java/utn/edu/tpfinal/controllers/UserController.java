@@ -23,8 +23,8 @@ public class UserController {
     }
 
     @GetMapping("/")
-    public List<User> getUsers(@RequestParam(required = false) Integer dni){
-        return userService.getAll(dni);
+    public List<User> getUsers(@RequestParam(required = false) Integer id){
+        return userService.getAll(id);
     }
 
     @PostMapping("/")
@@ -37,5 +37,12 @@ public class UserController {
         userService.addUser(newUser);
     }
 
+    public User login(String username, String password) {
+        if ((username != null) && (password != null)) {
+            return userService.login(username, password);
+        } else {
+            throw new RuntimeException("username and password must have a value");
+        }
+    }
 
 }
