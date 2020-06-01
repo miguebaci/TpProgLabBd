@@ -89,11 +89,11 @@ public class UserService {
         Optional<User> resultUser = getOneUser(idUser);
         User currentUser = resultUser.get();
 
-        ResultSet rs = userRepository.getUserBillInfo(idUser);
+
         List<Bill> currentBill = new ArrayList<>();
 
 
-        try{
+        /*try{
             while (rs.next()) {
                 float totalPrice = rs.getFloat("total_price");
                 Date emittionDate = rs.getDate("emittion_date");
@@ -111,9 +111,9 @@ public class UserService {
 
         } catch(SQLException e) {
            throw new SQLException();
-        }
+        }*/
 
-        //List<Bill> billsCurrentUser = userRepository.getUserBillInfo(idUser);
+        List<Bill> billsCurrentUser = userRepository.getUserBillInfo(idUser);
         //List<PhoneLine> phoneLinesCurrentUser = userRepository.getUserPhoneLineInfo(idUser);
 
         // We set the info to our response dto
