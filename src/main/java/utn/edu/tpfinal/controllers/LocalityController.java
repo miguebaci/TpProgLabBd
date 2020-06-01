@@ -6,6 +6,7 @@ import utn.edu.tpfinal.models.Locality;
 import utn.edu.tpfinal.services.LocalityService;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @RestController
@@ -19,13 +20,33 @@ public class LocalityController {
         this.localityService = localityService;
     }
 
+    // GET ONE LOCALITY BY PREFIX.
+    @GetMapping("/{prefix}")
+    public Optional<Locality> getLocality(@PathVariable Integer prefix){
+        return localityService.getOneLocality(prefix);
+    }
+
+    // GET ALL LOCALITIES.
+    @GetMapping("/")
+    public List<Locality> getLocalities(){
+        return localityService.getAllLocalities();
+    }
+
+    // POST LOCALITY.
     @PostMapping("/")
     public void addLocality(@RequestBody Locality newLocality){
         localityService.addLocality(newLocality);
     }
 
-    @GetMapping("/")
-    public List<Locality> getAllLocalities(@RequestParam(required = false) String name){
-        return localityService.getAll(name);
+    // DELETE ONE LOCALITY BY PREFIX.
+    @DeleteMapping("/{prefix}")
+    public void deleteProvince(@PathVariable Integer prefix){
+        localityService.deleteOneLocality(prefix);
+    }
+
+    // UPDATE LOCALITY BY PREFIX.
+    @PutMapping("/{prefix}")
+    public void updateProvince(@RequestBody Locality locality, @PathVariable Integer prefix){
+        localityService.updateOneLocality(locality, prefix);
     }
 }

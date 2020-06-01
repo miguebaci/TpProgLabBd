@@ -1,42 +1,58 @@
 package utn.edu.tpfinal.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import utn.edu.tpfinal.models.UserType;
+import utn.edu.tpfinal.dto.UserRespondeDTO;
 import utn.edu.tpfinal.models.User;
+import utn.edu.tpfinal.projections.IReduceUser;
 import utn.edu.tpfinal.services.UserService;
-import utn.edu.tpfinal.services.UserTypeService;
 
+import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/users")
 public class UserController {
 
     private final UserService userService;
-    //private final UserTypeService userTypeService;
 
     @Autowired
-    public UserController(UserService userService/*, UserTypeService userTypeService*/) {
+    public UserController(UserService userService) {
         this.userService = userService;
-        //this.userTypeService = userTypeService;
     }
 
+    // GET ONE USER BY ID.
+    @GetMapping("/{idUser}")
+    public Optional<User> getUser(@PathVariable Integer idUser){
+        return userService.getOneUser(idUser);
+    }
+
+    // GET ALL USERS.
     @GetMapping("/")
-    public List<User> getUsers(@RequestParam(required = false) Integer id){
-        return userService.getAll(id);
+    public List<User> getUsers(){
+        return userService.getAllUsers();
     }
 
+    // POST USER.
     @PostMapping("/")
     public void addUser(@RequestBody User newUser){
-        /*//  Get the first user type we have (1 -- > employee)
-        UserType userType = userTypeService.getById(1);
-        newUser.setUserType(userType);*/
-
-        // Saving the user with the user type Employee
         userService.addUser(newUser);
     }
 
+    // DELETE ONE USER BY ID.
+    @DeleteMapping("/{idUser}")
+    public void deleteUser(@PathVariable Integer idUser){
+        userService.deleteOneUser(idUser);
+    }
+
+    // UPDATE USER.
+    @PutMapping("/{idUser}")
+    public void updateUser(@RequestBody User user, @PathVariable Integer idUser){
+        userService.updateOneUser(user, idUser);
+    }
 
     public User login(String username, String password) {
         if ((username != null) && (password != null)) {
@@ -46,5 +62,28 @@ public class UserController {
         }
     }
 
+
+    // GET ONE REDUCE USER BY ID.
+    @GetMapping("/projection/{idUser}")
+    public IReduceUser getReduceUser(@PathVariable Integer idUser){
+        return userService.getOneReduceUser(idUser);
+    }
+
+
+    // Response user with DTO
+    @GetMapping("/reduce/{idUser}")
+    public ResponseEntity<UserRespondeDTO> getOneUserDTO (@PathVariable Integer idUser) throws SQLException {
+        ResponseEntity<UserRespondeDTO> responseEntity;
+
+        // Get the dto of the user
+        UserRespondeDTO userRespondeDTO = userService.getOneDTOUser(idUser);
+
+        if(userRespondeDTO != null) {
+            responseEntity = ResponseEntity.ok(userRespondeDTO);
+        }else{
+            responseEntity = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        return responseEntity;
+    }
 
 }

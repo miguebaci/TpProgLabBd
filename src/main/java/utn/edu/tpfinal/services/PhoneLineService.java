@@ -6,8 +6,7 @@ import utn.edu.tpfinal.models.PhoneLine;
 import utn.edu.tpfinal.repositories.PhoneLineRepository;
 
 import java.util.List;
-
-import static java.util.Objects.isNull;
+import java.util.Optional;
 
 @Service
 public class PhoneLineService {
@@ -18,15 +17,35 @@ public class PhoneLineService {
         this.phoneLineRepository = phoneLineRepository;
     }
 
+    public Optional<PhoneLine> getOnePhoneLine(Integer idPhoneLine) {
+        return phoneLineRepository.findById(idPhoneLine);
+    }
+
+    public List<PhoneLine> getAllPhoneLines(){
+        return phoneLineRepository.findAll();
+    }
+
     public void addPhoneLine(PhoneLine phoneLine) {
         phoneLineRepository.save(phoneLine);
     }
 
-    public List<PhoneLine> getAll(Integer idLine) {
-        if(isNull(idLine)){
-            return phoneLineRepository.findAll();
+    public void deleteOnePhoneLine(Integer idPhoneLine) {
+        phoneLineRepository.deleteById(idPhoneLine);
+    }
+
+    public void updateOnePhoneLine(PhoneLine newPhoneLine, Integer idPhoneLine) {
+        Optional<PhoneLine> resultPhoneLine = getOnePhoneLine(idPhoneLine);
+        PhoneLine currentPhoneLine = resultPhoneLine.get();
+
+        if(resultPhoneLine != null) {
+            currentPhoneLine.setIdLine(newPhoneLine.getIdLine());
+            currentPhoneLine.setUser(newPhoneLine.getUser());
+            currentPhoneLine.setLocality(newPhoneLine.getLocality());
+            currentPhoneLine.setLineType(newPhoneLine.getLineType());
+            currentPhoneLine.setLineNumber(newPhoneLine.getLineNumber());
+            currentPhoneLine.setCalls(newPhoneLine.getCalls());
+            addPhoneLine(currentPhoneLine);
         }
-        return phoneLineRepository.findOneByPhoneLineId(idLine);
     }
 
 }

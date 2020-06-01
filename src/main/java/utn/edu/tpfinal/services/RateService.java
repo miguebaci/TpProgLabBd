@@ -6,8 +6,7 @@ import utn.edu.tpfinal.models.Rate;
 import utn.edu.tpfinal.repositories.RateRepository;
 
 import java.util.List;
-
-import static java.util.Objects.isNull;
+import java.util.Optional;
 
 @Service
 public class RateService {
@@ -18,14 +17,36 @@ public class RateService {
         this.rateRepository = rateRepository;
     }
 
-    public void addRate(Rate rate) {
-        rateRepository.save(rate);
+    public Optional<Rate> getOneRate(Integer idRate) {
+        return rateRepository.findById(idRate);
     }
 
-    public List<Rate> getAll(Integer idRate) {
-        if(isNull(idRate)){
-            return rateRepository.findAll();
+    public List<Rate> getAllRates(){
+        return rateRepository.findAll();
+    }
+
+    public void addRate(Rate newRate) {
+        rateRepository.save(newRate);
+    }
+
+    public void deleteOneRate(Integer idRate) {
+        rateRepository.deleteById(idRate);
+    }
+
+    public void updateOneRate(Rate newRate, Integer idRate) {
+        Optional<Rate> resultRate = getOneRate(idRate);
+        Rate currentRate = resultRate.get();
+
+        if(resultRate != null) {
+            currentRate.setIdRate(newRate.getIdRate());
+            currentRate.setLocalityOrigin(newRate.getLocalityOrigin());
+            currentRate.setLocalityDestiny(newRate.getLocalityDestiny());
+            currentRate.setPricePerMinute(newRate.getPricePerMinute());
+            currentRate.setStartDate(newRate.getStartDate());
+            currentRate.setExpirationDate(newRate.getExpirationDate());
+            currentRate.setCost(newRate.getCost());
+            currentRate.setCalls(newRate.getCalls());
+            addRate(currentRate);
         }
-        return rateRepository.findOneByRateId(idRate);
     }
 }

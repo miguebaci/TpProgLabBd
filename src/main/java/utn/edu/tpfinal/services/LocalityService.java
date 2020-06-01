@@ -3,52 +3,49 @@ package utn.edu.tpfinal.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import utn.edu.tpfinal.models.Locality;
-import utn.edu.tpfinal.models.Province;
 import utn.edu.tpfinal.repositories.LocalityRepository;
 import utn.edu.tpfinal.repositories.ProvinceRepository;
 
-import java.util.ArrayList;
 import java.util.List;
-
-import static java.util.Objects.isNull;
+import java.util.Optional;
 
 @Service
 public class LocalityService {
 
     private final LocalityRepository localityRepository;
-    private final ProvinceRepository provinceRepository;
 
     @Autowired
-    public LocalityService(LocalityRepository localityRepository, ProvinceRepository provinceRepository) {
+    public LocalityService(LocalityRepository localityRepository) {
         this.localityRepository = localityRepository;
-        this.provinceRepository = provinceRepository;
+    }
+
+    public Optional<Locality> getOneLocality(Integer prefix) {
+        return localityRepository.findById(prefix);
+    }
+
+    public List<Locality> getAllLocalities(){
+        return localityRepository.findAll();
     }
 
     public void addLocality(Locality newLocality) {
-        // We save the locality
         localityRepository.save(newLocality);
     }
 
-    public List<Locality> getAll(String name) {
-        if(isNull(name)){
-            return localityRepository.findAll();
+    public void deleteOneLocality(Integer prefix) {
+        localityRepository.deleteById(prefix);
+    }
+
+    public void updateOneLocality(Locality newLocality, Integer prefix) {
+        Optional<Locality> resultLocality = getOneLocality(prefix);
+        Locality currentLocality = resultLocality.get();
+
+        if(resultLocality != null) {
+            currentLocality.setPrefix(newLocality.getPrefix());
+            currentLocality.setLocalityName(newLocality.getLocalityName());
+            currentLocality.setProvince(newLocality.getProvince());
+            currentLocality.setPhoneLines(newLocality.getPhoneLines());
+            currentLocality.setRates(newLocality.getRates());
+            addLocality(currentLocality);
         }
-
-        return localityRepository.findByLocalityName(name);
-
-        /*List<Locality> myLocalities = localityRepository.findAll();
-
-
-        for (Locality loc: myLocalities) {
-            Province province = provinceRepository.findByProvinceId(loc.getProvinceId());
-            province.setLocalities(null);
-            loc.setFrom(province);
-        }
-
-        if(isNull(name)){
-            return myLocalities;//localityRepository.findAll();
-        }
-
-        return localityRepository.findByLocalityName(name);*/
     }
 }

@@ -6,5 +6,4 @@ import utn.edu.tpfinal.models.LineType;
 
 @Repository
 public interface LineTypeRepository extends JpaRepository<LineType, Integer> {
-
 }

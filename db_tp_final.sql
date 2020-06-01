@@ -258,3 +258,19 @@ VALUES ('1552010304',  '155210762', now(), 15);
 
 INSERT INTO calls (number_origin, number_destiny, date_call, duration)
 VALUES ('1552010304',  '155210762', now(), 40);
+
+
+select u.dni, u.username, u.name, u.surname, p.line_number
+from users u
+inner join phone_lines p
+on u.id = p.id_line
+where id = 1;
+
+
+
+
+spring:
+  datasource:
+    url: jdbc:mysql://db4free.net:3306/tplabv2020
+    username: miguebaci
+    password: mysqllab2020
