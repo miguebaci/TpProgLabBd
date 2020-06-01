@@ -53,21 +53,21 @@ public class ProvinceServiceTest {
         list.add(province2);
         Mockito.when(provinceRepository.findAll()).thenReturn(list);
 
-        List<Province> response = provinceService.getAll(null);
+        List<Province> response = provinceService.getAllProvinces();
         assertNotNull(response);
         assertEquals(list,response);
     }
 
     @Test
-    public void getProvincesTest2() {
+    public void getAllProvincesTest() {
         Province province = new Province(1,"Buenos Aires",null);
         Province province2 = new Province(2,"La Pampa",null);
         List<Province> list= new ArrayList<Province>();
         list.add(province);
         list.add(province2);
-        when(provinceRepository.findByProvinceName("La Pampa")).thenReturn(list);
+        when(provinceRepository.findAll()).thenReturn(list);
 
-        List<Province> response = provinceService.getAll("La Pampa");
+        List<Province> response = provinceService.getAllProvinces();
         assertNotNull(response);
         assertEquals(list,response);
     }

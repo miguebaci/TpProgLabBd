@@ -1,54 +1,69 @@
 package utn.edu.tpfinal.controllers;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import utn.edu.tpfinal.models.Province;
 import utn.edu.tpfinal.services.ProvinceService;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.mock;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.Mockito.*;
+
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.WARN)
 
 public class ProvinceControllerTest {
-
-    private ProvinceService provinceService;
+    @InjectMocks
     private ProvinceController provinceController;
+    @Mock
+    private ProvinceService provinceService;
 
-    @Before
-    public void setUp() throws Exception {
-        provinceService = mock(ProvinceService.class);
-        provinceController = new ProvinceController(provinceService);
+    @Test
+    //public void addProvince(@RequestBody Province newProvince){provinceService.addProvince(newProvince);}
+    public void addProvinceTest(){
+        Province province = new Province(1,"Buenos Aires",null);
+        doNothing().when(provinceService).addProvince(province);
+        provinceController.addProvince(province);
+
+        verify(provinceService, Mockito.times(1)).addProvince(province);
+    }
+
+    //public List<Province> getProvinces(@RequestParam(required = false) String name){return provinceService.getAll(name);}
+    @Test
+    public void getProvincesTest(){
+        Province province = new Province(1,"Buenos Aires",null);
+        Province province2 = new Province(2,"La Pampa",null);
+        List<Province> list= new ArrayList<Province>();
+        list.add(province);
+        list.add(province2);
+        Mockito.when(provinceService.getOneProvince(1)).thenReturn(Optional.of(province));
+        Optional<Province> response = provinceController.getProvince(1);
+
+        assertNotNull(response);
+        assertEquals(province, response.get());
     }
 
     @Test
-    public void getProvince() {
-        Integer id= 1;
-        Province province = new Province(id,"Corrientes",null);
+    public void getAllProvincesTest(){
+        Province province = new Province(1,"Buenos Aires",null);
+        Province province2 = new Province(2,"La Pampa",null);
+        List<Province> list= new ArrayList<Province>();
+        list.add(province);
+        list.add(province2);
+        Mockito.when(provinceService.getAllProvinces()).thenReturn(list);
+        List<Province> response = provinceController.getProvinces();
 
-        Optional<Province> expected= Optional.of(province);
-
-        Mockito.when(provinceService.getOneProvince(id)).thenReturn(Optional.of(province));
-
-        Optional<Province> result = provinceController.getProvince(id);
-
-        assertEquals(expected,result);
-    }
-
-    @Test
-    public void getProvinces() {
-    }
-
-    @Test
-    public void addProvince() {
-    }
-
-    @Test
-    public void deleteProvince() {
-    }
-
-    @Test
-    public void updateProvince() {
+        assertNotNull(response);
+        assertEquals(list, response);
     }
 }
