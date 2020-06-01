@@ -25,5 +25,5 @@ public class UserRespondeDTO {
     @JsonProperty
     private List<PhoneLine> phoneLines;
     @JsonProperty
-    private List<Bill> bills;
+    private List<BillForUserDTO> bills;
 }

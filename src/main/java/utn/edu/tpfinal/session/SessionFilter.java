@@ -24,10 +24,12 @@ public class SessionFilter extends OncePerRequestFilter {
 
         String sessionToken = request.getHeader("Authorization");
         Session session = sessionManager.getSession(sessionToken);
+        String path = request.getRequestURI();
         if (null != session) {
             filterChain.doFilter(request, response);
         } else {
             response.setStatus(HttpStatus.FORBIDDEN.value());
         }
+
     }
 }

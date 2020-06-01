@@ -2,9 +2,9 @@ package utn.edu.tpfinal.repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-import utn.edu.tpfinal.models.Bill;
-import utn.edu.tpfinal.models.PhoneLine;
+import utn.edu.tpfinal.dto.BillForUserDTO;
 import utn.edu.tpfinal.models.User;
 import utn.edu.tpfinal.projections.IReduceUser;
 
@@ -24,16 +24,14 @@ public interface UserRepository extends JpaRepository<User, Integer> {
   IReduceUser findReduceById(Integer idUser);
 
 
-  @Query(value = "select * from bills where id_user = ?1", nativeQuery = true)
-  ResultSet getUserBillInfo(Integer idUser);
+  /*@Query(value = "select total_price as totalPrice," +
+                  " emittion_date as emittionDate," +
+                  " expiration_date as expiratioDate," +
+                  " bill_status as billStatus" +
+                  " from bills" +
+                  " where id_user = :idUser ;", nativeQuery = true)
+  List<BillForUserDTO> getUserBillInfo(@Param("idUser") Integer idUser);*/
 
-  @Query(value = "select * from phone_lines where id_user = ?1", nativeQuery = true)
-  ResultSet getUserPhoneLineInfo(Integer idUser);
-
-
-
-  /*@Query(value = "select u.dni, u.username, u.name, u.surname\n" +
-          "from users u\n" +
-          "where id = ?1;\n", nativeQuery = true)
-  User findUserInfoById(Integer idUser);*/
+  @Query(value = "SELECT new utn.edu.tpfinal.dto.BillForUserDTO(b.totalPrice, b.emittionDate, b.expirationDate, b.billStatus) from bills where id_user = :idUser ;", nativeQuery = true)
+  List<BillForUserDTO> getUserBillInfo(@Param("idUser") Integer idUser);
 }

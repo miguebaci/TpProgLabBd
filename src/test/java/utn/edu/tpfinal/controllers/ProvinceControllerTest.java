@@ -36,6 +36,7 @@ public class ProvinceControllerTest {
         provinceController.addProvince(province);
 
         verify(provinceService, Mockito.times(1)).addProvince(province);
+
     }
 
     //public List<Province> getProvinces(@RequestParam(required = false) String name){return provinceService.getAll(name);}
@@ -51,6 +52,11 @@ public class ProvinceControllerTest {
 
         assertNotNull(response);
         assertEquals(province, response.get());
+
+        Mockito.when(provinceService.getOneProvince(1)).thenReturn(Optional.ofNullable(null));
+        Optional<Province> response2 = provinceController.getProvince(1);
+
+        assertEquals(Optional.empty(), response2);
     }
 
     @Test

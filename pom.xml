@@ -60,8 +60,11 @@
             <artifactId>junit</artifactId>
             <scope>test</scope>
         </dependency>
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> f18c00b36f749540cef270b8d60275283f0a5f7f
 		<dependency>
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-all</artifactId>

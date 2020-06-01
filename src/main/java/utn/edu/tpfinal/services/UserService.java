@@ -2,17 +2,14 @@ package utn.edu.tpfinal.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import utn.edu.tpfinal.dto.BillForUserDTO;
 import utn.edu.tpfinal.dto.UserRespondeDTO;
 import utn.edu.tpfinal.models.Bill;
-import utn.edu.tpfinal.models.PhoneLine;
 import utn.edu.tpfinal.models.User;
 import utn.edu.tpfinal.projections.IReduceUser;
 import utn.edu.tpfinal.repositories.BillRepository;
-import utn.edu.tpfinal.repositories.PhoneLineRepository;
 import utn.edu.tpfinal.repositories.UserRepository;
 
-import java.sql.Date;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,12 +18,14 @@ import java.util.Optional;
 @Service
 public class UserService {
 
+    private final BillRepository billRepository;
     private final UserRepository userRepository;
     private final BillService billService;
     private final PhoneLineService phoneLineService;
 
     @Autowired
-    public UserService(UserRepository userRepository, BillService billService, PhoneLineService phoneLineService) {
+    public UserService(BillRepository billRepository, UserRepository userRepository, BillService billService, PhoneLineService phoneLineService) {
+        this.billRepository = billRepository;
         this.userRepository = userRepository;
         this.billService = billService;
         this.phoneLineService = phoneLineService;
@@ -89,40 +88,19 @@ public class UserService {
         Optional<User> resultUser = getOneUser(idUser);
         User currentUser = resultUser.get();
 
+        List<Bill> billsCurrentUser = billRepository.getUserBillInfo(idUser);
+        List<BillForUserDTO> billForUserDTO = new ArrayList<BillForUserDTO>();
 
-        List<Bill> currentBill = new ArrayList<>();
-
-
-        /*try{
-            while (rs.next()) {
-                float totalPrice = rs.getFloat("total_price");
-                Date emittionDate = rs.getDate("emittion_date");
-                Date expirationDate = rs.getDate("expiration_date");
-                Boolean billStatus = rs.getBoolean("bill_status");
-
-                Bill bill = new Bill();
-                bill.setTotalPrice(totalPrice);
-                bill.setEmittionDate(emittionDate);
-                bill.setExpirationDate(expirationDate);
-                bill.setBillStatus(billStatus);
-
-                currentBill.add(bill);
-            }
-
-        } catch(SQLException e) {
-           throw new SQLException();
-        }*/
-
-        List<Bill> billsCurrentUser = userRepository.getUserBillInfo(idUser);
-        //List<PhoneLine> phoneLinesCurrentUser = userRepository.getUserPhoneLineInfo(idUser);
+        for(Bill b: billsCurrentUser){
+            billForUserDTO.add(new BillForUserDTO(b.getTotalPrice(), b.getEmittionDate(), b.getExpirationDate(), b.isBillStatus()));
+        }
 
         // We set the info to our response dto
         userRespondeDTO.setDni(currentUser.getDni());
         userRespondeDTO.setName(currentUser.getName());
         userRespondeDTO.setSurname(currentUser.getSurname());
         userRespondeDTO.setUsername(currentUser.getUsername());
-        //userRespondeDTO.setPhoneLines(phoneLinesCurrentUser);
-        userRespondeDTO.setBills(currentBill);
+        userRespondeDTO.setBills(billForUserDTO);
 
         return userRespondeDTO;
     }
