@@ -4,6 +4,7 @@ utn\edu\tpfinal\config\Configuration.class
 utn\edu\tpfinal\controllers\LocalityController.class
 utn\edu\tpfinal\repositories\UserTypeRepository.class
 utn\edu\tpfinal\models\LineType.class
+utn\edu\tpfinal\projections\IReduceUser.class
 utn\edu\tpfinal\services\UserTypeService.class
 utn\edu\tpfinal\session\Session.class
 utn\edu\tpfinal\models\Bill.class
@@ -13,6 +14,7 @@ utn\edu\tpfinal\models\Locality$LocalityBuilder.class
 utn\edu\tpfinal\controllers\RatesController.class
 utn\edu\tpfinal\services\CallsService.class
 utn\edu\tpfinal\controllers\LoginController.class
+utn\edu\tpfinal\dto\UserRespondeDTO.class
 utn\edu\tpfinal\models\PhoneLine.class
 utn\edu\tpfinal\models\Rate.class
 utn\edu\tpfinal\session\SessionManager.class
@@ -30,7 +32,6 @@ utn\edu\tpfinal\TpfinalApplication.class
 utn\edu\tpfinal\models\UserType.class
 utn\edu\tpfinal\controllers\BillController.class
 utn\edu\tpfinal\models\Province.class
-utn\edu\tpfinal\projections\Localities.class
 utn\edu\tpfinal\services\PhoneLineService.class
 utn\edu\tpfinal\repositories\LineTypeRepository.class
 utn\edu\tpfinal\controllers\CallsController.class

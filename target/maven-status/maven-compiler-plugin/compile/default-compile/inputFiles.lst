@@ -22,9 +22,9 @@ E:\Facultad\TUSI\1er cuatrimestre\tpfinal\src\main\java\utn\edu\tpfinal\models\L
 E:\Facultad\TUSI\1er cuatrimestre\tpfinal\src\main\java\utn\edu\tpfinal\services\UserService.java
 E:\Facultad\TUSI\1er cuatrimestre\tpfinal\src\main\java\utn\edu\tpfinal\services\PhoneLineService.java
 E:\Facultad\TUSI\1er cuatrimestre\tpfinal\src\main\java\utn\edu\tpfinal\controllers\UserTypeController.java
+E:\Facultad\TUSI\1er cuatrimestre\tpfinal\src\main\java\utn\edu\tpfinal\dto\UserRespondeDTO.java
 E:\Facultad\TUSI\1er cuatrimestre\tpfinal\src\main\java\utn\edu\tpfinal\services\ProvinceService.java
 E:\Facultad\TUSI\1er cuatrimestre\tpfinal\src\main\java\utn\edu\tpfinal\models\Rate.java
-E:\Facultad\TUSI\1er cuatrimestre\tpfinal\src\main\java\utn\edu\tpfinal\projections\Localities.java
 E:\Facultad\TUSI\1er cuatrimestre\tpfinal\src\main\java\utn\edu\tpfinal\services\CallsService.java
 E:\Facultad\TUSI\1er cuatrimestre\tpfinal\src\main\java\utn\edu\tpfinal\controllers\UserController.java
 E:\Facultad\TUSI\1er cuatrimestre\tpfinal\src\main\java\utn\edu\tpfinal\models\Bill.java
@@ -35,6 +35,7 @@ E:\Facultad\TUSI\1er cuatrimestre\tpfinal\src\main\java\utn\edu\tpfinal\controll
 E:\Facultad\TUSI\1er cuatrimestre\tpfinal\src\main\java\utn\edu\tpfinal\models\Call.java
 E:\Facultad\TUSI\1er cuatrimestre\tpfinal\src\main\java\utn\edu\tpfinal\services\BillService.java
 E:\Facultad\TUSI\1er cuatrimestre\tpfinal\src\main\java\utn\edu\tpfinal\models\UserType.java
+E:\Facultad\TUSI\1er cuatrimestre\tpfinal\src\main\java\utn\edu\tpfinal\projections\IReduceUser.java
 E:\Facultad\TUSI\1er cuatrimestre\tpfinal\src\main\java\utn\edu\tpfinal\controllers\LineTypeController.java
 E:\Facultad\TUSI\1er cuatrimestre\tpfinal\src\main\java\utn\edu\tpfinal\models\User.java
 E:\Facultad\TUSI\1er cuatrimestre\tpfinal\src\main\java\utn\edu\tpfinal\repositories\ProvinceRepository.java

@@ -19,7 +19,7 @@ public class Configuration {
     public FilterRegistrationBean myFilter() {
         FilterRegistrationBean registration = new FilterRegistrationBean();
         registration.setFilter(sessionFilter);
-        registration.addUrlPatterns("/*");
+        registration.addUrlPatterns("/api/*");
         return registration;
     }
 }
