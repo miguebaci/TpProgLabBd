@@ -17,7 +17,9 @@ public class SessionManager {
     public SessionManager() {
         sessionMap = new Hashtable<>();
         UserType userType = new UserType(1,"user",null);
-        //createSession(new User(1, userType ,123456789, "aa" , "bb", "cc", null), "1");
+
+        createSession(new User(0, userType ,123456789, "aa" , "bb", "cc", "dd", null,null), "1");
+
     }
 
     public String createSession(User user) {

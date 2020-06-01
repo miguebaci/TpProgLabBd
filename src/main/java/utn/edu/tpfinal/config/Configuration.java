@@ -1,9 +1,5 @@
 package utn.edu.tpfinal.config;
 
-
-
-
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
@@ -18,8 +14,6 @@ public class Configuration {
 
     @Autowired
     SessionFilter sessionFilter;
-
-
 
     @Bean
     public FilterRegistrationBean myFilter() {

@@ -38,8 +38,12 @@ public class LoginController {
 
     @PostMapping("/logout")
     public ResponseEntity logout(@RequestHeader("Authorization") String token) {
+        if(token!=""){
         sessionManager.removeSession(token);
         return ResponseEntity.ok().build();
+        }else{
+            return  ResponseEntity.badRequest().build();
+        }
     }
 
     private HttpHeaders createHeaders(String token) {
