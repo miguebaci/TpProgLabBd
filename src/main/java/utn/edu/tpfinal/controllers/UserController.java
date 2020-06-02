@@ -4,12 +4,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import utn.edu.tpfinal.dto.CallsByUserOnDayX;
 import utn.edu.tpfinal.dto.UserRespondeDTO;
 import utn.edu.tpfinal.models.User;
 import utn.edu.tpfinal.projections.IReduceUser;
 import utn.edu.tpfinal.services.UserService;
 
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -80,6 +82,21 @@ public class UserController {
 
         if(userRespondeDTO != null) {
             responseEntity = ResponseEntity.ok(userRespondeDTO);
+        }else{
+            responseEntity = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        return responseEntity;
+    }
+
+    @GetMapping("/reduce/{idUser}/{date}")
+    public ResponseEntity<CallsByUserOnDayX> getUserCallsByDayDTO (@PathVariable Integer idUser, Date date){
+        ResponseEntity<CallsByUserOnDayX> responseEntity;
+
+        // Get the dto of the user
+        CallsByUserOnDayX callsByUserOnDayX = userService.getCallsByUserOnDayXDto(idUser, date);
+
+        if(callsByUserOnDayX != null) {
+            responseEntity = ResponseEntity.ok(callsByUserOnDayX);
         }else{
             responseEntity = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }

@@ -3,15 +3,20 @@ package utn.edu.tpfinal.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import utn.edu.tpfinal.dto.BillForUserDTO;
+import utn.edu.tpfinal.dto.CallsByDayDTO;
+import utn.edu.tpfinal.dto.CallsByUserOnDayX;
 import utn.edu.tpfinal.dto.UserRespondeDTO;
 import utn.edu.tpfinal.models.Bill;
+import utn.edu.tpfinal.models.Call;
 import utn.edu.tpfinal.models.User;
 import utn.edu.tpfinal.projections.IReduceUser;
 import utn.edu.tpfinal.repositories.BillRepository;
+import utn.edu.tpfinal.repositories.CallRepository;
 import utn.edu.tpfinal.repositories.UserRepository;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,13 +25,14 @@ public class UserService {
 
     private final BillRepository billRepository;
     private final UserRepository userRepository;
+    private final CallRepository callRepository;
     private final BillService billService;
     private final PhoneLineService phoneLineService;
 
-    @Autowired
-    public UserService(BillRepository billRepository, UserRepository userRepository, BillService billService, PhoneLineService phoneLineService) {
+    public UserService(BillRepository billRepository, UserRepository userRepository, CallRepository callRepository, BillService billService, PhoneLineService phoneLineService) {
         this.billRepository = billRepository;
         this.userRepository = userRepository;
+        this.callRepository = callRepository;
         this.billService = billService;
         this.phoneLineService = phoneLineService;
     }
@@ -103,5 +109,27 @@ public class UserService {
         userRespondeDTO.setBills(billForUserDTO);
 
         return userRespondeDTO;
+    }
+
+    public CallsByUserOnDayX getCallsByUserOnDayXDto(Integer idUser, Date date) {
+
+
+            CallsByUserOnDayX userDto = new CallsByUserOnDayX();
+
+            Optional<User> resultUser = getOneUser(idUser);
+            User currentUser = resultUser.get();
+
+            List<Call> callsCurrentUser = callRepository.findCallsById(idUser, date);
+            List<CallsByDayDTO> callsByDayDTO = new ArrayList<CallsByDayDTO>();
+
+            for (Call c : callsCurrentUser) {
+                callsByDayDTO.add(new CallsByDayDTO(c.getIdCall(), c.getLineOrigin().getLineNumber(), c.getLineDestiny().getLineNumber()));
+            }
+
+            userDto.setId(currentUser.getDni());
+            userDto.setUsername(currentUser.getUsername());
+            userDto.setCalls(callsByDayDTO);
+
+        return userDto;
     }
 }
