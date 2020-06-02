@@ -48,4 +48,8 @@ public class PhoneLineService {
         }
     }
 
+    public List<PhoneLine> getAllPhoneLinesByPrefix(Integer prefix) {
+        return phoneLineRepository.findAllPhoneLinesByPrefix(prefix);
+    }
+
 }

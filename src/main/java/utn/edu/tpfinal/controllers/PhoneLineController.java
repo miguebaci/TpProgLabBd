@@ -1,6 +1,8 @@
 package utn.edu.tpfinal.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import utn.edu.tpfinal.models.PhoneLine;
 import utn.edu.tpfinal.models.Province;
@@ -49,4 +51,22 @@ public class PhoneLineController {
     public void updatePhoneLine(@RequestBody PhoneLine phoneLine, @PathVariable Integer idPhoneLine){
         phoneLineService.updateOnePhoneLine(phoneLine, idPhoneLine);
     }
+
+    // GET ALL PHONE LINES WITH PREFIX : 351
+
+    @GetMapping("/exam/{prefix}")
+    public ResponseEntity<List<PhoneLine>> getAllPhoneLines(@PathVariable Integer prefix){
+        ResponseEntity<List<PhoneLine>> responseEntity;
+        List<PhoneLine> phoneLines = phoneLineService.getAllPhoneLinesByPrefix(prefix);
+
+        if(phoneLines.size() > 0){
+            responseEntity = ResponseEntity.ok(phoneLines);
+        }else{
+            responseEntity = ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        }
+
+        return responseEntity;
+    }
+
+
 }
