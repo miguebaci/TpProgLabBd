@@ -11,7 +11,7 @@ CREATE TABLE provinces (
 );
 
 CREATE TABLE localities (
-	prefix int unique not null,
+	prefix int unique not null,#varchar(11)
     id_prov int not null,
     locality_name varchar(50) not null,
     constraint pk_prefix primary key (prefix),
@@ -45,7 +45,7 @@ CREATE TABLE users (
 CREATE TABLE phone_lines (
 	id_line int auto_increment not null,
     id_user int not null,
-    prefix int not null,
+    prefix int not null,# varchar(11)
     id_line_type int not null,
     line_number varchar(50),
     constraint pk_id_line primary key (id_line),
@@ -69,8 +69,8 @@ CREATE TABLE bills (
 
 CREATE TABLE rates (
 	id_rate int auto_increment not null,
-    prefix_origin int not null,
-    prefix_destiny int not null,
+    prefix_origin int not null,#varchar(11)
+    prefix_destiny int not null,#varchar(11)
     price_per_minute float not null,
     start_date date,
     expiration_date date,
@@ -79,6 +79,7 @@ CREATE TABLE rates (
     constraint fk_prefix_origin foreign key (prefix_origin) references localities (prefix),
 	constraint fk_prefix_destiny foreign key (prefix_destiny) references localities (prefix)
 );
+
 
 CREATE TABLE calls(
 	id_call int auto_increment not null,
@@ -92,8 +93,8 @@ CREATE TABLE calls(
     date_call datetime,
     hour_call_finish datetime,
     duration int,
-    number_origin int,
-    number_destiny int,
+    number_origin VARCHAR(50),
+    number_destiny VARCHAR(50),
     constraint pk_id_call primary key (id_call),
     constraint fk_line_origin foreign key (line_origin) references phone_lines (id_line),
 	constraint fk_line_destiny foreign key (line_destiny) references phone_lines (id_line),
@@ -102,7 +103,7 @@ CREATE TABLE calls(
 );
 
 DELIMITER //
-CREATE TRIGGER ai_calls BEFORE INSERT ON calls FOR EACH ROW
+CREATE TRIGGER bi_calls BEFORE INSERT ON calls FOR EACH ROW
 BEGIN
 	declare locality_origin int;
     declare locality_destiny int;
@@ -218,6 +219,26 @@ $$
 drop EVENT call_billing;
 show procedure status
 
+
+
+DELIMITER //
+CREATE TRIGGER bi_phone_lines BEFORE INSERT ON phone_lines FOR EACH ROW
+BEGIN
+    declare tempResult varchar(50);
+    SET tempResult = CONCAT(new.prefix,new.line_number);
+    SET new.line_number = tempResult;
+END//
+DELIMITER ;
+drop trigger bi_phone_lines;
+
+SELECT CONCAT('223', '155999999')
+from phone_lines a
+limit 1;
+
+INSERT INTO phone_lines (id_user, prefix, id_line_type, line_number)
+VALUES (1, '223', 1, '155234567');
+
+
 INSERT INTO provinces (province_name) VALUES ('Buenos Aires');
 INSERT INTO provinces (province_name) VALUES ('Cordoba');
 
@@ -258,19 +279,3 @@ VALUES ('1552010304',  '155210762', now(), 15);
 
 INSERT INTO calls (number_origin, number_destiny, date_call, duration)
 VALUES ('1552010304',  '155210762', now(), 40);
-
-
-select u.dni, u.username, u.name, u.surname, p.line_number
-from users u
-inner join phone_lines p
-on u.id = p.id_line
-where id = 1;
-
-
-
-
-spring:
-  datasource:
-    url: jdbc:mysql://db4free.net:3306/tplabv2020
-    username: miguebaci
-    password: mysqllab2020

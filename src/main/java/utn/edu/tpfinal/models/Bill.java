@@ -1,5 +1,6 @@
 package utn.edu.tpfinal.models;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -29,9 +30,11 @@ public class Bill {
     @Column(name = "total_price")
     private Float totalPrice;
 
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd")
     @Column(name = "emittion_date")
     private Date emittionDate;
 
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd")
     @Column(name = "expiration_date")
     private Date expirationDate;
 

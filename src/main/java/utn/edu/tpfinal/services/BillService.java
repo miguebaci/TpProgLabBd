@@ -2,9 +2,12 @@ package utn.edu.tpfinal.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import utn.edu.tpfinal.dto.BillForUserDTO;
 import utn.edu.tpfinal.models.Bill;
 import utn.edu.tpfinal.repositories.BillRepository;
 
+import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -52,4 +55,37 @@ public class BillService {
         }
     }
 
+    public List<BillForUserDTO> getBillsBetweenRange(Integer idUser, String dateOne, String dateTwo) {
+
+        // converting a string to a sql date
+        Date dateFrom = Date.valueOf(dateOne);
+        Date dateTo = Date.valueOf(dateTwo);
+
+
+        // Convert the date to mysql type date
+        //java.sql.Date from = new java.sql.Date(dateOne.getTime());
+        //java.sql.Date to = new java.sql.Date(dateTwo.getTime());
+
+        List<Bill> userBills = billRepository.getBillsFromUserBetweenDates(idUser, dateFrom, dateTo);
+        List<BillForUserDTO> userDtoBills = new ArrayList<>();
+
+        // we pass the info to the bill dto
+        for(Bill b: userBills){
+            userDtoBills.add(new BillForUserDTO(b.getTotalPrice(), b.getEmittionDate(), b.getExpirationDate(), b.isBillStatus()));
+        }
+
+        return userDtoBills;
+    }
+
+    public List<BillForUserDTO> getAllBillsForUserDTO() {
+        List<Bill> userBills = getAllBills();
+        List<BillForUserDTO> userDtoBills = new ArrayList<>();
+
+        // we pass the info to the bill dto
+        for(Bill b: userBills){
+            userDtoBills.add(new BillForUserDTO(b.getTotalPrice(), b.getEmittionDate(), b.getExpirationDate(), b.isBillStatus()));
+        }
+
+        return userDtoBills;
+    }
 }

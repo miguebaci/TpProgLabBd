@@ -54,8 +54,8 @@ public class Call {
     private int duration;
 
     @Column(name= "number_origin")
-    private int numberOrigin;
+    private String numberOrigin;
 
     @Column(name= "number_destiny")
-    private int numberDestiny;
+    private String numberDestiny;
 }

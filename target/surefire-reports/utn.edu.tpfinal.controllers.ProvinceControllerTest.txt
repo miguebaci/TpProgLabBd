@@ -1,4 +1,0 @@
--------------------------------------------------------------------------------
-Test set: utn.edu.tpfinal.controllers.ProvinceControllerTest
--------------------------------------------------------------------------------
-Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.438 s - in utn.edu.tpfinal.controllers.ProvinceControllerTest

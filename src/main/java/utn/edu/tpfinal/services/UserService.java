@@ -1,7 +1,9 @@
 package utn.edu.tpfinal.services;
 
+import org.apache.catalina.SessionIdGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import utn.edu.tpfinal.Exceptions.UserNotexistException;
 import utn.edu.tpfinal.dto.BillForUserDTO;
 import utn.edu.tpfinal.dto.UserRespondeDTO;
 import utn.edu.tpfinal.models.Bill;
@@ -9,6 +11,7 @@ import utn.edu.tpfinal.models.User;
 import utn.edu.tpfinal.projections.IReduceUser;
 import utn.edu.tpfinal.repositories.BillRepository;
 import utn.edu.tpfinal.repositories.UserRepository;
+import utn.edu.tpfinal.session.SessionManager;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -22,13 +25,19 @@ public class UserService {
     private final UserRepository userRepository;
     private final BillService billService;
     private final PhoneLineService phoneLineService;
+    private final SessionManager sessionManager;
 
     @Autowired
-    public UserService(BillRepository billRepository, UserRepository userRepository, BillService billService, PhoneLineService phoneLineService) {
+    public UserService(BillRepository billRepository,
+                       UserRepository userRepository,
+                       BillService billService,
+                       PhoneLineService phoneLineService,
+                       SessionManager sessionManager) {
         this.billRepository = billRepository;
         this.userRepository = userRepository;
         this.billService = billService;
         this.phoneLineService = phoneLineService;
+        this.sessionManager = sessionManager;
     }
 
     public Optional<User> getOneUser(Integer idUser) {
@@ -79,7 +88,6 @@ public class UserService {
     public IReduceUser getOneReduceUser(Integer idUser) {
         return userRepository.findReduceById(idUser);
     }
-
 
     public UserRespondeDTO getOneDTOUser(Integer idUser) throws SQLException {
 
