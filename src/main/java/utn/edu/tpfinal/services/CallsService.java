@@ -2,12 +2,12 @@ package utn.edu.tpfinal.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import utn.edu.tpfinal.dto.CallForUserDTO;
-import utn.edu.tpfinal.models.Bill;
+import utn.edu.tpfinal.dto.CallsForUserDTO;
 import utn.edu.tpfinal.models.Call;
 import utn.edu.tpfinal.repositories.CallRepository;
 
-import java.util.Date;
+import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -58,11 +58,58 @@ public class CallsService {
         }
     }
 
-    public List<CallForUserDTO> geCallsBetweenRange(Integer id, Date from, Date to) {
-        return null;
+    public List<CallsForUserDTO> geCallsBetweenRange(String from, String to, String lineNumber, Boolean caller) {
+
+        // converting a string to a sql date
+        java.sql.Date fromDate = java.sql.Date.valueOf(from);
+        java.sql.Date toDate = Date.valueOf(to);
+
+        List<Call> userCalls;
+        List<CallsForUserDTO> listUserDtoCalls = new ArrayList<>();
+
+        if(caller){
+            userCalls = callRepository.getCallsFromUserAsCallerBetweenDates(fromDate, toDate, lineNumber);
+        }else{
+            userCalls = callRepository.getCallsFromUserAsReceiverBetweenDates(fromDate, toDate, lineNumber);
+        }
+
+        // we pass the information to the calls dto
+        for(Call c: userCalls){
+            Float price = null;
+
+            if(caller){
+                price = c.getPrice();
+            }
+
+            listUserDtoCalls.add(new CallsForUserDTO(price, c.getDateCall(), c.getHourCallFinish(),
+                                                    c.getDuration(), c.getNumberOrigin(), c.getNumberDestiny()));
+        }
+
+        return listUserDtoCalls;
     }
 
-    public List<CallForUserDTO> getAllCallsForUserDTO() {
-        return null;
+    public List<CallsForUserDTO> getAllCallsForUserDTO(String lineNumber, Boolean caller) {
+        List<Call> userCalls;
+        List<CallsForUserDTO> listUserDtoCalls = new ArrayList<>();
+
+        if(caller){
+            userCalls = callRepository.getCallsFromUserAsCaller(lineNumber);
+        }else{
+            userCalls = callRepository.getCallsFromUserAsReceiver(lineNumber);
+        }
+
+        // we pass the information to the calls dto
+        for(Call c: userCalls){
+            Float price = null;
+
+            if(caller){
+                price = c.getPrice();
+            }
+
+            listUserDtoCalls.add(new CallsForUserDTO(price, c.getDateCall(), c.getHourCallFinish(),
+                    c.getDuration(), c.getNumberOrigin(), c.getNumberDestiny()));
+        }
+
+        return listUserDtoCalls;
     }
 }
