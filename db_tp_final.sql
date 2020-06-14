@@ -167,6 +167,7 @@ begin
 		fetch cursor_bills into vIdUser, vLineNumber, vPrice, vCost, vProfit;
 
 		if vFinished = 1 THEN
+		    set vFinished = 0;
 			close cursor_bills;
 			LEAVE setBills;
 		END IF;

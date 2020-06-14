@@ -1,10 +1,10 @@
-package utn.edu.tpfinal.controllers;
+package utn.edu.tpfinal.controllers.web;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import utn.edu.tpfinal.dto.UserRespondeDTO;
+import utn.edu.tpfinal.dto.UserResponseDTO;
 import utn.edu.tpfinal.models.User;
 import utn.edu.tpfinal.projections.IReduceUser;
 import utn.edu.tpfinal.services.UserService;
@@ -14,13 +14,13 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/users")
-public class UserController {
+@RequestMapping("/backoffice")
+public class BackofficeController {
 
     private final UserService userService;
 
     @Autowired
-    public UserController(UserService userService) {
+    public BackofficeController(UserService userService) {
         this.userService = userService;
     }
 
@@ -72,14 +72,14 @@ public class UserController {
 
     // Response user with DTO
     @GetMapping("/reduce/{idUser}")
-    public ResponseEntity<UserRespondeDTO> getOneUserDTO (@PathVariable Integer idUser) throws SQLException {
-        ResponseEntity<UserRespondeDTO> responseEntity;
+    public ResponseEntity<UserResponseDTO> getOneUserDTO (@PathVariable Integer idUser) throws SQLException {
+        ResponseEntity<UserResponseDTO> responseEntity;
 
         // Get the dto of the user
-        UserRespondeDTO userRespondeDTO = userService.getOneDTOUser(idUser);
+        UserResponseDTO userResponseDTO = userService.getOneDTOUser(idUser);
 
-        if(userRespondeDTO != null) {
-            responseEntity = ResponseEntity.ok(userRespondeDTO);
+        if(userResponseDTO != null) {
+            responseEntity = ResponseEntity.ok(userResponseDTO);
         }else{
             responseEntity = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }

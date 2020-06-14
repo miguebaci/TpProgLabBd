@@ -13,7 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @Data
 
-public class UserRespondeDTO {
+public class UserResponseDTO {
     @JsonProperty
     private Integer dni;
     @JsonProperty

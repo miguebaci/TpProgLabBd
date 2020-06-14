@@ -1,15 +1,14 @@
 package utn.edu.tpfinal.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.stereotype.Controller;
 import utn.edu.tpfinal.models.Province;
 import utn.edu.tpfinal.services.ProvinceService;
 
 import java.util.List;
 import java.util.Optional;
 
-@RestController
-@RequestMapping("/province")
+@Controller
 public class ProvinceController {
     private final ProvinceService provinceService;
 
@@ -19,32 +18,27 @@ public class ProvinceController {
     }
 
     // GET ONE PROVINCE BY ID.
-    @GetMapping("/{idProvince}")
-    public Optional<Province> getProvince(@PathVariable Integer idProvince){
+    public Optional<Province> getProvince(Integer idProvince){
         return provinceService.getOneProvince(idProvince);
     }
 
     // GET ALL PROVINCES.
-    @GetMapping("/")
     public List<Province> getProvinces(){
         return provinceService.getAllProvinces();
     }
 
     // POST PROVINCE.
-    @PostMapping("/")
-    public void addProvince(@RequestBody Province newProvince){
+    public void addProvince(Province newProvince){
         provinceService.addProvince(newProvince);
     }
 
     // DELETE ONE PROVINCE BY ID.
-    @DeleteMapping("/{idProvince}")
-    public void deleteProvince(@PathVariable Integer idProvince){
+    public void deleteProvince(Integer idProvince){
         provinceService.deleteOneProvince(idProvince);
     }
 
     // UPDATE PROVINCE.
-    @PutMapping("/{idProvince}")
-    public void updateProvince(@RequestBody Province province, @PathVariable Integer idProvince){
+    public void updateProvince(Province province, Integer idProvince){
         provinceService.updateOneProvince(province, idProvince);
     }
 }

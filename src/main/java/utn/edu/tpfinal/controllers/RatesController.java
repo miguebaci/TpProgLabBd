@@ -1,15 +1,14 @@
 package utn.edu.tpfinal.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.stereotype.Controller;
 import utn.edu.tpfinal.models.Rate;
 import utn.edu.tpfinal.services.RateService;
 
 import java.util.List;
 import java.util.Optional;
 
-@RestController
-@RequestMapping("/rates")
+@Controller
 public class RatesController {
     private final RateService rateService;
 
@@ -19,32 +18,27 @@ public class RatesController {
     }
 
     // GET ONE RATE BY ID.
-    @GetMapping("/{idRate}")
-    public Optional<Rate> getUser(@PathVariable Integer idRate){
+    public Optional<Rate> getUser(Integer idRate){
         return rateService.getOneRate(idRate);
     }
 
     // GET ALL RATES.
-    @GetMapping("/")
     public List<Rate> getRates(){
         return rateService.getAllRates();
     }
 
     // POST RATE.
-    @PostMapping("/")
-    public void addRate(@RequestBody Rate newRate){
+    public void addRate(Rate newRate){
         rateService.addRate(newRate);
     }
 
     // DELETE ONE RATE BY ID.
-    @DeleteMapping("/{idRate}")
-    public void deleteRate(@PathVariable Integer idRate){
+    public void deleteRate(Integer idRate){
         rateService.deleteOneRate(idRate);
     }
 
     // UPDATE RATE.
-    @PutMapping("/{idRate}")
-    public void updateRate(@RequestBody Rate rate, @PathVariable Integer idRate){
+    public void updateRate(Rate rate, Integer idRate){
         rateService.updateOneRate(rate, idRate);
     }
 }

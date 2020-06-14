@@ -1,11 +1,9 @@
 package utn.edu.tpfinal.services;
 
-import org.apache.catalina.SessionIdGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import utn.edu.tpfinal.Exceptions.UserNotexistException;
 import utn.edu.tpfinal.dto.BillForUserDTO;
-import utn.edu.tpfinal.dto.UserRespondeDTO;
+import utn.edu.tpfinal.dto.UserResponseDTO;
 import utn.edu.tpfinal.models.Bill;
 import utn.edu.tpfinal.models.User;
 import utn.edu.tpfinal.projections.IReduceUser;
@@ -89,9 +87,9 @@ public class UserService {
         return userRepository.findReduceById(idUser);
     }
 
-    public UserRespondeDTO getOneDTOUser(Integer idUser) throws SQLException {
+    public UserResponseDTO getOneDTOUser(Integer idUser) throws SQLException {
 
-        UserRespondeDTO userRespondeDTO = new UserRespondeDTO();
+        UserResponseDTO userResponseDTO = new UserResponseDTO();
 
         Optional<User> resultUser = getOneUser(idUser);
         User currentUser = resultUser.get();
@@ -104,12 +102,12 @@ public class UserService {
         }
 
         // We set the info to our response dto
-        userRespondeDTO.setDni(currentUser.getDni());
-        userRespondeDTO.setName(currentUser.getName());
-        userRespondeDTO.setSurname(currentUser.getSurname());
-        userRespondeDTO.setUsername(currentUser.getUsername());
-        userRespondeDTO.setBills(billForUserDTO);
+        userResponseDTO.setDni(currentUser.getDni());
+        userResponseDTO.setName(currentUser.getName());
+        userResponseDTO.setSurname(currentUser.getSurname());
+        userResponseDTO.setUsername(currentUser.getUsername());
+        userResponseDTO.setBills(billForUserDTO);
 
-        return userRespondeDTO;
+        return userResponseDTO;
     }
 }
