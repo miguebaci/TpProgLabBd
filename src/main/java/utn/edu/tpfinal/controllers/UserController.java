@@ -1,18 +1,20 @@
-package utn.edu.tpfinal.controllers.web;
+package utn.edu.tpfinal.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import utn.edu.tpfinal.dto.UserResponseDTO;
 import utn.edu.tpfinal.models.User;
 import utn.edu.tpfinal.projections.IReduceUser;
 import utn.edu.tpfinal.services.UserService;
 
 import java.sql.SQLException;
+import java.util.List;
+import java.util.Optional;
 
-@RestController
-@RequestMapping("/api")
+@Controller
 public class UserController {
 
     private final UserService userService;
@@ -20,6 +22,31 @@ public class UserController {
     @Autowired
     public UserController(UserService userService) {
         this.userService = userService;
+    }
+
+    // GET ONE USER BY ID.
+    public Optional<User> getUser(Integer idUser){
+        return userService.getOneUser(idUser);
+    }
+
+    // GET ALL USERS.
+    public List<User> getUsers(){
+        return userService.getAllUsers();
+    }
+
+    // POST USER.
+    public void addUser(User newUser){
+        userService.addUser(newUser);
+    }
+
+    // DELETE ONE USER BY ID.
+    public void deleteUser(Integer idUser){
+        userService.deleteOneUser(idUser);
+    }
+
+    // UPDATE USER.
+    public void updateUser(User user,Integer idUser){
+        userService.updateOneUser(user, idUser);
     }
 
     public User login(String username, String password) {
@@ -30,16 +57,11 @@ public class UserController {
         }
     }
 
-    // GET ONE REDUCE USER BY ID.
-    @GetMapping("/projection/{idUser}")
-    public IReduceUser getReduceUser(@PathVariable Integer idUser){
+    public IReduceUser getReduceUser(Integer idUser){
         return userService.getOneReduceUser(idUser);
     }
 
-
-    // Response user with DTO
-    @GetMapping("/user/{idUser}")
-    public ResponseEntity<UserResponseDTO> getOneUserDTO (@PathVariable Integer idUser) throws SQLException {
+    public ResponseEntity<UserResponseDTO> getOneUserDTO (Integer idUser) throws SQLException {
         ResponseEntity<UserResponseDTO> responseEntity;
 
         // Get the dto of the user
@@ -52,5 +74,4 @@ public class UserController {
         }
         return responseEntity;
     }
-
 }

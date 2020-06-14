@@ -10,7 +10,6 @@ import java.util.Optional;
 
 
 @Controller
-
 public class LocalityController {
     private final LocalityService localityService;
 

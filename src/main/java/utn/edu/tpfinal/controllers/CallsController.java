@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
 import utn.edu.tpfinal.Exceptions.UserNotExistException;
 import utn.edu.tpfinal.dto.CallsForUserDTO;
 import utn.edu.tpfinal.models.Call;
@@ -53,11 +52,7 @@ public class CallsController {
     }
 
     // Get all calls between two ranges of dates
-    public ResponseEntity<List<CallsForUserDTO>> getBillsInfoForUser(@RequestHeader("Authorization") String sessionToken,
-                                                                     @RequestParam(value = "fromDate", required = false) String fromDate,
-                                                                     @RequestParam(value = "toDate", required = false) String toDate,
-                                                                     @RequestParam(value = "lineNumber" ) String lineNumber,
-                                                                     @RequestParam(value = "caller" ) Boolean caller) throws UserNotExistException {
+    public ResponseEntity<List<CallsForUserDTO>> getBillsInfoForUser(String sessionToken, String fromDate, String toDate, String lineNumber, Boolean caller) throws UserNotExistException {
         User currentUser = getCurrentUser(sessionToken);
 
         List<CallsForUserDTO> callsForUserDTO;

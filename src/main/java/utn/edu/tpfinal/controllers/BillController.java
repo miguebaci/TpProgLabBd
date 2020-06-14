@@ -55,9 +55,7 @@ public class BillController {
     }
 
     // Get All bills between two ranges of dates
-    public ResponseEntity<List<BillForUserDTO>> getBillsInfoForUser(@RequestHeader("Authorization") String sessionToken,
-                                                                    @RequestParam(value = "fromDate", required = false) String fromDate,
-                                                                    @RequestParam(value = "toDate", required = false) String toDate) throws UserNotExistException, ParseException {
+    public ResponseEntity<List<BillForUserDTO>> getBillsInfoForUser(String sessionToken, String fromDate, String toDate) throws UserNotExistException, ParseException {
         User currentUser = getCurrentUser(sessionToken);
         List<BillForUserDTO> billForUserDTO;
 
