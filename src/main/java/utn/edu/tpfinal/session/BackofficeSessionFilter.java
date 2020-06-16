@@ -26,7 +26,7 @@ public class BackofficeSessionFilter extends OncePerRequestFilter {
         String sessionToken = request.getHeader("Authorization");
         Session session = sessionManager.getSession(sessionToken);
         if (null != session) {
-            if (userTypeBackoffice.equals(session.getLoggedUser().getUserType().getUserTypeName())) {
+            if (userTypeBackoffice.equals(session.getLoggedUser().getUserType())) {
                 filterChain.doFilter(request, response);
             } else {
                 response.setStatus(HttpStatus.FORBIDDEN.value());

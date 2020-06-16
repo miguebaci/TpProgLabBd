@@ -3,6 +3,7 @@ package utn.edu.tpfinal.models;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @AllArgsConstructor
@@ -26,8 +27,9 @@ public class PhoneLine {
     @JoinColumn(name = "prefix")
     private Locality locality;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "id_line_type")
+    @NotNull
+    private enum LineType {landline, mobile};
+    @Enumerated(EnumType.STRING)
     private LineType lineType;
 
     @Column(name = "line_number")

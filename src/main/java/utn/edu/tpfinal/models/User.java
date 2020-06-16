@@ -22,9 +22,11 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name="user_type")
-    private UserType userType;
+
+    @NotNull
+    private enum UserType {backoffice, client};
+    @Enumerated(EnumType.STRING)
+    private  String userType;
 
     @NotNull
     private Integer dni;

@@ -18,40 +18,26 @@ CREATE TABLE localities (
     constraint fk_id_prov foreign key (id_prov) references provinces (id_prov)
 );
 
-CREATE TABLE line_types (
-	id_line_type int auto_increment not null,
-    line_type_name varchar(50) not null,
-    constraint pk_id_type primary key (id_line_type)
-);
-
-CREATE TABLE user_types (
-	id_user_type int auto_increment not null,
-    usertype_name varchar(50) not null,
-    constraint pk_id_user_type primary key (id_user_type)
-);
-
 CREATE TABLE users (
     id int auto_increment not null,
-    user_type int not null,
+    user_type ENUM("admin", "client") NOT NULL,
 	dni int not null,
 	username varchar(50) not null,
     name varchar(50) not null,
     surname varchar(50) not null,
     pass varchar(50) not null,
-	constraint pk_id primary key (id),
-	constraint fk_id_user_type foreign key (user_type) references user_types (id_user_type)
+	constraint pk_id primary key (id)
 );
 
 CREATE TABLE phone_lines (
 	id_line int auto_increment not null,
     id_user int not null,
     prefix int not null,# varchar(11)
-    id_line_type int not null,
+    line_type ENUM("landline", "mobile") NOT NULL,
     line_number varchar(50),
     constraint pk_id_line primary key (id_line),
     constraint fk_id_line_user foreign key (id_user) references users (id),
-	constraint fk_prefix foreign key (prefix) references localities (prefix),
-	constraint fk_id_line_type foreign key (id_line_type) references line_types (id_line_type)
+	constraint fk_prefix foreign key (prefix) references localities (prefix)
 );
 
 CREATE TABLE bills (
@@ -129,7 +115,6 @@ BEGIN
     SET new.cost = ( new.duration * (select r.cost from rates r where r.id_rate = new.id_rate));
     SET new.profit = (new.price - new.cost);
 END//
-DELIMITER ;
 
 DROP TRIGGER ai_calls;
 SHOW TRIGGERS;
@@ -229,15 +214,12 @@ BEGIN
     SET tempResult = CONCAT(new.prefix,new.line_number);
     SET new.line_number = tempResult;
 END//
-DELIMITER ;
+
 drop trigger bi_phone_lines;
 
 SELECT CONCAT('223', '155999999')
 from phone_lines a
 limit 1;
-
-INSERT INTO phone_lines (id_user, prefix, id_line_type, line_number)
-VALUES (1, '223', 1, '155234567');
 
 
 INSERT INTO provinces (province_name) VALUES ('Buenos Aires');
@@ -252,22 +234,21 @@ VALUES ('223', '3541', 2.5,null,null, 0.5);
 INSERT INTO rates (prefix_origin, prefix_destiny, price_per_minute, start_date, expiration_date, cost)
 VALUES ('3541', '223', 3.5, null, null, 1);
 
+INSERT INTO users (user_type, dni, username, name, surname, pass)
+VALUES (2, '37867266', 'Felipe', 'dema','Demaria', '221901');
 
-INSERT INTO line_types (line_type_name) VALUES ('cellphone');
+INSERT INTO users (user_type, dni, username, name, surname, pass)
+VALUES (2, '10204050', 'Miguel', 'baci','Bacigaluppi', '221902');
 
-INSERT INTO user_types (usertype_name) VALUES ('Client');
 
-INSERT INTO users (user_type, dni, name, surname, pass)
-VALUES (1, '37867266', 'Felipe', 'Demaria', '221901');
+INSERT INTO phone_lines (id_user, prefix, line_type, line_number)
+VALUES (1, '223', 2, '155210762');
 
-INSERT INTO users (user_type, dni, name, surname, pass)
-VALUES (1, '10204050', 'Miguel', 'Demaria', '221902');
+INSERT INTO phone_lines (id_user, prefix, line_type, line_number)
+VALUES (2, '3541', 2, '1552010304');
 
-INSERT INTO phone_lines (id_user, prefix, id_line_type, line_number)
-VALUES (1, '223', 1, '155210762');
-
-INSERT INTO phone_lines (id_user, prefix, id_line_type, line_number)
-VALUES (2, '3541', 1, '1552010304');
+INSERT INTO phone_lines (id_user, prefix, line_type, line_number)
+VALUES (1, '223', 2, '155234567');
 
 INSERT INTO calls (number_origin, number_destiny, date_call, duration)
 VALUES ('155210762', '1552010304', now(), 15);
