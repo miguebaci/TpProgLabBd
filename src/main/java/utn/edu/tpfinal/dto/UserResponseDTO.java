@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import utn.edu.tpfinal.models.Bill;
 import utn.edu.tpfinal.models.PhoneLine;
 
 import java.util.List;

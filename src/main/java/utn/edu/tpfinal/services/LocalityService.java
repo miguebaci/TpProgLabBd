@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import utn.edu.tpfinal.models.Locality;
 import utn.edu.tpfinal.repositories.LocalityRepository;
-import utn.edu.tpfinal.repositories.ProvinceRepository;
 
 import java.util.List;
 import java.util.Optional;
