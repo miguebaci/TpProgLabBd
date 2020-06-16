@@ -26,7 +26,7 @@ public class User {
     @NotNull
     private enum UserType {backoffice, client};
     @Enumerated(EnumType.STRING)
-    private  String userType;
+    private  UserType userType;
 
     @NotNull
     private Integer dni;
@@ -48,4 +48,8 @@ public class User {
 
     @Transient
     private List<Bill> bills;
+
+    public String getUserTypeString() {
+        return userType.toString();
+    }
 }

@@ -9,7 +9,7 @@ import java.util.*;
 public class SessionManager {
 
 
-    Map<String, Session> sessionMap;
+    Map<String, Session> sessionMap = new Hashtable<>();
     int sessionExpiration = 600000;
 
 

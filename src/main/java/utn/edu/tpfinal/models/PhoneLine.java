@@ -37,4 +37,8 @@ public class PhoneLine {
 
     @Transient
     List<Call> calls;
+
+    public String getLineTypeString() {
+        return lineType.toString();
+    }
 }
