@@ -20,7 +20,7 @@ CREATE TABLE localities (
 
 CREATE TABLE users (
     id int auto_increment not null,
-    user_type ENUM("admin", "client") NOT NULL,
+    user_type ENUM("backoffice", "client") NOT NULL,
 	dni int not null,
 	username varchar(50) not null,
     name varchar(50) not null,
@@ -239,6 +239,9 @@ VALUES (2, '37867266', 'dema', 'Felipe','Demaria', '221901');
 
 INSERT INTO users (user_type, dni, username, name, surname, pass)
 VALUES (2, '10204050', 'baci', 'Miguel','Bacigaluppi', '221902');
+
+INSERT INTO users (user_type, dni, username, name, surname, pass)
+VALUES (1, '32156521', 'admin', 'Admin','Admin', 'admin');
 
 
 INSERT INTO phone_lines (id_user, prefix, line_type, line_number)
