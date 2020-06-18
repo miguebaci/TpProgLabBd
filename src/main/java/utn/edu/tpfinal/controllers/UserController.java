@@ -10,6 +10,7 @@ import utn.edu.tpfinal.models.User;
 import utn.edu.tpfinal.projections.IReduceUser;
 import utn.edu.tpfinal.services.UserService;
 
+import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
@@ -35,7 +36,7 @@ public class UserController {
     }
 
     // POST USER.
-    public void addUser(User newUser){
+    public void addUser(User newUser) throws NoSuchAlgorithmException {
         userService.addUser(newUser);
     }
 
@@ -45,11 +46,11 @@ public class UserController {
     }
 
     // UPDATE USER.
-    public void updateUser(User user,Integer idUser){
+    public void updateUser(User user,Integer idUser) throws NoSuchAlgorithmException {
         userService.updateOneUser(user, idUser);
     }
 
-    public User login(String username, String password) {
+    public User login(String username, String password) throws NoSuchAlgorithmException {
         if ((username != null) && (password != null)) {
             return userService.login(username, password);
         } else {

@@ -235,14 +235,19 @@ INSERT INTO rates (prefix_origin, prefix_destiny, price_per_minute, start_date, 
 VALUES ('3541', '223', 3.5, null, null, 1);
 
 INSERT INTO users (user_type, dni, username, name, surname, pass)
-VALUES (2, '37867266', 'dema', 'Felipe','Demaria', '221901');
+VALUES (2, '37867266', 'dema', 'Felipe','Demaria', 'AA8C9E2985A40BDE1CB0443DA3BFEACC');
+
+#221901
 
 INSERT INTO users (user_type, dni, username, name, surname, pass)
-VALUES (2, '10204050', 'baci', 'Miguel','Bacigaluppi', '221902');
+VALUES (2, '10204050', 'baci', 'Miguel','Bacigaluppi', 'ED1430D0DE792B9FB3C0953CF7049005');
+
+#221902
 
 INSERT INTO users (user_type, dni, username, name, surname, pass)
-VALUES (1, '32156521', 'admin', 'Admin','Admin', 'admin');
+VALUES (1, '32156521', 'admin', 'Admin','Admin', '21232F297A57A5A743894A0E4A801FC3');
 
+#admin
 
 INSERT INTO phone_lines (id_user, prefix, line_type, line_number)
 VALUES (1, '223', 2, '155210762');

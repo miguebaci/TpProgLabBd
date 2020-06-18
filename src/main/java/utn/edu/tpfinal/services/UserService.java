@@ -11,6 +11,9 @@ import utn.edu.tpfinal.repositories.BillRepository;
 import utn.edu.tpfinal.repositories.UserRepository;
 import utn.edu.tpfinal.session.SessionManager;
 
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +49,8 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public void addUser(User newUser) {
+    public void addUser(User newUser) throws NoSuchAlgorithmException {
+        newUser.setPass(hashPass(newUser.getPass()));
         userRepository.save(newUser);
     }
 
@@ -54,7 +58,7 @@ public class UserService {
         userRepository.deleteById(idUser);
     }
 
-    public void updateOneUser(User newUser, Integer idUser) {
+    public void updateOneUser(User newUser, Integer idUser) throws NoSuchAlgorithmException {
         Optional<User> resultUser = getOneUser(idUser);
         User currentUser = resultUser.get();
 
@@ -78,9 +82,18 @@ public class UserService {
 
     }
 
-    public User login(String username, String password) {
-        User user = userRepository.userExists(username, password);
+    public User login(String username, String password) throws NoSuchAlgorithmException {
+        User user = userRepository.userExists(username, hashPass(password));
         return Optional.ofNullable(user).orElseThrow(() -> new RuntimeException("User does not exists"));
+    }
+
+    private String hashPass(String pass) throws NoSuchAlgorithmException {
+        MessageDigest m = MessageDigest.getInstance("MD5");
+        byte[] data = pass.getBytes();
+        m.update(data, 0, data.length);
+        BigInteger i = new BigInteger(1, m.digest());
+        System.out.println(String.format("%1$032X", i));
+        return String.format("%1$032X", i);
     }
 
     public IReduceUser getOneReduceUser(Integer idUser) {
