@@ -22,9 +22,11 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name="user_type")
-    private UserType userType;
+
+    @NotNull
+    private enum UserType {backoffice, client};
+    @Enumerated(EnumType.STRING)
+    private  UserType userType;
 
     @NotNull
     private Integer dni;
@@ -46,4 +48,8 @@ public class User {
 
     @Transient
     private List<Bill> bills;
+
+    public String getUserTypeString() {
+        return userType.toString();
+    }
 }

@@ -1,10 +1,9 @@
-package utn.edu.tpfinal.controllers;
+package utn.edu.tpfinal.controllers.web;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.*;
 import utn.edu.tpfinal.dto.UserResponseDTO;
 import utn.edu.tpfinal.models.User;
 import utn.edu.tpfinal.projections.IReduceUser;
@@ -15,38 +14,44 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
-@Controller
-public class UserController {
+@RestController
+@RequestMapping("/backoffice")
+public class BackofficeController {
 
     private final UserService userService;
 
     @Autowired
-    public UserController(UserService userService) {
+    public BackofficeController(UserService userService) {
         this.userService = userService;
     }
 
     // GET ONE USER BY ID.
-    public Optional<User> getUser(Integer idUser){
+    @GetMapping("/{idUser}")
+    public Optional<User> getUser(@PathVariable Integer idUser){
         return userService.getOneUser(idUser);
     }
 
     // GET ALL USERS.
+    @GetMapping("/")
     public List<User> getUsers(){
         return userService.getAllUsers();
     }
 
     // POST USER.
-    public void addUser(User newUser) throws NoSuchAlgorithmException {
+    @PostMapping("/")
+    public void addUser(@RequestBody User newUser) throws NoSuchAlgorithmException {
         userService.addUser(newUser);
     }
 
     // DELETE ONE USER BY ID.
-    public void deleteUser(Integer idUser){
+    @DeleteMapping("/{idUser}")
+    public void deleteUser(@PathVariable Integer idUser){
         userService.deleteOneUser(idUser);
     }
 
     // UPDATE USER.
-    public void updateUser(User user,Integer idUser) throws NoSuchAlgorithmException {
+    @PutMapping("/{idUser}")
+    public void updateUser(@RequestBody User user, @PathVariable Integer idUser) throws NoSuchAlgorithmException {
         userService.updateOneUser(user, idUser);
     }
 
@@ -58,11 +63,17 @@ public class UserController {
         }
     }
 
-    public IReduceUser getReduceUser(Integer idUser){
+
+    // GET ONE REDUCE USER BY ID.
+    @GetMapping("/projection/{idUser}")
+    public IReduceUser getReduceUser(@PathVariable Integer idUser){
         return userService.getOneReduceUser(idUser);
     }
 
-    public ResponseEntity<UserResponseDTO> getOneUserDTO (Integer idUser) throws SQLException {
+
+    // Response user with DTO
+    @GetMapping("/reduce/{idUser}")
+    public ResponseEntity<UserResponseDTO> getOneUserDTO (@PathVariable Integer idUser) throws SQLException {
         ResponseEntity<UserResponseDTO> responseEntity;
 
         // Get the dto of the user
@@ -75,4 +86,5 @@ public class UserController {
         }
         return responseEntity;
     }
+
 }

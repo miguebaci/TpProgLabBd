@@ -4,9 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import utn.edu.tpfinal.controllers.web.ClientController;
 import utn.edu.tpfinal.dto.LoginRequestDto;
 import utn.edu.tpfinal.models.User;
 import utn.edu.tpfinal.session.SessionManager;
+
+import java.security.NoSuchAlgorithmException;
 
 @RestController
 @RequestMapping("/")
@@ -23,13 +26,13 @@ public class LoginController {
 
 
     @PostMapping("/login")
-    public ResponseEntity login(@RequestBody LoginRequestDto loginRequestDto) {
+    public ResponseEntity login(@RequestBody LoginRequestDto loginRequestDto) throws NoSuchAlgorithmException {
         ResponseEntity response;
         try {
             User u = userController.login(loginRequestDto.getUsername(), loginRequestDto.getPass());
             String token = sessionManager.createSession(u);
             response = ResponseEntity.ok().headers(createHeaders(token)).build();
-        } catch (RuntimeException e) {
+        } catch (RuntimeException | NoSuchAlgorithmException e) {
             throw e;
         }
         return response;

@@ -2,7 +2,6 @@ package utn.edu.tpfinal.session;
 
 import org.springframework.stereotype.Component;
 import utn.edu.tpfinal.models.User;
-import utn.edu.tpfinal.models.UserType;
 
 import java.util.*;
 
@@ -10,17 +9,9 @@ import java.util.*;
 public class SessionManager {
 
 
-    Map<String, Session> sessionMap;
+    Map<String, Session> sessionMap = new Hashtable<>();
     int sessionExpiration = 600000;
 
-
-    public SessionManager() {
-        sessionMap = new Hashtable<>();
-        UserType userType = new UserType(1,"user",null);
-
-        createSession(new User(0, userType ,123456789, "aa" , "bb", "cc", "dd", null,null), "1");
-
-    }
 
     public String createSession(User user) {
         String token = UUID.randomUUID().toString();
