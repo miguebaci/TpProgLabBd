@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import utn.edu.tpfinal.controllers.UserController;
 import utn.edu.tpfinal.dto.UserResponseDTO;
 import utn.edu.tpfinal.models.User;
 import utn.edu.tpfinal.projections.IReduceUser;
@@ -18,56 +19,47 @@ import java.util.Optional;
 @RequestMapping("/backoffice")
 public class BackofficeController {
 
-    private final UserService userService;
+    private final UserController userController;
 
     @Autowired
-    public BackofficeController(UserService userService) {
-        this.userService = userService;
+    public BackofficeController(UserController userController) {
+        this.userController = userController;
     }
 
     // GET ONE USER BY ID.
     @GetMapping("/{idUser}")
     public Optional<User> getUser(@PathVariable Integer idUser){
-        return userService.getOneUser(idUser);
+        return userController.getUser(idUser);
     }
 
     // GET ALL USERS.
     @GetMapping("/")
     public List<User> getUsers(){
-        return userService.getAllUsers();
+        return userController.getUsers();
     }
 
     // POST USER.
     @PostMapping("/")
     public void addUser(@RequestBody User newUser) throws NoSuchAlgorithmException {
-        userService.addUser(newUser);
+        userController.addUser(newUser);
     }
 
     // DELETE ONE USER BY ID.
     @DeleteMapping("/{idUser}")
     public void deleteUser(@PathVariable Integer idUser){
-        userService.deleteOneUser(idUser);
+        userController.deleteUser(idUser);
     }
 
     // UPDATE USER.
     @PutMapping("/{idUser}")
     public void updateUser(@RequestBody User user, @PathVariable Integer idUser) throws NoSuchAlgorithmException {
-        userService.updateOneUser(user, idUser);
+        userController.updateUser(user, idUser);
     }
-
-    public User login(String username, String password) throws NoSuchAlgorithmException {
-        if ((username != null) && (password != null)) {
-            return userService.login(username, password);
-        } else {
-            throw new RuntimeException("username and password must have a value");
-        }
-    }
-
 
     // GET ONE REDUCE USER BY ID.
     @GetMapping("/projection/{idUser}")
     public IReduceUser getReduceUser(@PathVariable Integer idUser){
-        return userService.getOneReduceUser(idUser);
+        return userController.getReduceUser(idUser);
     }
 
 
@@ -77,13 +69,8 @@ public class BackofficeController {
         ResponseEntity<UserResponseDTO> responseEntity;
 
         // Get the dto of the user
-        UserResponseDTO userResponseDTO = userService.getOneDTOUser(idUser);
+        responseEntity = userController.getOneUserDTO(idUser);
 
-        if(userResponseDTO != null) {
-            responseEntity = ResponseEntity.ok(userResponseDTO);
-        }else{
-            responseEntity = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
         return responseEntity;
     }
 

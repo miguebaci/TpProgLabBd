@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import utn.edu.tpfinal.Exceptions.PhoneLineNotFoundException;
 import utn.edu.tpfinal.Exceptions.UserNotExistException;
 import utn.edu.tpfinal.dto.CallsForUserDTO;
 import utn.edu.tpfinal.models.Call;
@@ -11,6 +12,7 @@ import utn.edu.tpfinal.models.User;
 import utn.edu.tpfinal.services.CallsService;
 import utn.edu.tpfinal.session.SessionManager;
 
+import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,18 +39,8 @@ public class CallsController {
     }
 
     // POST CALL.
-    public void addCall(Call newCall){
-        callsService.addCall(newCall);
-    }
-
-    // DELETE ONE CALL BY ID.
-    public void deleteCall(Integer idCall){
-        callsService.deleteOneCall(idCall);
-    }
-
-    // UPDATE CALL BY ID.
-    public void updateCall(Call call, Integer idCall){
-        callsService.updateOneCall(call, idCall);
+    public URI addCall(CallsForUserDTO newCall) throws PhoneLineNotFoundException {
+        return callsService.addCall(newCall);
     }
 
     // Get all calls between two ranges of dates
@@ -58,7 +50,7 @@ public class CallsController {
         List<CallsForUserDTO> callsForUserDTO;
 
         if(fromDate != null && toDate != null){
-            callsForUserDTO= callsService.geCallsBetweenRange(fromDate,toDate,lineNumber,caller);
+            callsForUserDTO= callsService.getCallsBetweenRange(fromDate,toDate,lineNumber,caller);
         }else{
             // we return all calls for the line
             callsForUserDTO = callsService.getAllCallsForUserDTO(lineNumber,caller);
@@ -68,7 +60,7 @@ public class CallsController {
     }
 
     private User getCurrentUser(String sessionToken) throws UserNotExistException {
-        //throw new UserNotexistException();
+        //throw new UserNotExistException();
         return Optional.ofNullable(sessionManager.getCurrentUser(sessionToken)).orElseThrow(UserNotExistException::new);
     }
 

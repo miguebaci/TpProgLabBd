@@ -92,7 +92,6 @@ public class UserService {
         byte[] data = pass.getBytes();
         m.update(data, 0, data.length);
         BigInteger i = new BigInteger(1, m.digest());
-        System.out.println(String.format("%1$032X", i));
         return String.format("%1$032X", i);
     }
 

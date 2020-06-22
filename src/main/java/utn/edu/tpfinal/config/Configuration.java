@@ -5,6 +5,7 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import utn.edu.tpfinal.session.AntennaSessionFilter;
 import utn.edu.tpfinal.session.BackofficeSessionFilter;
 import utn.edu.tpfinal.session.SessionFilter;
 
@@ -17,6 +18,8 @@ public class Configuration {
     SessionFilter sessionFilter;
     @Autowired
     BackofficeSessionFilter backofficeSessionFilter;
+    @Autowired
+    AntennaSessionFilter antennaSessionFilter;
 
     @Bean
     public FilterRegistrationBean userFilter() {
@@ -31,6 +34,14 @@ public class Configuration {
         FilterRegistrationBean registration = new FilterRegistrationBean();
         registration.setFilter(backofficeSessionFilter);
         registration.addUrlPatterns("/backoffice/*");
+        return registration;
+    }
+
+    @Bean
+    public FilterRegistrationBean antennaFilter() {
+        FilterRegistrationBean registration = new FilterRegistrationBean();
+        registration.setFilter(antennaSessionFilter);
+        registration.addUrlPatterns("/antenna/*");
         return registration;
     }
 }

@@ -15,14 +15,9 @@ import java.util.Date;
 @Data
 
 public class CallsForUserDTO {
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private Float price;
 
     @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm:ss.000")
     private Date dateCall;
-
-    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm:ss.000")
-    private Date  hourCallFinish;
 
     @JsonProperty
     private int duration;

@@ -2,10 +2,15 @@ package utn.edu.tpfinal.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import utn.edu.tpfinal.Exceptions.PhoneLineNotFoundException;
 import utn.edu.tpfinal.dto.CallsForUserDTO;
 import utn.edu.tpfinal.models.Call;
+import utn.edu.tpfinal.models.PhoneLine;
 import utn.edu.tpfinal.repositories.CallRepository;
+import utn.edu.tpfinal.repositories.PhoneLineRepository;
 
+import java.net.URI;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,10 +19,12 @@ import java.util.Optional;
 @Service
 public class CallsService {
     private final CallRepository callRepository;
+    private final PhoneLineService phoneLineService;
 
     @Autowired
-    public CallsService(CallRepository callRepository) {
+    public CallsService(CallRepository callRepository, PhoneLineService phoneLineService) {
         this.callRepository = callRepository;
+        this.phoneLineService= phoneLineService;
     }
 
     public Optional<Call> getOneCall(Integer idCall) {
@@ -28,37 +35,19 @@ public class CallsService {
         return callRepository.findAll();
     }
 
-    public void addCall(Call newCall) {
-        callRepository.save(newCall);
+    public URI addCall(CallsForUserDTO callDto) throws PhoneLineNotFoundException {
+        PhoneLine from = phoneLineService.getByLineNumber(callDto.getNumberOrigin());
+        PhoneLine to = phoneLineService.getByLineNumber(callDto.getNumberDestiny());
+        Call created = callRepository.save(Call.builder()
+                .lineOrigin(from)
+                .lineDestiny(to)
+                .duration(callDto.getDuration())
+                .dateCall(callDto.getDateCall())
+                .build());
+        return getLocation(created);
     }
 
-    public void deleteOneCall(Integer idCall) {
-        callRepository.deleteById(idCall);
-    }
-
-    public void updateOneCall(Call newCall, Integer idCall) {
-        Optional<Call> resultCall = getOneCall(idCall);
-        Call currentCall = resultCall.get();
-
-        if(resultCall != null) {
-            currentCall.setIdCall(newCall.getIdCall());
-            currentCall.setLineOrigin(newCall.getLineOrigin());
-            currentCall.setLineDestiny(newCall.getLineDestiny());
-            currentCall.setBill(newCall.getBill());
-            currentCall.setRate(newCall.getRate());
-            currentCall.setPrice(newCall.getPrice());
-            currentCall.setCost(newCall.getCost());
-            currentCall.setProfit(newCall.getProfit());
-            currentCall.setDateCall(newCall.getDateCall());
-            currentCall.setHourCallFinish(newCall.getHourCallFinish());
-            currentCall.setDuration(newCall.getDuration());
-            currentCall.setNumberOrigin(newCall.getNumberOrigin());
-            currentCall.setNumberDestiny(newCall.getNumberDestiny());
-            addCall(currentCall);
-        }
-    }
-
-    public List<CallsForUserDTO> geCallsBetweenRange(String from, String to, String lineNumber, Boolean caller) {
+    public List<CallsForUserDTO> getCallsBetweenRange(String from, String to, String lineNumber, Boolean caller) {
 
         // converting a string to a sql date
         java.sql.Date fromDate = java.sql.Date.valueOf(from);
@@ -81,7 +70,7 @@ public class CallsService {
                 price = c.getPrice();
             }
 
-            listUserDtoCalls.add(new CallsForUserDTO(price, c.getDateCall(), c.getHourCallFinish(),
+            listUserDtoCalls.add(new CallsForUserDTO(c.getDateCall(),
                                                     c.getDuration(), c.getNumberOrigin(), c.getNumberDestiny()));
         }
 
@@ -106,10 +95,19 @@ public class CallsService {
                 price = c.getPrice();
             }
 
-            listUserDtoCalls.add(new CallsForUserDTO(price, c.getDateCall(), c.getHourCallFinish(),
+            listUserDtoCalls.add(new CallsForUserDTO(c.getDateCall(),
                     c.getDuration(), c.getNumberOrigin(), c.getNumberDestiny()));
         }
 
         return listUserDtoCalls;
     }
+
+    private URI getLocation(Call call) {
+        return ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(call.getIdCall())
+                .toUri();
+    }
+
 }

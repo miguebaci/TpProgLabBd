@@ -21,6 +21,8 @@ public class PhoneLineService {
         return phoneLineRepository.findById(idPhoneLine);
     }
 
+    public PhoneLine getByLineNumber(String lineNumber) { return phoneLineRepository.findByLineNumber(lineNumber);}
+
     public List<PhoneLine> getAllPhoneLines(){
         return phoneLineRepository.findAll();
     }

@@ -1,6 +1,7 @@
 package utn.edu.tpfinal.models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -24,7 +25,7 @@ public class User {
 
 
     @NotNull
-    private enum UserType {backoffice, client};
+    private enum UserType {backoffice, client, antenna};
     @Enumerated(EnumType.STRING)
     private  UserType userType;
 
@@ -49,6 +50,7 @@ public class User {
     @Transient
     private List<Bill> bills;
 
+    @JsonIgnore
     public String getUserTypeString() {
         return userType.toString();
     }
