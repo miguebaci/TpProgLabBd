@@ -122,4 +122,20 @@ public class UserService {
 
         return userResponseDTO;
     }
+
+    public void activeUser(Integer idUser) throws NoSuchAlgorithmException {
+        Optional<User> resultUser = getOneUser(idUser);
+        User currentUser = resultUser.get();
+        if(resultUser != null) {
+            if(currentUser.getSuspended()){
+                currentUser.setSuspended(false);
+            }
+            else currentUser.setSuspended(true);
+            // When we call add user method we will use the save JPA method which will update BECAUSE
+            // the method is based on id value, if an id exists it merge (updated) the entity otherwise
+            // it will save a new entity.
+            addUser(currentUser);
+        }
+
+    }
 }

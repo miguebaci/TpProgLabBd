@@ -75,4 +75,8 @@ public class UserController {
         }
         return responseEntity;
     }
+
+    public void activeUser(Integer idUser) throws NoSuchAlgorithmException {
+        userService.activeUser(idUser);
+    }
 }

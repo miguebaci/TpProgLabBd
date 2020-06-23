@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import utn.edu.tpfinal.controllers.PhoneLineController;
 import utn.edu.tpfinal.controllers.UserController;
 import utn.edu.tpfinal.dto.UserResponseDTO;
 import utn.edu.tpfinal.models.User;
@@ -20,10 +21,12 @@ import java.util.Optional;
 public class BackofficeController {
 
     private final UserController userController;
+    private final PhoneLineController phoneLineController;
 
     @Autowired
-    public BackofficeController(UserController userController) {
+    public BackofficeController(UserController userController,PhoneLineController phoneLineController) {
         this.userController = userController;
+        this.phoneLineController = phoneLineController;
     }
 
     // GET ONE USER BY ID.
@@ -48,6 +51,19 @@ public class BackofficeController {
     @DeleteMapping("/{idUser}")
     public void deleteUser(@PathVariable Integer idUser){
         userController.deleteUser(idUser);
+    }
+
+
+    // SUSPEND OR REACTIVATE USER.
+    @PutMapping("/active/users/{idUser}")
+    public void suspendUser(@PathVariable Integer idUser) throws NoSuchAlgorithmException {
+        userController.activeUser(idUser);
+    }
+
+    // SUSPEND OR REACTIVATE PHONELINE.
+    @PutMapping("/active/phoneline/{idUser}")
+    public void suspendphoneline(@PathVariable Integer idPhone) throws NoSuchAlgorithmException {
+        phoneLineController.activePhoneLine(idPhone);
     }
 
     // UPDATE USER.

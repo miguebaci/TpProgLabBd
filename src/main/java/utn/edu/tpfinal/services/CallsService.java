@@ -38,13 +38,16 @@ public class CallsService {
     public URI addCall(CallsForUserDTO callDto) throws PhoneLineNotFoundException {
         PhoneLine from = phoneLineService.getByLineNumber(callDto.getNumberOrigin());
         PhoneLine to = phoneLineService.getByLineNumber(callDto.getNumberDestiny());
-        Call created = callRepository.save(Call.builder()
-                .lineOrigin(from)
-                .lineDestiny(to)
-                .duration(callDto.getDuration())
-                .dateCall(callDto.getDateCall())
-                .build());
-        return getLocation(created);
+        if (!from.getSuspended() && !to.getSuspended()) {
+            Call created = callRepository.save(Call.builder()
+                    .lineOrigin(from)
+                    .lineDestiny(to)
+                    .duration(callDto.getDuration())
+                    .dateCall(callDto.getDateCall())
+                    .build());
+            return getLocation(created);
+        }
+        else throw new PhoneLineNotFoundException();
     }
 
     public List<CallsForUserDTO> getCallsBetweenRange(String from, String to, String lineNumber, Boolean caller) {

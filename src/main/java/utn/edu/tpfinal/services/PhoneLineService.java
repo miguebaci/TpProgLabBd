@@ -21,9 +21,11 @@ public class PhoneLineService {
         return phoneLineRepository.findById(idPhoneLine);
     }
 
-    public PhoneLine getByLineNumber(String lineNumber) { return phoneLineRepository.findByLineNumber(lineNumber);}
+    public PhoneLine getByLineNumber(String lineNumber) {
+        return phoneLineRepository.findByLineNumber(lineNumber);
+    }
 
-    public List<PhoneLine> getAllPhoneLines(){
+    public List<PhoneLine> getAllPhoneLines() {
         return phoneLineRepository.findAll();
     }
 
@@ -39,7 +41,7 @@ public class PhoneLineService {
         Optional<PhoneLine> resultPhoneLine = getOnePhoneLine(idPhoneLine);
         PhoneLine currentPhoneLine = resultPhoneLine.get();
 
-        if(resultPhoneLine != null) {
+        if (resultPhoneLine != null) {
             currentPhoneLine.setIdLine(newPhoneLine.getIdLine());
             currentPhoneLine.setUser(newPhoneLine.getUser());
             currentPhoneLine.setLocality(newPhoneLine.getLocality());
@@ -50,4 +52,17 @@ public class PhoneLineService {
         }
     }
 
+    public void activePhoneLine(Integer idPhoneLine) {
+        Optional<PhoneLine> resultPhoneLine = getOnePhoneLine(idPhoneLine);
+        PhoneLine currentPhoneLine = resultPhoneLine.get();
+
+        if (resultPhoneLine != null) {
+            if (resultPhoneLine != null) {
+                if (currentPhoneLine.getSuspended()) {
+                    currentPhoneLine.setSuspended(false);
+                } else currentPhoneLine.setSuspended(true);
+                addPhoneLine(currentPhoneLine);
+            }
+        }
+    }
 }

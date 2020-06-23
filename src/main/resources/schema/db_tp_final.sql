@@ -26,6 +26,7 @@ CREATE TABLE users (
     name varchar(50) not null,
     surname varchar(50) not null,
     pass varchar(50) not null,
+    suspended boolean not null default false,
 	constraint pk_id primary key (id)
 );
 
@@ -35,6 +36,7 @@ CREATE TABLE phone_lines (
     prefix int not null,# varchar(11)
     line_type ENUM("landline", "mobile") NOT NULL,
     line_number varchar(50),
+    suspended boolean not null default false,
     constraint pk_id_line primary key (id_line),
     constraint fk_id_line_user foreign key (id_user) references users (id),
 	constraint fk_prefix foreign key (prefix) references localities (prefix)

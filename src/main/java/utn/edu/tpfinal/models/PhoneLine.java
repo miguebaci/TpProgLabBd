@@ -36,6 +36,9 @@ public class PhoneLine {
     @Column(name = "line_number")
     private String lineNumber;
 
+    @NotNull
+    private Boolean suspended;
+
     @Transient
     List<Call> calls;
 
