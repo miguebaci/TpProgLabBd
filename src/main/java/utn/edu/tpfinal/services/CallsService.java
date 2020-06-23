@@ -1,6 +1,7 @@
 package utn.edu.tpfinal.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import utn.edu.tpfinal.Exceptions.PhoneLineNotFoundException;
@@ -35,7 +36,7 @@ public class CallsService {
         return callRepository.findAll();
     }
 
-    public URI addCall(CallsForUserDTO callDto) throws PhoneLineNotFoundException {
+    public ResponseEntity<Call> addCall(CallsForUserDTO callDto) throws PhoneLineNotFoundException {
         PhoneLine from = phoneLineService.getByLineNumber(callDto.getNumberOrigin());
         PhoneLine to = phoneLineService.getByLineNumber(callDto.getNumberDestiny());
         if (!from.getSuspended() && !to.getSuspended()) {
@@ -45,7 +46,7 @@ public class CallsService {
                     .duration(callDto.getDuration())
                     .dateCall(callDto.getDateCall())
                     .build());
-            return getLocation(created);
+            return ResponseEntity.ok(created);
         }
         else throw new PhoneLineNotFoundException();
     }
@@ -103,14 +104,6 @@ public class CallsService {
         }
 
         return listUserDtoCalls;
-    }
-
-    private URI getLocation(Call call) {
-        return ServletUriComponentsBuilder
-                .fromCurrentRequest()
-                .path("/{id}")
-                .buildAndExpand(call.getIdCall())
-                .toUri();
     }
 
 }

@@ -3,13 +3,12 @@ package utn.edu.tpfinal.controllers.web;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import utn.edu.tpfinal.Exceptions.PhoneLineNotFoundException;
 import utn.edu.tpfinal.controllers.CallsController;
 import utn.edu.tpfinal.dto.CallsForUserDTO;
+import utn.edu.tpfinal.models.Call;
 
 import java.net.URI;
 
@@ -26,16 +25,22 @@ public class AntennaController {
 
     // POST CALL.
     @PostMapping("/calls")
-    public ResponseEntity<CallsForUserDTO> makeCall(@RequestBody CallsForUserDTO newCall) throws PhoneLineNotFoundException {
+    public ResponseEntity<Call> makeCall(@RequestHeader("Authorization") String sessionToken, @RequestBody CallsForUserDTO newCall) throws PhoneLineNotFoundException {
         ResponseEntity response;
         try{
-            URI location =this.callsController.addCall(newCall);
+            URI location = getLocation(this.callsController.addCall(newCall).getBody());
             response = ResponseEntity.created(location).build();
         }catch (PhoneLineNotFoundException e){
             response = ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
-
         return response;
     }
 
+    private URI getLocation(Call call) {
+        return ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(call.getIdCall())
+                .toUri();
+    }
 }

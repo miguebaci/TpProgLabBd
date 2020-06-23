@@ -39,7 +39,7 @@ public class CallsController {
     }
 
     // POST CALL.
-    public URI addCall(CallsForUserDTO newCall) throws PhoneLineNotFoundException {
+    public ResponseEntity<Call> addCall(CallsForUserDTO newCall) throws PhoneLineNotFoundException {
         return callsService.addCall(newCall);
     }
 
