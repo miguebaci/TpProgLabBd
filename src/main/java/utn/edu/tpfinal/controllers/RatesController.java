@@ -2,6 +2,7 @@ package utn.edu.tpfinal.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import utn.edu.tpfinal.Exceptions.ResourceNotExistException;
 import utn.edu.tpfinal.models.Rate;
 import utn.edu.tpfinal.services.RateService;
 
@@ -25,5 +26,9 @@ public class RatesController {
     // GET ALL RATES.
     public List<Rate> getRates() {
         return rateService.getAllRates();
+    }
+
+    public Rate getRatesByLocality(Integer idLocalityOrigin, Integer idLocalityDestiny) throws ResourceNotExistException {
+        return this.rateService.getRatesByLocality(idLocalityOrigin, idLocalityDestiny);
     }
 }

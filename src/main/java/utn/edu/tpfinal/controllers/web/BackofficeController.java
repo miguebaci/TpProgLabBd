@@ -7,11 +7,14 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import utn.edu.tpfinal.Exceptions.ResourceNotExistException;
 import utn.edu.tpfinal.controllers.PhoneLineController;
+import utn.edu.tpfinal.controllers.RatesController;
 import utn.edu.tpfinal.controllers.UserController;
 import utn.edu.tpfinal.dto.UserResponseDTO;
+import utn.edu.tpfinal.models.Rate;
 import utn.edu.tpfinal.models.User;
 import utn.edu.tpfinal.projections.IReduceUser;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
@@ -24,11 +27,13 @@ public class BackofficeController {
 
     private final UserController userController;
     private final PhoneLineController phoneLineController;
+    private RatesController ratesController;
 
     @Autowired
-    public BackofficeController(UserController userController, PhoneLineController phoneLineController) {
+    public BackofficeController(UserController userController, PhoneLineController phoneLineController, RatesController ratesController) {
         this.userController = userController;
         this.phoneLineController = phoneLineController;
+        this.ratesController = ratesController;
     }
 
     // GET ONE USER BY ID.
@@ -45,12 +50,12 @@ public class BackofficeController {
 
     // POST USER.
     @PostMapping("/")
-    public ResponseEntity<User> addUser(@RequestHeader("Authorization") String sessionToken, @RequestBody User newUser) throws NoSuchAlgorithmException {
+    public ResponseEntity<User> addUser(@RequestHeader("Authorization") String sessionToken, @Valid @RequestBody User newUser){
         ResponseEntity response;
         try {
             URI location = getLocation(this.userController.addUser(newUser).getBody());
             response = ResponseEntity.created(location).build();
-        } catch (NoSuchAlgorithmException | ResourceNotExistException e) {
+        } catch (ResourceNotExistException | NoSuchAlgorithmException e) {
             response = ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
         return response;
@@ -64,14 +69,14 @@ public class BackofficeController {
 
 
     // SUSPEND OR REACTIVATE USER.
-    @PutMapping("/active/users/{idUser}")
+    @PutMapping("/activate/users/{idUser}")
     public void suspendUser(@RequestHeader("Authorization") String sessionToken, @PathVariable Integer idUser) throws NoSuchAlgorithmException, ResourceNotExistException {
         userController.activeUser(idUser);
     }
 
     // SUSPEND OR REACTIVATE PHONELINE.
-    @PutMapping("/active/phoneline/{idUser}")
-    public void suspendphoneline(@RequestHeader("Authorization") String sessionToken, @PathVariable Integer idPhone) throws NoSuchAlgorithmException {
+    @PutMapping("/activate/phoneline/{idUser}")
+    public void suspendphoneline(@RequestHeader("Authorization") String sessionToken, @PathVariable Integer idPhone){
         phoneLineController.activePhoneLine(idPhone);
     }
 
@@ -81,6 +86,11 @@ public class BackofficeController {
         System.out.println(user);
         userController.updateUser(user, idUser);
     }
+
+    @GetMapping("/rates")
+    public ResponseEntity<Rate> getRatesByLocalities(@RequestParam(name = "localityOrigin") Integer idLocalityOrigin, @RequestParam(name = "localityDestiny") Integer idLocalityDestiny) throws ResourceNotExistException {
+        return ResponseEntity.ok(this.ratesController.getRatesByLocality(idLocalityOrigin, idLocalityDestiny));
+    }//localhost:8080/backoffice/rates?localityOrigin=223&localityDestiny=226
 
     // GET ONE REDUCE USER BY ID.
     @GetMapping("/projection/{idUser}")
