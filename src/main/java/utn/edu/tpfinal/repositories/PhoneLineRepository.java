@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import utn.edu.tpfinal.models.PhoneLine;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface PhoneLineRepository extends JpaRepository<PhoneLine, Integer> {
@@ -17,5 +18,5 @@ public interface PhoneLineRepository extends JpaRepository<PhoneLine, Integer> {
     PhoneLine getPhoneLineByUserId(@Param("lineNumber") String lineNumber,
                                    @Param("idUser") Integer idUser);
 
-    PhoneLine findByLineNumber(String lineNumber);
+    Optional<PhoneLine> findByLineNumber(String lineNumber);
 }

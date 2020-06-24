@@ -78,6 +78,7 @@ public class BackofficeController {
     // UPDATE USER.
     @PutMapping("/{idUser}")
     public void updateUser(@RequestHeader("Authorization") String sessionToken, @RequestBody User user, @PathVariable Integer idUser) throws NoSuchAlgorithmException, ResourceNotExistException {
+        System.out.println(user);
         userController.updateUser(user, idUser);
     }
 

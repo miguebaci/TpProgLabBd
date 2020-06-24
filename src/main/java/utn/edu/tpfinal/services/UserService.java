@@ -45,14 +45,16 @@ public class UserService {
     }
 
     public ResponseEntity<User> addUser(User newUser) throws NoSuchAlgorithmException, ResourceNotExistException {
-        User exists = userRepository.findById(newUser.getDni()).get();
-        if (exists != null) {
+        Boolean exists = userRepository.findByDni(newUser.getDni()).isPresent();
+        if (!exists) {
             User created = userRepository.save(User.builder()
+                    .userType(newUser.getUserType())
                     .dni(newUser.getDni())
                     .username(newUser.getUsername())
                     .name(newUser.getName())
                     .surname(newUser.getSurname())
                     .pass(hashPass(newUser.getPass()))
+                    .suspended(false)
                     .build());
             return ResponseEntity.ok(created);
         } else throw new ResourceNotExistException();
@@ -64,7 +66,9 @@ public class UserService {
 
     public void updateOneUser(User newUser, Integer idUser) throws NoSuchAlgorithmException, ResourceNotExistException {
         Optional<User> resultUser = getOneUser(idUser);
+        System.out.println(resultUser);
         User currentUser = resultUser.get();
+        System.out.println(currentUser);
 
         if (resultUser != null) {
             currentUser.setId(newUser.getId());
@@ -73,15 +77,13 @@ public class UserService {
             currentUser.setUsername(newUser.getUsername());
             currentUser.setName(newUser.getName());
             currentUser.setSurname(newUser.getSurname());
-            currentUser.setPass(newUser.getPass());
+            if(!currentUser.getPass().equals(hashPass(newUser.getPass()))){
+            currentUser.setPass(hashPass(newUser.getPass()));
+            }
             currentUser.setPhoneLines(newUser.getPhoneLines());
             currentUser.setBills(newUser.getBills());
 
-            // When we call add user method we will use the save JPA method which will update BECAUSE
-            // the method is based on id value, if an id exists it merge (updated) the entity otherwise
-            // it will save a new entity.
-
-            addUser(currentUser);
+            userRepository.save(currentUser);
         }
 
     }
@@ -130,11 +132,9 @@ public class UserService {
             if (currentUser.getSuspended()) {
                 currentUser.setSuspended(false);
             } else currentUser.setSuspended(true);
-            // When we call add user method we will use the save JPA method which will update BECAUSE
-            // the method is based on id value, if an id exists it merge (updated) the entity otherwise
-            // it will save a new entity.
-            addUser(currentUser);
+            userRepository.save(currentUser);
         }
 
     }
+
 }
