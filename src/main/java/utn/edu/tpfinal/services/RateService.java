@@ -21,7 +21,7 @@ public class RateService {
         return rateRepository.findById(idRate);
     }
 
-    public List<Rate> getAllRates(){
+    public List<Rate> getAllRates() {
         return rateRepository.findAll();
     }
 }

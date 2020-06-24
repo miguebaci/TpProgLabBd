@@ -26,12 +26,12 @@ public class UserController {
     }
 
     // GET ONE USER BY ID.
-    public Optional<User> getUser(Integer idUser){
+    public Optional<User> getUser(Integer idUser) {
         return userService.getOneUser(idUser);
     }
 
     // GET ALL USERS.
-    public List<User> getUsers(){
+    public List<User> getUsers() {
         return userService.getAllUsers();
     }
 
@@ -41,12 +41,12 @@ public class UserController {
     }
 
     // DELETE ONE USER BY ID.
-    public void deleteUser(Integer idUser){
+    public void deleteUser(Integer idUser) {
         userService.deleteOneUser(idUser);
     }
 
     // UPDATE USER.
-    public void updateUser(User user,Integer idUser) throws NoSuchAlgorithmException, ResourceNotExistException {
+    public void updateUser(User user, Integer idUser) throws NoSuchAlgorithmException, ResourceNotExistException {
         userService.updateOneUser(user, idUser);
     }
 
@@ -58,32 +58,32 @@ public class UserController {
         }*/
         User u = null;
 
-        try{
+        try {
             if ((username != null) && (password != null)) {
                 u = userService.login(username, password);
-            }else{
+            } else {
                 throw new ValidationException("You must introduce username and password so you can log in.");
             }
-        }catch (NoSuchAlgorithmException | ResourceNotExistException | ValidationException e){
+        } catch (NoSuchAlgorithmException | ResourceNotExistException | ValidationException e) {
             throw e;
         }
 
         return u;
     }
 
-    public IReduceUser getReduceUser(Integer idUser){
+    public IReduceUser getReduceUser(Integer idUser) {
         return userService.getOneReduceUser(idUser);
     }
 
-    public ResponseEntity<UserResponseDTO> getOneUserDTO (Integer idUser) {
+    public ResponseEntity<UserResponseDTO> getOneUserDTO(Integer idUser) {
         ResponseEntity<UserResponseDTO> responseEntity;
 
         // Get the dto of the user
         UserResponseDTO userResponseDTO = userService.getOneDTOUser(idUser);
 
-        if(userResponseDTO != null) {
+        if (userResponseDTO != null) {
             responseEntity = ResponseEntity.ok(userResponseDTO);
-        }else{
+        } else {
             responseEntity = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
         return responseEntity;

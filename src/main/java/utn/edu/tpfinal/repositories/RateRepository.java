@@ -5,5 +5,5 @@ import org.springframework.stereotype.Repository;
 import utn.edu.tpfinal.models.Rate;
 
 @Repository
-public interface RateRepository extends JpaRepository<Rate, Integer>  {
+public interface RateRepository extends JpaRepository<Rate, Integer> {
 }

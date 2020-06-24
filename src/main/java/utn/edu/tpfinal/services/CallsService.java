@@ -22,14 +22,14 @@ public class CallsService {
     @Autowired
     public CallsService(CallRepository callRepository, PhoneLineService phoneLineService) {
         this.callRepository = callRepository;
-        this.phoneLineService= phoneLineService;
+        this.phoneLineService = phoneLineService;
     }
 
     public Optional<Call> getOneCall(Integer idCall) {
         return callRepository.findById(idCall);
     }
 
-    public List<Call> getAllCalls(){
+    public List<Call> getAllCalls() {
         return callRepository.findAll();
     }
 
@@ -44,8 +44,7 @@ public class CallsService {
                     .dateCall(callDto.getDateCall())
                     .build());
             return ResponseEntity.ok(created);
-        }
-        else throw new ResourceNotExistException();
+        } else throw new ResourceNotExistException();
     }
 
     public List<CallsForUserDTO> geCallsBetweenRange(String from, String to, String lineNumber, Boolean caller) {
@@ -57,21 +56,21 @@ public class CallsService {
         List<Call> userCalls;
         List<CallsForUserDTO> listUserDtoCalls = new ArrayList<>();
 
-        if(caller){
+        if (caller) {
             userCalls = callRepository.getCallsFromUserAsCallerBetweenDates(fromDate, toDate, lineNumber);
-        }else{
+        } else {
             userCalls = callRepository.getCallsFromUserAsReceiverBetweenDates(fromDate, toDate, lineNumber);
         }
 
         // we pass the information to the calls dto
-        for(Call c: userCalls){
+        for (Call c : userCalls) {
             Float price = null;
 
-            if(caller){
+            if (caller) {
                 price = c.getPrice();
             }
 
-            listUserDtoCalls.add(new CallsForUserDTO( c.getDateCall(),
+            listUserDtoCalls.add(new CallsForUserDTO(c.getDateCall(),
                     c.getDuration(), c.getNumberOrigin(), c.getNumberDestiny()));
         }
 
@@ -87,22 +86,22 @@ public class CallsService {
         List<Call> userCalls;
         List<CallsForUserDTO> listUserDtoCalls = new ArrayList<>();
 
-        if(caller){
+        if (caller) {
             userCalls = callRepository.getCallsFromUserAsCallerBetweenDates(fromDate, toDate, lineNumber);
-        }else{
+        } else {
             userCalls = callRepository.getCallsFromUserAsReceiverBetweenDates(fromDate, toDate, lineNumber);
         }
 
         // we pass the information to the calls dto
-        for(Call c: userCalls){
+        for (Call c : userCalls) {
             Float price = null;
 
-            if(caller){
+            if (caller) {
                 price = c.getPrice();
             }
 
             listUserDtoCalls.add(new CallsForUserDTO(c.getDateCall(),
-                                                    c.getDuration(), c.getNumberOrigin(), c.getNumberDestiny()));
+                    c.getDuration(), c.getNumberOrigin(), c.getNumberDestiny()));
         }
 
         return listUserDtoCalls;
@@ -112,17 +111,17 @@ public class CallsService {
         List<Call> userCalls;
         List<CallsForUserDTO> listUserDtoCalls = new ArrayList<>();
 
-        if(caller){
+        if (caller) {
             userCalls = callRepository.getCallsFromUserAsCaller(lineNumber);
-        }else{
+        } else {
             userCalls = callRepository.getCallsFromUserAsReceiver(lineNumber);
         }
 
         // we pass the information to the calls dto
-        for(Call c: userCalls){
+        for (Call c : userCalls) {
             Float price = null;
 
-            if(caller){
+            if (caller) {
                 price = c.getPrice();
             }
 

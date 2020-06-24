@@ -1,8 +1,6 @@
 package utn.edu.tpfinal.models;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -27,9 +25,11 @@ public class User {
 
 
     @NotNull
-    private enum UserType {backoffice, client, antenna};
+    private enum UserType {backoffice, client, antenna}
+
+    ;
     @Enumerated(EnumType.STRING)
-    private  UserType userType;
+    private UserType userType;
 
     @NotNull
     private Integer dni;

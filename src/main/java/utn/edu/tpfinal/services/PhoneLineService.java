@@ -2,9 +2,7 @@ package utn.edu.tpfinal.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import utn.edu.tpfinal.dto.BillForUserDTO;
 import utn.edu.tpfinal.dto.PhoneLineForUserDTO;
-import utn.edu.tpfinal.models.Bill;
 import utn.edu.tpfinal.models.PhoneLine;
 import utn.edu.tpfinal.repositories.PhoneLineRepository;
 
@@ -64,7 +62,7 @@ public class PhoneLineService {
         List<PhoneLineForUserDTO> userDtoPhoneLines = new ArrayList<>();
 
         // we pass the info to the bill dto
-        for(PhoneLine p: userPhoneLines){
+        for (PhoneLine p : userPhoneLines) {
             userDtoPhoneLines.add(new PhoneLineForUserDTO(p.getLineNumber(), p.getLineTypeString()));
         }
 

@@ -18,12 +18,12 @@ public class RatesController {
     }
 
     // GET ONE RATE BY ID.
-    public Optional<Rate> getUser(Integer idRate){
+    public Optional<Rate> getUser(Integer idRate) {
         return rateService.getOneRate(idRate);
     }
 
     // GET ALL RATES.
-    public List<Rate> getRates(){
+    public List<Rate> getRates() {
         return rateService.getAllRates();
     }
 }

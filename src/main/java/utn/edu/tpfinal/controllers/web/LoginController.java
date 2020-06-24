@@ -45,7 +45,7 @@ public class LoginController {
     @PostMapping("/logout")
     public ResponseEntity logout(@RequestHeader("Authorization") String token) throws ValidationException, LogOutException {
         // Check for null in token
-        if(token == ""){
+        if (token == "") {
             throw new ValidationException("You must provided a valid token authorization to log out.");
         }
 
@@ -54,7 +54,7 @@ public class LoginController {
             User u = sessionManager.getCurrentUser(token);
             sessionManager.removeSession(token);
             return ResponseEntity.ok().build();
-        }catch (ResourceNotExistException e){
+        } catch (ResourceNotExistException e) {
             throw new LogOutException("You cant log out if the user does not exists. Verify your token and try again.");
         }
     }

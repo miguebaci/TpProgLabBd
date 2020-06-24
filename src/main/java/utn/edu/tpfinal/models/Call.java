@@ -12,7 +12,7 @@ import java.util.Date;
 @Data
 @Builder
 @ToString
-@Table(name="calls")
+@Table(name = "calls")
 @Entity
 
 public class Call {
@@ -41,19 +41,19 @@ public class Call {
     private Float cost;
     private Float profit;
 
-    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm:ss.000")
-    @Column(name= "date_call")
-    private Date  dateCall;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss.000")
+    @Column(name = "date_call")
+    private Date dateCall;
 
-    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm:ss.000")
-    @Column(name= "hour_call_finish")
-    private Date  hourCallFinish;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss.000")
+    @Column(name = "hour_call_finish")
+    private Date hourCallFinish;
 
     private int duration;
 
-    @Column(name= "number_origin")
+    @Column(name = "number_origin")
     private String numberOrigin;
 
-    @Column(name= "number_destiny")
+    @Column(name = "number_destiny")
     private String numberDestiny;
 }

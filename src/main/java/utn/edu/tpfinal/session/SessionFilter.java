@@ -37,7 +37,7 @@ public class SessionFilter extends OncePerRequestFilter {
                 // In our case a backoffice token is being used to acces client side of the application.
                 response.setStatus(HttpStatus.FORBIDDEN.value());
             }
-        }else{
+        } else {
             // Return 401 - Unauthorized: when authentication is required and has failed or has not yet been provided
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
         }

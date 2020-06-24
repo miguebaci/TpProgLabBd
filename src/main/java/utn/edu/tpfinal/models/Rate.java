@@ -1,6 +1,5 @@
 package utn.edu.tpfinal.models;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,7 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @Data
 @ToString
-@Table(name="rates")
+@Table(name = "rates")
 @Entity
 
 public class Rate {

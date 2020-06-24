@@ -26,31 +26,31 @@ public class BackofficeController {
     private final PhoneLineController phoneLineController;
 
     @Autowired
-    public BackofficeController(UserController userController,PhoneLineController phoneLineController) {
+    public BackofficeController(UserController userController, PhoneLineController phoneLineController) {
         this.userController = userController;
         this.phoneLineController = phoneLineController;
     }
 
     // GET ONE USER BY ID.
     @GetMapping("/{idUser}")
-    public Optional<User> getUser(@RequestHeader("Authorization") String sessionToken, @PathVariable Integer idUser){
+    public Optional<User> getUser(@RequestHeader("Authorization") String sessionToken, @PathVariable Integer idUser) {
         return userController.getUser(idUser);
     }
 
     // GET ALL USERS.
     @GetMapping("/")
-    public List<User> getUsers(@RequestHeader("Authorization") String sessionToken){
+    public List<User> getUsers(@RequestHeader("Authorization") String sessionToken) {
         return userController.getUsers();
     }
 
     // POST USER.
     @PostMapping("/")
-    public ResponseEntity<User> addUser(@RequestHeader("Authorization") String sessionToken, @RequestBody User newUser) throws  NoSuchAlgorithmException {
+    public ResponseEntity<User> addUser(@RequestHeader("Authorization") String sessionToken, @RequestBody User newUser) throws NoSuchAlgorithmException {
         ResponseEntity response;
-        try{
+        try {
             URI location = getLocation(this.userController.addUser(newUser).getBody());
             response = ResponseEntity.created(location).build();
-        }catch (NoSuchAlgorithmException | ResourceNotExistException e){
+        } catch (NoSuchAlgorithmException | ResourceNotExistException e) {
             response = ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
         return response;
@@ -58,7 +58,7 @@ public class BackofficeController {
 
     // DELETE ONE USER BY ID.
     @DeleteMapping("/{idUser}")
-    public void deleteUser(@RequestHeader("Authorization") String sessionToken, @PathVariable Integer idUser){
+    public void deleteUser(@RequestHeader("Authorization") String sessionToken, @PathVariable Integer idUser) {
         userController.deleteUser(idUser);
     }
 
@@ -83,14 +83,14 @@ public class BackofficeController {
 
     // GET ONE REDUCE USER BY ID.
     @GetMapping("/projection/{idUser}")
-    public IReduceUser getReduceUser(@RequestHeader("Authorization") String sessionToken, @PathVariable Integer idUser){
+    public IReduceUser getReduceUser(@RequestHeader("Authorization") String sessionToken, @PathVariable Integer idUser) {
         return userController.getReduceUser(idUser);
     }
 
 
     // Response user with DTO
     @GetMapping("/reduce/{idUser}")
-    public ResponseEntity<UserResponseDTO> getOneUserDTO (@RequestHeader("Authorization") String sessionToken, @PathVariable Integer idUser) throws SQLException {
+    public ResponseEntity<UserResponseDTO> getOneUserDTO(@RequestHeader("Authorization") String sessionToken, @PathVariable Integer idUser) throws SQLException {
         ResponseEntity<UserResponseDTO> responseEntity;
 
         // Get the dto of the user

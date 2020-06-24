@@ -12,7 +12,7 @@ import java.util.List;
 @Data
 @Builder
 @ToString
-@Table(name="phone_lines")
+@Table(name = "phone_lines")
 @Entity
 public class PhoneLine {
     @Id
@@ -29,7 +29,9 @@ public class PhoneLine {
     private Locality locality;
 
     @NotNull
-    private enum LineType {landline, mobile};
+    private enum LineType {landline, mobile}
+
+    ;
     @Enumerated(EnumType.STRING)
     private LineType lineType;
 

@@ -7,18 +7,14 @@ import utn.edu.tpfinal.Exceptions.ResourceNotExistException;
 import utn.edu.tpfinal.dto.BillForUserDTO;
 import utn.edu.tpfinal.dto.PhoneLineForUserDTO;
 import utn.edu.tpfinal.dto.UserResponseDTO;
-import utn.edu.tpfinal.models.Bill;
-import utn.edu.tpfinal.models.PhoneLine;
 import utn.edu.tpfinal.models.User;
 import utn.edu.tpfinal.projections.IReduceUser;
-import utn.edu.tpfinal.repositories.BillRepository;
 import utn.edu.tpfinal.repositories.UserRepository;
 import utn.edu.tpfinal.session.SessionManager;
 
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 

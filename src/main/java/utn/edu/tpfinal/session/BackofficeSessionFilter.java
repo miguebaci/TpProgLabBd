@@ -24,7 +24,7 @@ public class BackofficeSessionFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response, FilterChain filterChain)
-                    throws ServletException, IOException {
+            throws ServletException, IOException {
         String sessionToken = request.getHeader("Authorization");
         Session session = sessionManager.getSession(sessionToken);
         if (null != session) {
@@ -33,7 +33,7 @@ public class BackofficeSessionFilter extends OncePerRequestFilter {
             } else {
                 response.setStatus(HttpStatus.FORBIDDEN.value());
             }
-        }else{
+        } else {
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
         }
     }

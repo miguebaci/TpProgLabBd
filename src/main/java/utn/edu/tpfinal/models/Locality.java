@@ -11,7 +11,7 @@ import java.util.List;
 @Data
 @Builder
 @ToString
-@Table(name="localities")
+@Table(name = "localities")
 @Entity
 public class Locality {
     @Id

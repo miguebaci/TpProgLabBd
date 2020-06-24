@@ -12,12 +12,13 @@ import java.util.List;
 @NoArgsConstructor
 @Data
 @ToString
-@Table(name="provinces")
+@Table(name = "provinces")
 @Entity
 public class Province {
     @Id
     @Column(name = "id_prov")
-    @GeneratedValue(strategy = GenerationType.IDENTITY) //The @GeneratedValue annotation is to configure the way of increment of the specified column(field)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    //The @GeneratedValue annotation is to configure the way of increment of the specified column(field)
     private Integer idProv;
 
     @Column(name = "province_name")

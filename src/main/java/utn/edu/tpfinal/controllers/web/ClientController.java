@@ -69,7 +69,7 @@ public class ClientController {
                                                                      @RequestParam(value = "lineNumber") String lineNumber,
                                                                      @RequestParam(value = "caller") Boolean caller) throws ResourceNotExistException, ValidationException {
         try {
-            return callsController.getCallsBetweenRangeOfDates(sessionToken, fromDate, toDate,lineNumber,caller);
+            return callsController.getCallsBetweenRangeOfDates(sessionToken, fromDate, toDate, lineNumber, caller);
         } catch (ResourceNotExistException | ValidationException e) {
             throw e;
         }

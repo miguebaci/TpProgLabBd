@@ -25,7 +25,7 @@ public class BillService {
         return billRepository.findById(idBill);
     }
 
-    public List<Bill> getAllBills(){
+    public List<Bill> getAllBills() {
         return billRepository.findAll();
     }
 
@@ -41,7 +41,7 @@ public class BillService {
         Optional<Bill> resultBill = getOneBill(idBill);
         Bill currentBill = resultBill.get();
 
-        if(resultBill != null) {
+        if (resultBill != null) {
             currentBill.setIdBill(newBill.getIdBill());
             currentBill.setUser(newBill.getUser());
             currentBill.setTotalPrice(newBill.getTotalPrice());
@@ -70,7 +70,7 @@ public class BillService {
         List<BillForUserDTO> userDtoBills = new ArrayList<>();
 
         // we pass the info to the bill dto
-        for(Bill b: userBills){
+        for (Bill b : userBills) {
             userDtoBills.add(new BillForUserDTO(b.getTotalPrice(), b.getEmittionDate(), b.getExpirationDate(), b.isBillStatus()));
         }
 
@@ -85,7 +85,7 @@ public class BillService {
         List<BillForUserDTO> userDtoBills = new ArrayList<>();
 
         // we pass the info to the bill dto
-        for(Bill b: userBills){
+        for (Bill b : userBills) {
             userDtoBills.add(new BillForUserDTO(b.getTotalPrice(), b.getEmittionDate(), b.getExpirationDate(), b.isBillStatus()));
         }
 

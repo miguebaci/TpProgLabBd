@@ -9,10 +9,10 @@ import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
+import springfox.documentation.swagger2.annotations.EnableSwagger2WebMvc;
 import utn.edu.tpfinal.session.AntennaSessionFilter;
 import utn.edu.tpfinal.session.BackofficeSessionFilter;
 import utn.edu.tpfinal.session.SessionFilter;
-import springfox.documentation.swagger2.annotations.EnableSwagger2WebMvc;
 
 
 @org.springframework.context.annotation.Configuration
@@ -51,6 +51,7 @@ public class Configuration {
         registration.addUrlPatterns("/antenna/*");
         return registration;
     }
+
     @Bean
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2)

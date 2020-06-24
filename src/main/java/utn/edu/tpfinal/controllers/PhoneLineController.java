@@ -19,27 +19,27 @@ public class PhoneLineController {
     }
 
     // GET ONE PHONE LINE BY ID.
-    public Optional<PhoneLine> getPhoneLine(Integer idPhoneLine){
+    public Optional<PhoneLine> getPhoneLine(Integer idPhoneLine) {
         return phoneLineService.getOnePhoneLine(idPhoneLine);
     }
 
     // GET ALL PHONE LINES.
-    public List<PhoneLine> getPhoneLines(){
+    public List<PhoneLine> getPhoneLines() {
         return phoneLineService.getAllPhoneLines();
     }
 
     // POST PHONE LINE.
-    public void addPhoneLine(PhoneLine newPhoneLine){
+    public void addPhoneLine(PhoneLine newPhoneLine) {
         phoneLineService.addPhoneLine(newPhoneLine);
     }
 
     // DELETE ONE PHONE LINE BY ID.
-    public void deletePhoneLine(Integer idPhoneLine){
+    public void deletePhoneLine(Integer idPhoneLine) {
         phoneLineService.deleteOnePhoneLine(idPhoneLine);
     }
 
     // UPDATE PHONE LINE.
-    public void updatePhoneLine(PhoneLine phoneLine, Integer idPhoneLine){
+    public void updatePhoneLine(PhoneLine phoneLine, Integer idPhoneLine) {
         phoneLineService.updateOnePhoneLine(phoneLine, idPhoneLine);
     }
 

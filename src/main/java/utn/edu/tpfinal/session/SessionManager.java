@@ -4,7 +4,10 @@ import org.springframework.stereotype.Component;
 import utn.edu.tpfinal.Exceptions.ResourceNotExistException;
 import utn.edu.tpfinal.models.User;
 
-import java.util.*;
+import java.util.Date;
+import java.util.Hashtable;
+import java.util.Map;
+import java.util.UUID;
 
 @Component
 public class SessionManager {
@@ -33,7 +36,7 @@ public class SessionManager {
         Session session = sessionMap.get(token);
         if (session != null) {
             session.setLastAction(new Date(System.currentTimeMillis()));
-        }else{
+        } else {
             throw new ResourceNotExistException();
         }
         return session;
@@ -54,10 +57,10 @@ public class SessionManager {
     }
 
     public User getCurrentUser(String token) throws ResourceNotExistException {
-        try{
+        try {
             User u = getSession(token).getLoggedUser();
             return u;
-        }catch (ResourceNotExistException e){
+        } catch (ResourceNotExistException e) {
             throw e;
         }
     }

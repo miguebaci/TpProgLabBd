@@ -14,7 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @Data
 @ToString
-@Table(name="bills")
+@Table(name = "bills")
 @Entity
 
 public class Bill {
@@ -30,11 +30,11 @@ public class Bill {
     @Column(name = "total_price")
     private Float totalPrice;
 
-    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     @Column(name = "emittion_date")
     private Date emittionDate;
 
-    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     @Column(name = "expiration_date")
     private Date expirationDate;
 

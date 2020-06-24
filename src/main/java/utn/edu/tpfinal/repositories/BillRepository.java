@@ -18,9 +18,4 @@ public interface BillRepository extends JpaRepository<Bill, Integer> {
     List<Bill> getBillsFromUserBetweenDates(@Param("idUser") Integer idUser,
                                             @Param("fromDate") Date fromDate,
                                             @Param("toDate") Date toDate);
-
-    /*@Query(value = "select * from bills b where b.id_user = :idUser and b.expiration_date >= :fromDate and b.expiration_date <= :toDate ;", nativeQuery = true)
-    List<Bill> getBillsFromUserBetweenDates(@Param("idUser") Integer idUser,
-                                            @Param("fromDate") Date fromDate,
-                                            @Param("toDate") Date toDate);*/
 }
