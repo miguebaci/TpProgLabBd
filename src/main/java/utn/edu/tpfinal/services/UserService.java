@@ -1,6 +1,7 @@
 package utn.edu.tpfinal.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import utn.edu.tpfinal.Exceptions.ResourceNotExistException;
 import utn.edu.tpfinal.dto.BillForUserDTO;
@@ -43,24 +44,33 @@ public class UserService {
         return userRepository.findById(idUser);
     }
 
-    public List<User> getAllUsers(){
+    public List<User> getAllUsers() {
         return userRepository.findAll();
     }
 
-    public void addUser(User newUser) throws NoSuchAlgorithmException {
-        newUser.setPass(hashPass(newUser.getPass()));
-        userRepository.save(newUser);
+    public ResponseEntity<User> addUser(User newUser) throws NoSuchAlgorithmException, UserNotExistException {
+        User exists = userRepository.findById(newUser.getDni()).get();
+        if (exists != null) {
+            User created = userRepository.save(User.builder()
+                    .dni(newUser.getDni())
+                    .username(newUser.getUsername())
+                    .name(newUser.getName())
+                    .surname(newUser.getSurname())
+                    .pass(hashPass(newUser.getPass()))
+                    .build());
+            return ResponseEntity.ok(created);
+        } else throw new UserNotExistException();
     }
 
     public void deleteOneUser(Integer idUser) {
         userRepository.deleteById(idUser);
     }
 
-    public void updateOneUser(User newUser, Integer idUser) throws NoSuchAlgorithmException {
+    public void updateOneUser(User newUser, Integer idUser) throws NoSuchAlgorithmException, UserNotExistException {
         Optional<User> resultUser = getOneUser(idUser);
         User currentUser = resultUser.get();
 
-        if(resultUser != null) {
+        if (resultUser != null) {
             currentUser.setId(newUser.getId());
             currentUser.setUserType(newUser.getUserType());
             currentUser.setDni(newUser.getDni());
@@ -90,7 +100,6 @@ public class UserService {
         byte[] data = pass.getBytes();
         m.update(data, 0, data.length);
         BigInteger i = new BigInteger(1, m.digest());
-        System.out.println(String.format("%1$032X", i));
         return String.format("%1$032X", i);
     }
 
@@ -116,5 +125,20 @@ public class UserService {
         userResponseDTO.setBills(billForUserDTO);
         userResponseDTO.setPhoneLines(phoneLineForUserDTO);
         return userResponseDTO;
+    }
+
+    public void activeUser(Integer idUser) throws NoSuchAlgorithmException, UserNotExistException {
+        Optional<User> resultUser = getOneUser(idUser);
+        User currentUser = resultUser.get();
+        if (resultUser != null) {
+            if (currentUser.getSuspended()) {
+                currentUser.setSuspended(false);
+            } else currentUser.setSuspended(true);
+            // When we call add user method we will use the save JPA method which will update BECAUSE
+            // the method is based on id value, if an id exists it merge (updated) the entity otherwise
+            // it will save a new entity.
+            addUser(currentUser);
+        }
+
     }
 }

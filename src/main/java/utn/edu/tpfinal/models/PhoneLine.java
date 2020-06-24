@@ -1,5 +1,6 @@
 package utn.edu.tpfinal.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -35,9 +36,13 @@ public class PhoneLine {
     @Column(name = "line_number")
     private String lineNumber;
 
+    @NotNull
+    private Boolean suspended;
+
     @Transient
     List<Call> calls;
 
+    @JsonIgnore
     public String getLineTypeString() {
         return lineType.toString();
     }

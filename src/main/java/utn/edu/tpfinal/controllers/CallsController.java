@@ -12,6 +12,7 @@ import utn.edu.tpfinal.services.CallsService;
 import utn.edu.tpfinal.services.PhoneLineService;
 import utn.edu.tpfinal.session.SessionManager;
 
+import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
@@ -40,18 +41,8 @@ public class CallsController {
     }
 
     // POST CALL.
-    public void addCall(Call newCall){
-        callsService.addCall(newCall);
-    }
-
-    // DELETE ONE CALL BY ID.
-    public void deleteCall(Integer idCall){
-        callsService.deleteOneCall(idCall);
-    }
-
-    // UPDATE CALL BY ID.
-    public void updateCall(Call call, Integer idCall){
-        callsService.updateOneCall(call, idCall);
+    public ResponseEntity<Call> addCall(CallsForUserDTO newCall) throws PhoneLineNotFoundException {
+        return callsService.addCall(newCall);
     }
 
     // Get all calls between two ranges of dates

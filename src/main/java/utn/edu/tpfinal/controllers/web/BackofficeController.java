@@ -4,11 +4,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import utn.edu.tpfinal.Exceptions.UserNotExistException;
+import utn.edu.tpfinal.controllers.PhoneLineController;
+import utn.edu.tpfinal.controllers.UserController;
 import utn.edu.tpfinal.dto.UserResponseDTO;
 import utn.edu.tpfinal.models.User;
 import utn.edu.tpfinal.projections.IReduceUser;
-import utn.edu.tpfinal.services.UserService;
 
+import java.net.URI;
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.util.List;
@@ -18,74 +22,89 @@ import java.util.Optional;
 @RequestMapping("/backoffice")
 public class BackofficeController {
 
-    private final UserService userService;
+    private final UserController userController;
+    private final PhoneLineController phoneLineController;
 
     @Autowired
-    public BackofficeController(UserService userService) {
-        this.userService = userService;
+    public BackofficeController(UserController userController,PhoneLineController phoneLineController) {
+        this.userController = userController;
+        this.phoneLineController = phoneLineController;
     }
 
     // GET ONE USER BY ID.
     @GetMapping("/{idUser}")
-    public Optional<User> getUser(@PathVariable Integer idUser){
-        return userService.getOneUser(idUser);
+    public Optional<User> getUser(@RequestHeader("Authorization") String sessionToken, @PathVariable Integer idUser){
+        return userController.getUser(idUser);
     }
 
     // GET ALL USERS.
     @GetMapping("/")
-    public List<User> getUsers(){
-        return userService.getAllUsers();
+    public List<User> getUsers(@RequestHeader("Authorization") String sessionToken){
+        return userController.getUsers();
     }
 
     // POST USER.
     @PostMapping("/")
-    public void addUser(@RequestBody User newUser) throws NoSuchAlgorithmException {
-        userService.addUser(newUser);
+    public ResponseEntity<User> addUser(@RequestHeader("Authorization") String sessionToken, @RequestBody User newUser) throws UserNotExistException, NoSuchAlgorithmException {
+        ResponseEntity response;
+        try{
+            URI location = getLocation(this.userController.addUser(newUser).getBody());
+            response = ResponseEntity.created(location).build();
+        }catch (UserNotExistException | NoSuchAlgorithmException e){
+            response = ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+        return response;
     }
 
     // DELETE ONE USER BY ID.
     @DeleteMapping("/{idUser}")
-    public void deleteUser(@PathVariable Integer idUser){
-        userService.deleteOneUser(idUser);
+    public void deleteUser(@RequestHeader("Authorization") String sessionToken, @PathVariable Integer idUser){
+        userController.deleteUser(idUser);
+    }
+
+
+    // SUSPEND OR REACTIVATE USER.
+    @PutMapping("/active/users/{idUser}")
+    public void suspendUser(@RequestHeader("Authorization") String sessionToken, @PathVariable Integer idUser) throws NoSuchAlgorithmException, UserNotExistException {
+        userController.activeUser(idUser);
+    }
+
+    // SUSPEND OR REACTIVATE PHONELINE.
+    @PutMapping("/active/phoneline/{idUser}")
+    public void suspendphoneline(@RequestHeader("Authorization") String sessionToken, @PathVariable Integer idPhone) throws NoSuchAlgorithmException {
+        phoneLineController.activePhoneLine(idPhone);
     }
 
     // UPDATE USER.
     @PutMapping("/{idUser}")
-    public void updateUser(@RequestBody User user, @PathVariable Integer idUser) throws NoSuchAlgorithmException {
-        userService.updateOneUser(user, idUser);
+    public void updateUser(@RequestHeader("Authorization") String sessionToken, @RequestBody User user, @PathVariable Integer idUser) throws NoSuchAlgorithmException, UserNotExistException {
+        userController.updateUser(user, idUser);
     }
-
-    public User login(String username, String password) throws NoSuchAlgorithmException {
-        /*if ((username != null) && (password != null)) {
-            return userService.login(username, password);
-        } else {
-            throw new RuntimeException("username and password must have a value");
-        }*/
-        return null;
-    }
-
 
     // GET ONE REDUCE USER BY ID.
     @GetMapping("/projection/{idUser}")
-    public IReduceUser getReduceUser(@PathVariable Integer idUser){
-        return userService.getOneReduceUser(idUser);
+    public IReduceUser getReduceUser(@RequestHeader("Authorization") String sessionToken, @PathVariable Integer idUser){
+        return userController.getReduceUser(idUser);
     }
 
 
     // Response user with DTO
     @GetMapping("/reduce/{idUser}")
-    public ResponseEntity<UserResponseDTO> getOneUserDTO (@PathVariable Integer idUser) throws SQLException {
+    public ResponseEntity<UserResponseDTO> getOneUserDTO (@RequestHeader("Authorization") String sessionToken, @PathVariable Integer idUser) throws SQLException {
         ResponseEntity<UserResponseDTO> responseEntity;
 
         // Get the dto of the user
-        UserResponseDTO userResponseDTO = userService.getOneDTOUser(idUser);
+        responseEntity = userController.getOneUserDTO(idUser);
 
-        if(userResponseDTO != null) {
-            responseEntity = ResponseEntity.ok(userResponseDTO);
-        }else{
-            responseEntity = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
         return responseEntity;
+    }
+
+    private URI getLocation(User user) {
+        return ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(user.getId())
+                .toUri();
     }
 
 }

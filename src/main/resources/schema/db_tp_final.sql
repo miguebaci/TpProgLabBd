@@ -20,12 +20,13 @@ CREATE TABLE localities (
 
 CREATE TABLE users (
     id int auto_increment not null,
-    user_type ENUM("backoffice", "client") NOT NULL,
+    user_type ENUM("backoffice", "client", "antenna") NOT NULL,
 	dni int not null,
 	username varchar(50) not null,
     name varchar(50) not null,
     surname varchar(50) not null,
     pass varchar(50) not null,
+    suspended boolean not null default false,
 	constraint pk_id primary key (id)
 );
 
@@ -35,6 +36,7 @@ CREATE TABLE phone_lines (
     prefix int not null,# varchar(11)
     line_type ENUM("landline", "mobile") NOT NULL,
     line_number varchar(50),
+    suspended boolean not null default false,
     constraint pk_id_line primary key (id_line),
     constraint fk_id_line_user foreign key (id_user) references users (id),
 	constraint fk_prefix foreign key (prefix) references localities (prefix)
@@ -240,16 +242,27 @@ VALUES ('3541', '223', 3.5, now(), "2020/07/22", 1);
 # Rate de mardel a Miramar
 INSERT INTO rates (prefix_origin, prefix_destiny, price_per_minute, start_date, expiration_date, cost)
 VALUES ('223', '226', 4.5, now(), "2020/07/22", 1.5);
+INSERT INTO users (user_type, dni, username, name, surname, pass)
+VALUES (2, '37867266', 'dema', 'Felipe','Demaria', 'AA8C9E2985A40BDE1CB0443DA3BFEACC');
+
+#pass=221901
 
 INSERT INTO users (user_type, dni, username, name, surname, pass)
 VALUES (2, '37867266', 'dema', 'Felipe','Demaria', 'AA8C9E2985A40BDE1CB0443DA3BFEACC');#221901
 
 INSERT INTO users (user_type, dni, username, name, surname, pass)
 VALUES (2, '10204050', 'baci', 'Miguel','Bacigaluppi', 'ED1430D0DE792B9FB3C0953CF7049005');#221902
+#pass=221902
 
 INSERT INTO users (user_type, dni, username, name, surname, pass)
 VALUES (1, '32156521', 'admin', 'Admin','Admin', '21232F297A57A5A743894A0E4A801FC3');#admin
 
+#pass=admin
+
+INSERT INTO users (user_type, dni, username, name, surname, pass)
+VALUES (3, '32154684', 'antenna', 'Antenna','Antenna', 'F212100E38F782E152EBFAB712A0E6EC');
+
+#pass=antenna
 
 # Dos lineas : Dema
 INSERT INTO phone_lines (id_user, prefix, line_type, line_number)

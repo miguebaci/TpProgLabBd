@@ -13,7 +13,8 @@ import java.util.List;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer> {
-  @Query(value = "select * from users where username = ?1 and pass = ?2", nativeQuery = true)
+
+    @Query(value = "select * from users where username = ?1 and pass = ?2", nativeQuery = true)
   User userExists(String username, String password);
 
   @Query(value = "select u.dni, u.username, u.name, u.surname, p.line_number\n" +
@@ -34,4 +35,5 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
   @Query(value = "SELECT new utn.edu.tpfinal.dto.BillForUserDTO(b.totalPrice, b.emittionDate, b.expirationDate, b.billStatus) from bills where id_user = :idUser ;", nativeQuery = true)
   List<BillForUserDTO> getUserBillInfo(@Param("idUser") Integer idUser);
+
 }
