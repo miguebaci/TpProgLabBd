@@ -88,8 +88,8 @@ public class UserController {
         return responseEntity;
     }
 
-    @GetMapping("/reduce/{idUser}/{date}")
-    public ResponseEntity<CallsByUserOnDayX> getUserCallsByDayDTO (@PathVariable Integer idUser, Date date){
+    @GetMapping("/callsUser")
+    public ResponseEntity<CallsByUserOnDayX> getUserCallsByDayDTO (@RequestParam Integer idUser, @RequestParam String date){
         ResponseEntity<CallsByUserOnDayX> responseEntity;
 
         // Get the dto of the user

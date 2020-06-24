@@ -111,15 +111,14 @@ public class UserService {
         return userRespondeDTO;
     }
 
-    public CallsByUserOnDayX getCallsByUserOnDayXDto(Integer idUser, Date date) {
+    public CallsByUserOnDayX getCallsByUserOnDayXDto(Integer idUser, String date) {
 
-
+            java.sql.Date dateSQL = java.sql.Date.valueOf(date);
             CallsByUserOnDayX userDto = new CallsByUserOnDayX();
-
             Optional<User> resultUser = getOneUser(idUser);
             User currentUser = resultUser.get();
 
-            List<Call> callsCurrentUser = callRepository.findCallsById(idUser, date);
+            List<Call> callsCurrentUser = callRepository.findCallsById(idUser, dateSQL);
             List<CallsByDayDTO> callsByDayDTO = new ArrayList<CallsByDayDTO>();
 
             for (Call c : callsCurrentUser) {
