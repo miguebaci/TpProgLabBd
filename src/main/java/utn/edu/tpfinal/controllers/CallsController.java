@@ -12,7 +12,6 @@ import utn.edu.tpfinal.services.CallsService;
 import utn.edu.tpfinal.services.PhoneLineService;
 import utn.edu.tpfinal.session.SessionManager;
 
-import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,7 +40,7 @@ public class CallsController {
     }
 
     // POST CALL.
-    public ResponseEntity<Call> addCall(CallsForUserDTO newCall) throws PhoneLineNotFoundException {
+    public ResponseEntity<Call> addCall(CallsForUserDTO newCall) throws ResourceNotExistException {
         return callsService.addCall(newCall);
     }
 

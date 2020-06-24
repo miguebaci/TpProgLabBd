@@ -1,11 +1,10 @@
 package utn.edu.tpfinal.controllers.web;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import utn.edu.tpfinal.Exceptions.PhoneLineNotFoundException;
+import utn.edu.tpfinal.Exceptions.ResourceNotExistException;
 import utn.edu.tpfinal.controllers.CallsController;
 import utn.edu.tpfinal.dto.CallsForUserDTO;
 import utn.edu.tpfinal.models.Call;
@@ -25,14 +24,10 @@ public class AntennaController {
 
     // POST CALL.
     @PostMapping("/calls")
-    public ResponseEntity<Call> makeCall(@RequestHeader("Authorization") String sessionToken, @RequestBody CallsForUserDTO newCall) throws PhoneLineNotFoundException {
+    public ResponseEntity<Call> makeCall(@RequestHeader("Authorization") String sessionToken, @RequestBody CallsForUserDTO newCall) throws  ResourceNotExistException {
         ResponseEntity response;
-        try{
-            URI location = getLocation(this.callsController.addCall(newCall).getBody());
-            response = ResponseEntity.created(location).build();
-        }catch (PhoneLineNotFoundException e){
-            response = ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
+        URI location = getLocation(this.callsController.addCall(newCall).getBody());
+        response = ResponseEntity.created(location).build();
         return response;
     }
 

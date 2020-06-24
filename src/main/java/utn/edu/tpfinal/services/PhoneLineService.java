@@ -72,7 +72,9 @@ public class PhoneLineService {
     }
 
     public PhoneLine getOnePhoneLineByUser(String lineNumber, Integer idUser) {
-        return phoneLineRepository.getPhoneLineByUserId(lineNumber,idUser);
+        return phoneLineRepository.getPhoneLineByUserId(lineNumber, idUser);
+    }
+
     public void activePhoneLine(Integer idPhoneLine) {
         Optional<PhoneLine> resultPhoneLine = getOnePhoneLine(idPhoneLine);
         PhoneLine currentPhoneLine = resultPhoneLine.get();

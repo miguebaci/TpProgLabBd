@@ -19,4 +19,6 @@ public interface PhoneLineRepository extends JpaRepository<PhoneLine, Integer> {
     @Query(value = "select * from phone_lines where line_number = :lineNumber and id_user = :idUser ;", nativeQuery = true)
     PhoneLine getPhoneLineByUserId(@Param("lineNumber") String lineNumber,
                                    @Param("idUser") Integer idUser);
+
+    PhoneLine findByLineNumber(String lineNumber);
 }

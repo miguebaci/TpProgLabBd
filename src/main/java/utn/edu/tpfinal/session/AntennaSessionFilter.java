@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.filter.OncePerRequestFilter;
+import utn.edu.tpfinal.Exceptions.ResourceNotExistException;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -26,7 +27,12 @@ public class AntennaSessionFilter extends OncePerRequestFilter {
 
 
         String sessionToken = request.getHeader("Authorization");
-        Session session = sessionManager.getSession(sessionToken);
+        Session session = null;
+        try {
+            session = sessionManager.getSession(sessionToken);
+        } catch (ResourceNotExistException e) {
+            e.printStackTrace();
+        }
         if (null != session) {
             if (userTypeAntenna.equals(session.getLoggedUser().getUserTypeString())) {
                 filterChain.doFilter(request, response);

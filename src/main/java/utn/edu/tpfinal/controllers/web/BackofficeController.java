@@ -5,7 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import utn.edu.tpfinal.Exceptions.UserNotExistException;
+import utn.edu.tpfinal.Exceptions.ResourceNotExistException;
 import utn.edu.tpfinal.controllers.PhoneLineController;
 import utn.edu.tpfinal.controllers.UserController;
 import utn.edu.tpfinal.dto.UserResponseDTO;
@@ -45,12 +45,12 @@ public class BackofficeController {
 
     // POST USER.
     @PostMapping("/")
-    public ResponseEntity<User> addUser(@RequestHeader("Authorization") String sessionToken, @RequestBody User newUser) throws UserNotExistException, NoSuchAlgorithmException {
+    public ResponseEntity<User> addUser(@RequestHeader("Authorization") String sessionToken, @RequestBody User newUser) throws  NoSuchAlgorithmException {
         ResponseEntity response;
         try{
             URI location = getLocation(this.userController.addUser(newUser).getBody());
             response = ResponseEntity.created(location).build();
-        }catch (UserNotExistException | NoSuchAlgorithmException e){
+        }catch (NoSuchAlgorithmException | ResourceNotExistException e){
             response = ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
         return response;
@@ -65,7 +65,7 @@ public class BackofficeController {
 
     // SUSPEND OR REACTIVATE USER.
     @PutMapping("/active/users/{idUser}")
-    public void suspendUser(@RequestHeader("Authorization") String sessionToken, @PathVariable Integer idUser) throws NoSuchAlgorithmException, UserNotExistException {
+    public void suspendUser(@RequestHeader("Authorization") String sessionToken, @PathVariable Integer idUser) throws NoSuchAlgorithmException, ResourceNotExistException {
         userController.activeUser(idUser);
     }
 
@@ -77,7 +77,7 @@ public class BackofficeController {
 
     // UPDATE USER.
     @PutMapping("/{idUser}")
-    public void updateUser(@RequestHeader("Authorization") String sessionToken, @RequestBody User user, @PathVariable Integer idUser) throws NoSuchAlgorithmException, UserNotExistException {
+    public void updateUser(@RequestHeader("Authorization") String sessionToken, @RequestBody User user, @PathVariable Integer idUser) throws NoSuchAlgorithmException, ResourceNotExistException {
         userController.updateUser(user, idUser);
     }
 

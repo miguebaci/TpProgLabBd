@@ -48,7 +48,7 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public ResponseEntity<User> addUser(User newUser) throws NoSuchAlgorithmException, UserNotExistException {
+    public ResponseEntity<User> addUser(User newUser) throws NoSuchAlgorithmException, ResourceNotExistException {
         User exists = userRepository.findById(newUser.getDni()).get();
         if (exists != null) {
             User created = userRepository.save(User.builder()
@@ -59,14 +59,14 @@ public class UserService {
                     .pass(hashPass(newUser.getPass()))
                     .build());
             return ResponseEntity.ok(created);
-        } else throw new UserNotExistException();
+        } else throw new ResourceNotExistException();
     }
 
     public void deleteOneUser(Integer idUser) {
         userRepository.deleteById(idUser);
     }
 
-    public void updateOneUser(User newUser, Integer idUser) throws NoSuchAlgorithmException, UserNotExistException {
+    public void updateOneUser(User newUser, Integer idUser) throws NoSuchAlgorithmException, ResourceNotExistException {
         Optional<User> resultUser = getOneUser(idUser);
         User currentUser = resultUser.get();
 
@@ -127,7 +127,7 @@ public class UserService {
         return userResponseDTO;
     }
 
-    public void activeUser(Integer idUser) throws NoSuchAlgorithmException, UserNotExistException {
+    public void activeUser(Integer idUser) throws NoSuchAlgorithmException, ResourceNotExistException {
         Optional<User> resultUser = getOneUser(idUser);
         User currentUser = resultUser.get();
         if (resultUser != null) {

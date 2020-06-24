@@ -36,7 +36,7 @@ public class UserController {
     }
 
     // POST USER.
-    public ResponseEntity<User> addUser(User newUser) throws UserNotExistException, NoSuchAlgorithmException {
+    public ResponseEntity<User> addUser(User newUser) throws ResourceNotExistException, NoSuchAlgorithmException {
         return userService.addUser(newUser);
     }
 
@@ -46,7 +46,7 @@ public class UserController {
     }
 
     // UPDATE USER.
-    public void updateUser(User user,Integer idUser) throws NoSuchAlgorithmException, UserNotExistException {
+    public void updateUser(User user,Integer idUser) throws NoSuchAlgorithmException, ResourceNotExistException {
         userService.updateOneUser(user, idUser);
     }
 
@@ -89,7 +89,7 @@ public class UserController {
         return responseEntity;
     }
 
-    public void activeUser(Integer idUser) throws NoSuchAlgorithmException, UserNotExistException {
+    public void activeUser(Integer idUser) throws NoSuchAlgorithmException, ResourceNotExistException {
         userService.activeUser(idUser);
     }
 }
