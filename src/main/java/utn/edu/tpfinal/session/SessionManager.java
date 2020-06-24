@@ -1,6 +1,7 @@
 package utn.edu.tpfinal.session;
 
 import org.springframework.stereotype.Component;
+import utn.edu.tpfinal.Exceptions.ResourceNotExistException;
 import utn.edu.tpfinal.models.User;
 
 import java.util.*;
@@ -24,13 +25,16 @@ public class SessionManager {
         return token;
     }
 
-    public Session getSession(String token) {
+    public Session getSession(String token) throws ResourceNotExistException {
         if (token == null) {
             return null;
         }
+
         Session session = sessionMap.get(token);
         if (session != null) {
             session.setLastAction(new Date(System.currentTimeMillis()));
+        }else{
+            throw new ResourceNotExistException();
         }
         return session;
     }
@@ -49,7 +53,12 @@ public class SessionManager {
         }
     }
 
-    public User getCurrentUser(String token) {
-        return getSession(token).getLoggedUser();
+    public User getCurrentUser(String token) throws ResourceNotExistException {
+        try{
+            User u = getSession(token).getLoggedUser();
+            return u;
+        }catch (ResourceNotExistException e){
+            throw e;
+        }
     }
 }

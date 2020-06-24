@@ -2,9 +2,12 @@ package utn.edu.tpfinal.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import utn.edu.tpfinal.Exceptions.ResourceNotExistException;
 import utn.edu.tpfinal.dto.BillForUserDTO;
+import utn.edu.tpfinal.dto.PhoneLineForUserDTO;
 import utn.edu.tpfinal.dto.UserResponseDTO;
 import utn.edu.tpfinal.models.Bill;
+import utn.edu.tpfinal.models.PhoneLine;
 import utn.edu.tpfinal.models.User;
 import utn.edu.tpfinal.projections.IReduceUser;
 import utn.edu.tpfinal.repositories.BillRepository;
@@ -14,27 +17,22 @@ import utn.edu.tpfinal.session.SessionManager;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class UserService {
-
-    private final BillRepository billRepository;
     private final UserRepository userRepository;
     private final BillService billService;
     private final PhoneLineService phoneLineService;
     private final SessionManager sessionManager;
 
     @Autowired
-    public UserService(BillRepository billRepository,
-                       UserRepository userRepository,
+    public UserService(UserRepository userRepository,
                        BillService billService,
                        PhoneLineService phoneLineService,
                        SessionManager sessionManager) {
-        this.billRepository = billRepository;
         this.userRepository = userRepository;
         this.billService = billService;
         this.phoneLineService = phoneLineService;
@@ -82,9 +80,9 @@ public class UserService {
 
     }
 
-    public User login(String username, String password) throws NoSuchAlgorithmException {
+    public User login(String username, String password) throws NoSuchAlgorithmException, ResourceNotExistException {
         User user = userRepository.userExists(username, hashPass(password));
-        return Optional.ofNullable(user).orElseThrow(() -> new RuntimeException("User does not exists"));
+        return Optional.ofNullable(user).orElseThrow(() -> new ResourceNotExistException("There is no user with the information you have provided."));
     }
 
     private String hashPass(String pass) throws NoSuchAlgorithmException {
@@ -100,19 +98,15 @@ public class UserService {
         return userRepository.findReduceById(idUser);
     }
 
-    public UserResponseDTO getOneDTOUser(Integer idUser) throws SQLException {
+    public UserResponseDTO getOneDTOUser(Integer idUser) {
 
         UserResponseDTO userResponseDTO = new UserResponseDTO();
 
         Optional<User> resultUser = getOneUser(idUser);
         User currentUser = resultUser.get();
 
-        List<Bill> billsCurrentUser = billRepository.getUserBillInfo(idUser);
-        List<BillForUserDTO> billForUserDTO = new ArrayList<BillForUserDTO>();
-
-        for(Bill b: billsCurrentUser){
-            billForUserDTO.add(new BillForUserDTO(b.getTotalPrice(), b.getEmittionDate(), b.getExpirationDate(), b.isBillStatus()));
-        }
+        List<BillForUserDTO> billForUserDTO = billService.getBillsForUserDTO(idUser);
+        List<PhoneLineForUserDTO> phoneLineForUserDTO = phoneLineService.getPhoneLinesForUserDTO(idUser);
 
         // We set the info to our response dto
         userResponseDTO.setDni(currentUser.getDni());
@@ -120,7 +114,7 @@ public class UserService {
         userResponseDTO.setSurname(currentUser.getSurname());
         userResponseDTO.setUsername(currentUser.getUsername());
         userResponseDTO.setBills(billForUserDTO);
-
+        userResponseDTO.setPhoneLines(phoneLineForUserDTO);
         return userResponseDTO;
     }
 }

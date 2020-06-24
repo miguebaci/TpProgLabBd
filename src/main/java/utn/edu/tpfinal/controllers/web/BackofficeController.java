@@ -56,11 +56,12 @@ public class BackofficeController {
     }
 
     public User login(String username, String password) throws NoSuchAlgorithmException {
-        if ((username != null) && (password != null)) {
+        /*if ((username != null) && (password != null)) {
             return userService.login(username, password);
         } else {
             throw new RuntimeException("username and password must have a value");
-        }
+        }*/
+        return null;
     }
 
 

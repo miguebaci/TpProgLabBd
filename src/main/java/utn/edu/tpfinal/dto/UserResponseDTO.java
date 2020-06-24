@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import utn.edu.tpfinal.models.PhoneLine;
 
 import java.util.List;
 
@@ -22,7 +21,7 @@ public class UserResponseDTO {
     @JsonProperty
     private String surname;
     @JsonProperty
-    private List<PhoneLine> phoneLines;
+    private List<PhoneLineForUserDTO> phoneLines;
     @JsonProperty
     private List<BillForUserDTO> bills;
 }

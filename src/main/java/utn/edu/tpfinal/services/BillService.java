@@ -77,8 +77,11 @@ public class BillService {
         return userDtoBills;
     }
 
-    public List<BillForUserDTO> getAllBillsForUserDTO() {
-        List<Bill> userBills = getAllBills();
+    public List<BillForUserDTO> getBillsForUserDTO(Integer idUser) {
+        // We get the user bills searching with its id.
+        // Then we wrap them in a dto.
+
+        List<Bill> userBills = billRepository.getUserBillInfo(idUser);
         List<BillForUserDTO> userDtoBills = new ArrayList<>();
 
         // we pass the info to the bill dto
@@ -88,4 +91,5 @@ public class BillService {
 
         return userDtoBills;
     }
+
 }

@@ -226,46 +226,65 @@ INSERT INTO provinces (province_name) VALUES ('Buenos Aires');
 INSERT INTO provinces (province_name) VALUES ('Cordoba');
 
 INSERT INTO localities (prefix, id_prov, locality_name) VALUES ('223', 1, 'Mar del Plata');
+INSERT INTO localities (prefix, id_prov, locality_name) VALUES ('226', 1, 'Miramar');
 INSERT INTO localities (prefix, id_prov, locality_name) VALUES ('3541', 2, 'Carlos Paz');
 
+# Rate de mardel a carlos paz
 INSERT INTO rates (prefix_origin, prefix_destiny, price_per_minute, start_date, expiration_date, cost)
-VALUES ('223', '3541', 2.5,null,null, 0.5);
+VALUES ('223', '3541', 2.5,now(),"2020/07/22", 0.5);
 
+# Rate de carlos paz a mardel
 INSERT INTO rates (prefix_origin, prefix_destiny, price_per_minute, start_date, expiration_date, cost)
-VALUES ('3541', '223', 3.5, null, null, 1);
+VALUES ('3541', '223', 3.5, now(), "2020/07/22", 1);
+
+# Rate de mardel a Miramar
+INSERT INTO rates (prefix_origin, prefix_destiny, price_per_minute, start_date, expiration_date, cost)
+VALUES ('223', '226', 4.5, now(), "2020/07/22", 1.5);
 
 INSERT INTO users (user_type, dni, username, name, surname, pass)
-VALUES (2, '37867266', 'dema', 'Felipe','Demaria', 'AA8C9E2985A40BDE1CB0443DA3BFEACC');
-
-#221901
+VALUES (2, '37867266', 'dema', 'Felipe','Demaria', 'AA8C9E2985A40BDE1CB0443DA3BFEACC');#221901
 
 INSERT INTO users (user_type, dni, username, name, surname, pass)
-VALUES (2, '10204050', 'baci', 'Miguel','Bacigaluppi', 'ED1430D0DE792B9FB3C0953CF7049005');
-
-#221902
+VALUES (2, '10204050', 'baci', 'Miguel','Bacigaluppi', 'ED1430D0DE792B9FB3C0953CF7049005');#221902
 
 INSERT INTO users (user_type, dni, username, name, surname, pass)
-VALUES (1, '32156521', 'admin', 'Admin','Admin', '21232F297A57A5A743894A0E4A801FC3');
+VALUES (1, '32156521', 'admin', 'Admin','Admin', '21232F297A57A5A743894A0E4A801FC3');#admin
 
-#admin
 
+# Dos lineas : Dema
 INSERT INTO phone_lines (id_user, prefix, line_type, line_number)
 VALUES (1, '223', 2, '155210762');
 
 INSERT INTO phone_lines (id_user, prefix, line_type, line_number)
-VALUES (2, '3541', 2, '1552010304');
-
-INSERT INTO phone_lines (id_user, prefix, line_type, line_number)
 VALUES (1, '223', 2, '155234567');
 
-INSERT INTO calls (number_origin, number_destiny, date_call, duration)
-VALUES ('155210762', '1552010304', now(), 15);
+# 1 linea : Baci
+INSERT INTO phone_lines (id_user, prefix, line_type, line_number)
+VALUES (2, '3541', 2, '155201030');
+
+
+# Llamo desde dema a baci:
 
 INSERT INTO calls (number_origin, number_destiny, date_call, duration)
-VALUES ('155210762', '1552010304', now(), 40);
+VALUES ('223155210762', '3541155201030', now(), 15);
 
 INSERT INTO calls (number_origin, number_destiny, date_call, duration)
-VALUES ('1552010304',  '155210762', now(), 15);
+VALUES ('223155210762', '3541155201030', now(), 40);
+
+# Llamo desde baci a dema:
+INSERT INTO calls (number_origin, number_destiny, date_call, duration)
+VALUES ('3541155201030',  '223155210762', now(), 2);
 
 INSERT INTO calls (number_origin, number_destiny, date_call, duration)
-VALUES ('1552010304',  '155210762', now(), 40);
+VALUES ('3541155201030',  '223155210762', now(), 5);
+
+
+# Inserto Bills para dema:
+INSERT INTO bills(id_user, total_price, emittion_date, expiration_date, bill_status, total_cost, total_profit)
+VALUES(1, 1500.2, "2020-07-01", "2020-07-15", false, 200, 20);
+
+INSERT INTO bills(id_user, total_price, emittion_date, expiration_date, bill_status, total_cost, total_profit)
+VALUES(1, 1100, "2020-07-01", "2020-07-15", false, 100, 10);
+
+INSERT INTO bills(id_user, total_price, emittion_date, expiration_date, bill_status, total_cost, total_profit)
+VALUES(1, 800, "2020-01-01", "2020-02-15", false, 50, 10);
