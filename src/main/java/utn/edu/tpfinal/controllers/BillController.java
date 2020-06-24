@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import utn.edu.tpfinal.Exceptions.UserNotExistException;
+import utn.edu.tpfinal.Exceptions.ResourceNotExistException;
 import utn.edu.tpfinal.dto.BillForUserDTO;
 import utn.edu.tpfinal.models.Bill;
 import utn.edu.tpfinal.models.User;
@@ -54,27 +54,33 @@ public class BillController {
     }
 
     // Get All bills between two ranges of dates
-    public ResponseEntity<List<BillForUserDTO>> getBillsInfoForUser(String sessionToken, String fromDate, String toDate) throws UserNotExistException, ParseException {
-        User currentUser = getCurrentUser(sessionToken);
-        List<BillForUserDTO> billForUserDTO;
+    public ResponseEntity<List<BillForUserDTO>> getBillsBetweenRangeOfDates(String sessionToken, String fromDate, String toDate) throws ResourceNotExistException {
 
-        if(fromDate != null && toDate != null){
-            // We search bills between the dates.
+        try{
+            User currentUser = sessionManager.getCurrentUser(sessionToken);
+            List<BillForUserDTO> billForUserDTO;
 
-            billForUserDTO= billService.getBillsBetweenRange(currentUser.getId(),fromDate,toDate);
+            if(fromDate != null && toDate != null){
+                // We search bills between the dates.
 
-            //Date from = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(fromDate);
-            //Date to = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(toDate);
-            //billForUserDTO= billService.getBillsBetweenRange(currentUser.getId(),from,to);
-        }else{
-            // we return all bills
-            billForUserDTO = billService.getAllBillsForUserDTO();
+                billForUserDTO= billService.getBillsBetweenRange(currentUser.getId(),fromDate,toDate);
+
+                //Date from = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(fromDate);
+                //Date to = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(toDate);
+                //billForUserDTO= billService.getBillsBetweenRange(currentUser.getId(),from,to);
+            }else{
+                // we return all bills
+                billForUserDTO = billService.getBillsForUserDTO(currentUser.getId());
+            }
+
+            if(billForUserDTO.size() > 0){
+                return ResponseEntity.ok(billForUserDTO);
+            }else{
+                throw new ResourceNotExistException("The bill between the ranges of dates you provided has not been found");
+            }
+
+        }catch (ResourceNotExistException e){
+            throw e;
         }
-
-        return (billForUserDTO.size() > 0) ? ResponseEntity.ok(billForUserDTO) : ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-    }
-
-    private User getCurrentUser(String sessionToken) throws UserNotExistException {
-        return Optional.ofNullable(sessionManager.getCurrentUser(sessionToken)).orElseThrow(UserNotExistException::new);
     }
 }

@@ -13,7 +13,7 @@ import java.sql.Date;
 @Data
 
 public class BillForUserDTO {
-    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd")
+    //@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd")
     @JsonProperty
     private Float totalPrice;
 

@@ -1,5 +1,6 @@
 package utn.edu.tpfinal.session;
 
+import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,7 @@ public class BackofficeSessionFilter extends OncePerRequestFilter {
 
     private static final String userTypeBackoffice = "backoffice";
 
+    @SneakyThrows
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response, FilterChain filterChain)
@@ -31,7 +33,8 @@ public class BackofficeSessionFilter extends OncePerRequestFilter {
             } else {
                 response.setStatus(HttpStatus.FORBIDDEN.value());
             }
-
+        }else{
+            response.setStatus(HttpStatus.UNAUTHORIZED.value());
         }
     }
 }

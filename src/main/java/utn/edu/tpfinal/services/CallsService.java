@@ -81,7 +81,7 @@ public class CallsService {
         return listUserDtoCalls;
     }
 
-    public List<CallsForUserDTO> getAllCallsForUserDTO(String lineNumber, Boolean caller) {
+    public List<CallsForUserDTO> getCallsForUserDTO(String lineNumber, Boolean caller) {
         List<Call> userCalls;
         List<CallsForUserDTO> listUserDtoCalls = new ArrayList<>();
 

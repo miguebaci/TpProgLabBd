@@ -4,15 +4,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import utn.edu.tpfinal.Exceptions.UserNotExistException;
+import utn.edu.tpfinal.Exceptions.ResourceNotExistException;
+import utn.edu.tpfinal.Exceptions.ValidationException;
 import utn.edu.tpfinal.dto.UserResponseDTO;
 import utn.edu.tpfinal.models.User;
 import utn.edu.tpfinal.projections.IReduceUser;
 import utn.edu.tpfinal.services.UserService;
 
 import java.security.NoSuchAlgorithmException;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
@@ -51,19 +50,32 @@ public class UserController {
         userService.updateOneUser(user, idUser);
     }
 
-    public User login(String username, String password) throws NoSuchAlgorithmException {
-        if ((username != null) && (password != null)) {
+    public User login(String username, String password) throws NoSuchAlgorithmException, ResourceNotExistException, ValidationException {
+        /*if ((username != null) && (password != null)) {
             return userService.login(username, password);
         } else {
             throw new RuntimeException("username and password must have a value");
+        }*/
+        User u = null;
+
+        try{
+            if ((username != null) && (password != null)) {
+                u = userService.login(username, password);
+            }else{
+                throw new ValidationException("You must introduce username and password so you can log in.");
+            }
+        }catch (NoSuchAlgorithmException | ResourceNotExistException | ValidationException e){
+            throw e;
         }
+
+        return u;
     }
 
     public IReduceUser getReduceUser(Integer idUser){
         return userService.getOneReduceUser(idUser);
     }
 
-    public ResponseEntity<UserResponseDTO> getOneUserDTO (Integer idUser) throws SQLException {
+    public ResponseEntity<UserResponseDTO> getOneUserDTO (Integer idUser) {
         ResponseEntity<UserResponseDTO> responseEntity;
 
         // Get the dto of the user
