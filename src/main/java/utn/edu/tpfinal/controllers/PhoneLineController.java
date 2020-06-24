@@ -42,4 +42,8 @@ public class PhoneLineController {
     public void updatePhoneLine(PhoneLine phoneLine, Integer idPhoneLine){
         phoneLineService.updateOnePhoneLine(phoneLine, idPhoneLine);
     }
+
+    public void activePhoneLine(Integer idPhoneLine) {
+        phoneLineService.activePhoneLine(idPhoneLine);
+    }
 }

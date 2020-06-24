@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
+import utn.edu.tpfinal.Exceptions.UserNotExistException;
 import utn.edu.tpfinal.dto.UserResponseDTO;
 import utn.edu.tpfinal.models.User;
 import utn.edu.tpfinal.projections.IReduceUser;
@@ -36,8 +37,8 @@ public class UserController {
     }
 
     // POST USER.
-    public void addUser(User newUser) throws NoSuchAlgorithmException {
-        userService.addUser(newUser);
+    public ResponseEntity<User> addUser(User newUser) throws UserNotExistException, NoSuchAlgorithmException {
+        return userService.addUser(newUser);
     }
 
     // DELETE ONE USER BY ID.
@@ -46,7 +47,7 @@ public class UserController {
     }
 
     // UPDATE USER.
-    public void updateUser(User user,Integer idUser) throws NoSuchAlgorithmException {
+    public void updateUser(User user,Integer idUser) throws NoSuchAlgorithmException, UserNotExistException {
         userService.updateOneUser(user, idUser);
     }
 
@@ -74,5 +75,9 @@ public class UserController {
             responseEntity = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
         return responseEntity;
+    }
+
+    public void activeUser(Integer idUser) throws NoSuchAlgorithmException, UserNotExistException {
+        userService.activeUser(idUser);
     }
 }

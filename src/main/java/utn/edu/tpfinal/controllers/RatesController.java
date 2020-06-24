@@ -26,19 +26,4 @@ public class RatesController {
     public List<Rate> getRates(){
         return rateService.getAllRates();
     }
-
-    // POST RATE.
-    public void addRate(Rate newRate){
-        rateService.addRate(newRate);
-    }
-
-    // DELETE ONE RATE BY ID.
-    public void deleteRate(Integer idRate){
-        rateService.deleteOneRate(idRate);
-    }
-
-    // UPDATE RATE.
-    public void updateRate(Rate rate, Integer idRate){
-        rateService.updateOneRate(rate, idRate);
-    }
 }
