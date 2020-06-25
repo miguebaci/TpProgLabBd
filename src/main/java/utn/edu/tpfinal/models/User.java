@@ -46,7 +46,6 @@ public class User {
     @NotNull
     private String pass;
 
-    @NotNull
     private Boolean suspended;
 
     @Transient

@@ -9,6 +9,7 @@ import utn.edu.tpfinal.models.User;
 import utn.edu.tpfinal.projections.IReduceUser;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer> {
@@ -35,4 +36,5 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     @Query(value = "SELECT new utn.edu.tpfinal.dto.BillForUserDTO(b.totalPrice, b.emittionDate, b.expirationDate, b.billStatus) from bills where id_user = :idUser ;", nativeQuery = true)
     List<BillForUserDTO> getUserBillInfo(@Param("idUser") Integer idUser);
 
+    Optional<User> findByDni(Integer dni);
 }
