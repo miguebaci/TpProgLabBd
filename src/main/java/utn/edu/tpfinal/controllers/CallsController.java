@@ -7,9 +7,11 @@ import utn.edu.tpfinal.Exceptions.ResourceNotExistException;
 import utn.edu.tpfinal.Exceptions.ValidationException;
 import utn.edu.tpfinal.dto.CallsForUserDTO;
 import utn.edu.tpfinal.models.Call;
+import utn.edu.tpfinal.models.PhoneLine;
 import utn.edu.tpfinal.models.User;
 import utn.edu.tpfinal.services.CallsService;
 import utn.edu.tpfinal.services.PhoneLineService;
+import utn.edu.tpfinal.services.UserService;
 import utn.edu.tpfinal.session.SessionManager;
 
 import java.util.List;
@@ -21,12 +23,14 @@ public class CallsController {
     private final CallsService callsService;
     private final SessionManager sessionManager;
     private final PhoneLineService phoneLineService;
+    private final UserService userService;
 
     @Autowired
-    public CallsController(CallsService callsService, SessionManager sessionManager, PhoneLineService phoneLineService) {
+    public CallsController(CallsService callsService, SessionManager sessionManager, PhoneLineService phoneLineService, UserService userService) {
         this.callsService = callsService;
         this.sessionManager = sessionManager;
         this.phoneLineService = phoneLineService;
+        this.userService = userService;
     }
 
     // GET ONE CALL BY ID.
@@ -42,6 +46,30 @@ public class CallsController {
     // POST CALL.
     public ResponseEntity<Call> addCall(CallsForUserDTO newCall) throws ResourceNotExistException {
         return callsService.addCall(newCall);
+    }
+
+    // Get all calls between two ranges of dates
+    public ResponseEntity<List<CallsForUserDTO>> getCallsByUser(Integer IdUser, String lineNumber) throws ResourceNotExistException{
+        try {
+            User currentUser = userService.getOneUser(IdUser).get();
+            PhoneLine line = phoneLineService.getByLineNumber(lineNumber);
+
+            if(currentUser.getPhoneLines().contains(line)) {
+
+                List<CallsForUserDTO> callsForUserDTO;
+                callsForUserDTO = callsService.getCallsForUserDTO(lineNumber, true);
+                if (callsForUserDTO.size() > 0) {
+                    return ResponseEntity.ok(callsForUserDTO);
+                } else {
+                    throw new ResourceNotExistException("The calls between the ranges of dates you have provided has not been found");
+                }
+            }
+            else{
+                throw new ResourceNotExistException("This user does not owns this line");
+            }
+        } catch (ResourceNotExistException e) {
+            throw e;
+        }
     }
 
     // Get all calls between two ranges of dates

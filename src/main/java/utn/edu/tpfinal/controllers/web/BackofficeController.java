@@ -6,9 +6,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import utn.edu.tpfinal.Exceptions.ResourceNotExistException;
+import utn.edu.tpfinal.Exceptions.ValidationException;
+import utn.edu.tpfinal.controllers.CallsController;
 import utn.edu.tpfinal.controllers.PhoneLineController;
 import utn.edu.tpfinal.controllers.RatesController;
 import utn.edu.tpfinal.controllers.UserController;
+import utn.edu.tpfinal.dto.CallsForUserDTO;
 import utn.edu.tpfinal.dto.UserResponseDTO;
 import utn.edu.tpfinal.models.Rate;
 import utn.edu.tpfinal.models.User;
@@ -28,12 +31,14 @@ public class BackofficeController {
     private final UserController userController;
     private final PhoneLineController phoneLineController;
     private RatesController ratesController;
+    private CallsController callsController;
 
     @Autowired
-    public BackofficeController(UserController userController, PhoneLineController phoneLineController, RatesController ratesController) {
+    public BackofficeController(UserController userController, PhoneLineController phoneLineController, RatesController ratesController, CallsController callsController) {
         this.userController = userController;
         this.phoneLineController = phoneLineController;
         this.ratesController = ratesController;
+        this.callsController = callsController;
     }
 
     // GET ONE USER BY ID.
@@ -91,6 +96,16 @@ public class BackofficeController {
     public ResponseEntity<Rate> getRatesByLocalities(@RequestParam(name = "localityOrigin") Integer idLocalityOrigin, @RequestParam(name = "localityDestiny") Integer idLocalityDestiny) throws ResourceNotExistException {
         return ResponseEntity.ok(this.ratesController.getRatesByLocality(idLocalityOrigin, idLocalityDestiny));
     }//localhost:8080/backoffice/rates?localityOrigin=223&localityDestiny=226
+
+    @GetMapping("/calls/user/{idUser}")
+    public ResponseEntity<List<CallsForUserDTO>> getCallsOfUser(@RequestHeader("Authorization") String sessionToken,
+                                                                     @PathVariable Integer idUser, @RequestParam(value = "lineNumber") String lineNumber) throws ResourceNotExistException {
+        try {
+            return callsController.getCallsByUser(idUser, lineNumber);
+        } catch (ResourceNotExistException e) {
+            throw e;
+        }
+    }
 
     // GET ONE REDUCE USER BY ID.
     @GetMapping("/projection/{idUser}")
