@@ -49,12 +49,11 @@ public class CallsController {
     }
 
     // Get all calls between two ranges of dates
-    public ResponseEntity<List<CallsForUserDTO>> getCallsByUser(Integer idUser, String lineNumber) throws ResourceNotExistException{
+    public ResponseEntity<List<CallsForUserDTO>> getCallsByUser(Integer idUser, String lineNumber) throws ResourceNotExistException {
         try {
-            User currentUser = userService.getOneUser(idUser).get();
-            PhoneLine line = phoneLineService.getOnePhoneLineByUser(lineNumber,idUser);
+            PhoneLine line = phoneLineService.getOnePhoneLineByUser(lineNumber, idUser);
 
-            if(line != null) {
+            if (line != null) {
 
                 List<CallsForUserDTO> callsForUserDTO;
                 callsForUserDTO = callsService.getCallsForUserDTO(lineNumber, true);
@@ -63,8 +62,7 @@ public class CallsController {
                 } else {
                     throw new ResourceNotExistException("The user has no calls");
                 }
-            }
-            else{
+            } else {
                 throw new ResourceNotExistException("This user does not owns this line");
             }
         } catch (ResourceNotExistException e) {
