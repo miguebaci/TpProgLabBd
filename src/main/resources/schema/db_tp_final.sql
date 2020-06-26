@@ -271,6 +271,12 @@ VALUES (1, '223', 2, '155234567');
 INSERT INTO phone_lines (id_user, prefix, line_type, line_number)
 VALUES (2, '3541', 2, '155201030');
 
+INSERT INTO phone_lines (id_user, prefix, line_type, line_number)
+VALUES (2, '3541', 2, '155201031');
+
+INSERT INTO phone_lines (id_user, prefix, line_type, line_number)
+VALUES (2, '226', 2, '1551111111');
+
 
 # Llamo desde dema a baci:
 
@@ -280,6 +286,9 @@ VALUES ('223155210762', '3541155201030', now(), 15);
 INSERT INTO calls (number_origin, number_destiny, date_call, duration)
 VALUES ('223155210762', '3541155201030', now(), 40);
 
+INSERT INTO calls (number_origin, number_destiny, date_call, duration)
+VALUES ('223155210762', '2261551111111', now(), 40);
+
 # Llamo desde baci a dema:
 INSERT INTO calls (number_origin, number_destiny, date_call, duration)
 VALUES ('3541155201030',  '223155210762', now(), 2);
@@ -287,6 +296,14 @@ VALUES ('3541155201030',  '223155210762', now(), 2);
 INSERT INTO calls (number_origin, number_destiny, date_call, duration)
 VALUES ('3541155201030',  '223155210762', now(), 5);
 
+INSERT INTO calls (number_origin, number_destiny, date_call, duration)
+VALUES ('3541155201030',  '223155210762', now(), 1);
+
+INSERT INTO calls (number_origin, number_destiny, date_call, duration)
+VALUES ('3541155201031',  '223155210762', now(), 1);
+
+INSERT INTO calls (number_origin, number_destiny, date_call, duration)
+VALUES ('3541155201031',  '223155234567', now(), 1);
 
 # Inserto Bills para dema:
 INSERT INTO bills(id_user, total_price, emittion_date, expiration_date, bill_status, total_cost, total_profit)

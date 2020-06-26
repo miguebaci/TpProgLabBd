@@ -5,8 +5,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import utn.edu.tpfinal.Exceptions.ResourceNotExistException;
 import utn.edu.tpfinal.dto.CallsForUserDTO;
+import utn.edu.tpfinal.dto.Top10DestinationCalledDTO;
 import utn.edu.tpfinal.models.Call;
 import utn.edu.tpfinal.models.PhoneLine;
+import utn.edu.tpfinal.projections.ITop10DestinationCalled;
 import utn.edu.tpfinal.repositories.CallRepository;
 
 import java.sql.Date;
@@ -130,6 +132,12 @@ public class CallsService {
         }
 
         return listUserDtoCalls;
+    }
+
+
+    public List<ITop10DestinationCalled> getTop10DestinationsWithNumberOfCalls(Integer idUser){
+        List<ITop10DestinationCalled> list = callRepository.getTop10Info(idUser);
+        return list;
     }
 
 }
