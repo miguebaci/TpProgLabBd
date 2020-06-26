@@ -7,12 +7,15 @@ import utn.edu.tpfinal.Exceptions.ResourceNotExistException;
 import utn.edu.tpfinal.Exceptions.ValidationException;
 import utn.edu.tpfinal.controllers.BillController;
 import utn.edu.tpfinal.controllers.CallsController;
+import utn.edu.tpfinal.controllers.PhoneLineController;
 import utn.edu.tpfinal.controllers.UserController;
 import utn.edu.tpfinal.dto.BillForUserDTO;
 import utn.edu.tpfinal.dto.CallsForUserDTO;
+import utn.edu.tpfinal.dto.Top10DestinationCalledDTO;
 import utn.edu.tpfinal.dto.UserResponseDTO;
 import utn.edu.tpfinal.models.User;
 import utn.edu.tpfinal.projections.IReduceUser;
+import utn.edu.tpfinal.projections.ITop10DestinationCalled;
 import utn.edu.tpfinal.session.SessionManager;
 
 import java.util.List;
@@ -24,13 +27,15 @@ public class ClientController {
     private final UserController userController;
     private final BillController billController;
     private final CallsController callsController;
+    private final PhoneLineController phoneLineController;
     private final SessionManager sessionManager;
 
     @Autowired
-    public ClientController(UserController userController, BillController billController, CallsController callController, SessionManager sessionManager) {
+    public ClientController(UserController userController, BillController billController, CallsController callController, PhoneLineController phoneLineController, SessionManager sessionManager) {
         this.userController = userController;
         this.billController = billController;
         this.callsController = callController;
+        this.phoneLineController = phoneLineController;
         this.sessionManager = sessionManager;
     }
 
@@ -74,5 +79,14 @@ public class ClientController {
             throw e;
         }
     }
-
+    
+    @GetMapping("user/top10")
+    public ResponseEntity<List<ITop10DestinationCalled>> getTop10DestinationCalledByUser(@RequestHeader("Authorization") String sessionToken) throws ResourceNotExistException {
+        try {
+            List<ITop10DestinationCalled> list = callsController.getTop10DestinationWithNumberOfCalls(sessionToken);
+            return ResponseEntity.ok(list);
+        } catch (ResourceNotExistException  e) {
+            throw e;
+        }
+    }
 }

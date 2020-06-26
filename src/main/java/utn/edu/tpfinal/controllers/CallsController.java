@@ -3,12 +3,15 @@ package utn.edu.tpfinal.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import utn.edu.tpfinal.Exceptions.ResourceNotExistException;
 import utn.edu.tpfinal.Exceptions.ValidationException;
 import utn.edu.tpfinal.dto.CallsForUserDTO;
+import utn.edu.tpfinal.dto.Top10DestinationCalledDTO;
 import utn.edu.tpfinal.models.Call;
 import utn.edu.tpfinal.models.PhoneLine;
 import utn.edu.tpfinal.models.User;
+import utn.edu.tpfinal.projections.ITop10DestinationCalled;
 import utn.edu.tpfinal.services.CallsService;
 import utn.edu.tpfinal.services.PhoneLineService;
 import utn.edu.tpfinal.services.UserService;
@@ -95,6 +98,25 @@ public class CallsController {
                 throw new ResourceNotExistException("The calls between the ranges of dates you have provided has not been found");
             }
         } catch (ResourceNotExistException | ValidationException e) {
+            throw e;
+        }
+    }
+
+    // Get top 10 destination most called
+    @GetMapping("/Top10DestinationCalled")
+    public List<ITop10DestinationCalled> getTop10DestinationWithNumberOfCalls(String sessionToken) throws ResourceNotExistException {
+        try {
+            // Verify token
+            User currentUser = sessionManager.getCurrentUser(sessionToken);
+
+            List<ITop10DestinationCalled> listTop10DestinationsCalled = callsService.getTop10DestinationsWithNumberOfCalls(currentUser.getId());
+
+            if (listTop10DestinationsCalled.size() > 0) {
+                return listTop10DestinationsCalled;
+            } else {
+                throw new ResourceNotExistException("We couldnt generate the top 10 destinations called by you, because you dont have any calls yet!");
+            }
+        } catch (ResourceNotExistException e) {
             throw e;
         }
     }

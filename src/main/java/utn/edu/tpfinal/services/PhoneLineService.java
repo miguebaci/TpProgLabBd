@@ -5,9 +5,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import utn.edu.tpfinal.Exceptions.ResourceNotExistException;
 import utn.edu.tpfinal.dto.PhoneLineForUserDTO;
+import utn.edu.tpfinal.dto.Top10DestinationCalledDTO;
 import utn.edu.tpfinal.models.PhoneLine;
-import utn.edu.tpfinal.models.User;
+import utn.edu.tpfinal.projections.ITop10DestinationCalled;
 import utn.edu.tpfinal.repositories.PhoneLineRepository;
+import utn.edu.tpfinal.repositories.RateRepository;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -17,10 +19,12 @@ import java.util.Optional;
 @Service
 public class PhoneLineService {
     private final PhoneLineRepository phoneLineRepository;
+    private final RateRepository rateRepository;
 
     @Autowired
-    public PhoneLineService(PhoneLineRepository phoneLineRepository) {
+    public PhoneLineService(PhoneLineRepository phoneLineRepository, RateRepository rateRepository) {
         this.phoneLineRepository = phoneLineRepository;
+        this.rateRepository = rateRepository;
     }
 
     public Optional<PhoneLine> getOnePhoneLine(Integer idPhoneLine) {
