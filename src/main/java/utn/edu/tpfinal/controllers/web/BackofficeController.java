@@ -98,14 +98,13 @@ public class BackofficeController {
     }//localhost:8080/backoffice/rates?localityOrigin=223&localityDestiny=226
 
     @GetMapping("/calls/user/{idUser}")
-    public ResponseEntity<List<CallsForUserDTO>> getCallsOfUser(@RequestHeader("Authorization") String sessionToken,
-                                                                     @PathVariable Integer idUser, @RequestParam(value = "lineNumber") String lineNumber) throws ResourceNotExistException {
+    public ResponseEntity<List<CallsForUserDTO>> getCallsOfUser(@RequestHeader("Authorization") String sessionToken, @PathVariable Integer idUser, @RequestParam(value = "lineNumber") String lineNumber) throws ResourceNotExistException {
         try {
             return callsController.getCallsByUser(idUser, lineNumber);
         } catch (ResourceNotExistException e) {
             throw e;
         }
-    }
+    }//localhost:8080/backoffice/calls/user/{idUser}?lineNumber=
 
     // GET ONE REDUCE USER BY ID.
     @GetMapping("/projection/{idUser}")

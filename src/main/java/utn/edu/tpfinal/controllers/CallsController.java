@@ -49,19 +49,19 @@ public class CallsController {
     }
 
     // Get all calls between two ranges of dates
-    public ResponseEntity<List<CallsForUserDTO>> getCallsByUser(Integer IdUser, String lineNumber) throws ResourceNotExistException{
+    public ResponseEntity<List<CallsForUserDTO>> getCallsByUser(Integer idUser, String lineNumber) throws ResourceNotExistException{
         try {
-            User currentUser = userService.getOneUser(IdUser).get();
-            PhoneLine line = phoneLineService.getByLineNumber(lineNumber);
+            User currentUser = userService.getOneUser(idUser).get();
+            PhoneLine line = phoneLineService.getOnePhoneLineByUser(lineNumber,idUser);
 
-            if(currentUser.getPhoneLines().contains(line)) {
+            if(line != null) {
 
                 List<CallsForUserDTO> callsForUserDTO;
                 callsForUserDTO = callsService.getCallsForUserDTO(lineNumber, true);
                 if (callsForUserDTO.size() > 0) {
                     return ResponseEntity.ok(callsForUserDTO);
                 } else {
-                    throw new ResourceNotExistException("The calls between the ranges of dates you have provided has not been found");
+                    throw new ResourceNotExistException("The user has no calls");
                 }
             }
             else{
