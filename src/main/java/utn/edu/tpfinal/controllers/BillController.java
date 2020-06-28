@@ -1,7 +1,6 @@
 package utn.edu.tpfinal.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import utn.edu.tpfinal.Exceptions.ResourceNotExistException;
 import utn.edu.tpfinal.dto.BillForUserDTO;
@@ -52,33 +51,17 @@ public class BillController {
     }
 
     // Get All bills between two ranges of dates
-    public ResponseEntity<List<BillForUserDTO>> getBillsBetweenRangeOfDates(String sessionToken, String fromDate, String toDate) throws ResourceNotExistException {
+    public List<BillForUserDTO> getBillsBetweenRangeOfDates(User currentUser, String fromDate, String toDate) throws ResourceNotExistException {
 
-        try {
-            User currentUser = sessionManager.getCurrentUser(sessionToken);
-            List<BillForUserDTO> billForUserDTO;
+        List<BillForUserDTO> billForUserDTO;
 
-            if (fromDate != null && toDate != null) {
-                // We search bills between the dates.
-
-                billForUserDTO = billService.getBillsBetweenRange(currentUser.getId(), fromDate, toDate);
-
-                //Date from = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(fromDate);
-                //Date to = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(toDate);
-                //billForUserDTO= billService.getBillsBetweenRange(currentUser.getId(),from,to);
-            } else {
-                // we return all bills
-                billForUserDTO = billService.getBillsForUserDTO(currentUser.getId());
-            }
-
-            if (billForUserDTO.size() > 0) {
-                return ResponseEntity.ok(billForUserDTO);
-            } else {
-                throw new ResourceNotExistException("The bill between the ranges of dates you provided has not been found");
-            }
-
-        } catch (ResourceNotExistException e) {
-            throw e;
+        if (fromDate != null && toDate != null) {
+            // We search bills between the dates.
+            billForUserDTO = billService.getBillsBetweenRange(currentUser.getId(), fromDate, toDate);
+        } else {
+            // we return all bills
+            billForUserDTO = billService.getBillsForUserDTO(currentUser.getId());
         }
+        return billForUserDTO;
     }
 }

@@ -27,7 +27,6 @@ public class LoginController {
         this.sessionManager = sessionManager;
     }
 
-
     @PostMapping("/login")
     public ResponseEntity login(@RequestBody LoginRequestDto loginRequestDto) throws NoSuchAlgorithmException, ResourceNotExistException, ValidationException {
         ResponseEntity response;
@@ -40,7 +39,6 @@ public class LoginController {
         }
         return response;
     }
-
 
     @PostMapping("/logout")
     public ResponseEntity logout(@RequestHeader("Authorization") String token) throws ValidationException, LogOutException {
@@ -64,6 +62,4 @@ public class LoginController {
         responseHeaders.set("Authorization", token);
         return responseHeaders;
     }
-
-
 }

@@ -37,7 +37,7 @@ public class SessionManager {
         if (session != null) {
             session.setLastAction(new Date(System.currentTimeMillis()));
         } else {
-            throw new ResourceNotExistException();
+            throw new ResourceNotExistException("Token acess not provided or invalid.");
         }
         return session;
     }

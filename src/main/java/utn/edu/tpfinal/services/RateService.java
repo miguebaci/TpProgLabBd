@@ -7,6 +7,7 @@ import utn.edu.tpfinal.models.Rate;
 import utn.edu.tpfinal.repositories.RateRepository;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -27,6 +28,13 @@ public class RateService {
     }
 
     public Rate getRatesByLocality(Integer idLocalityOrigin, Integer idLocalityDestiny) throws ResourceNotExistException {
-        return this.rateRepository.getRatesByLocality(idLocalityOrigin, idLocalityDestiny).orElseThrow(ResourceNotExistException::new);
+        try{
+            Optional<Rate> optionalRate = this.rateRepository.getRatesByLocality(idLocalityOrigin, idLocalityDestiny);
+            Rate rate = optionalRate.get();
+            return rate;
+        }catch (NoSuchElementException e){
+            throw new ResourceNotExistException("The rate you want to search does not exist.");
+        }
+        //return this.rateRepository.getRatesByLocality(idLocalityOrigin, idLocalityDestiny).orElseThrow(ResourceNotExistException::new);
     }
 }

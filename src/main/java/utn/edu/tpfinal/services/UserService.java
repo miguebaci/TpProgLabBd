@@ -1,8 +1,8 @@
 package utn.edu.tpfinal.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import utn.edu.tpfinal.Exceptions.ResourceAlreadyExistException;
 import utn.edu.tpfinal.Exceptions.ResourceNotExistException;
 import utn.edu.tpfinal.dto.BillForUserDTO;
 import utn.edu.tpfinal.dto.PhoneLineForUserDTO;
@@ -16,6 +16,7 @@ import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -40,12 +41,13 @@ public class UserService {
         return userRepository.findById(idUser);
     }
 
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
+    public List<IReduceUser> getAllUsers() {
+        return userRepository.findAllUsersReduce();
     }
 
-    public ResponseEntity<User> addUser(User newUser) throws NoSuchAlgorithmException, ResourceNotExistException {
+    public User addUser(User newUser) throws NoSuchAlgorithmException, ResourceAlreadyExistException {
         Boolean exists = userRepository.findByDni(newUser.getDni()).isPresent();
+
         if (!exists) {
             User created = userRepository.save(User.builder()
                     .userType(newUser.getUserType())
@@ -56,34 +58,44 @@ public class UserService {
                     .pass(hashPass(newUser.getPass()))
                     .suspended(false)
                     .build());
-            return ResponseEntity.ok(created);
-        } else throw new ResourceNotExistException();
+            return created;
+        } else throw new ResourceAlreadyExistException("The user you are trying to save already exits");
     }
 
     public void deleteOneUser(Integer idUser) {
-        userRepository.deleteById(idUser);
+        try {
+            Optional<User> u = getOneUser(idUser);
+            User myUser = u.get();
+            userRepository.deleteById(idUser);
+        }catch (NoSuchElementException e){
+            throw e;
+        }
     }
 
     public void updateOneUser(User newUser, Integer idUser) throws NoSuchAlgorithmException, ResourceNotExistException {
-        Optional<User> resultUser = getOneUser(idUser);
-        System.out.println(resultUser);
-        User currentUser = resultUser.get();
-        System.out.println(currentUser);
+        try {
+            Optional<User> resultUser = getOneUser(idUser);
+            //System.out.println(resultUser);
+            User currentUser = resultUser.get();
+            //System.out.println(currentUser);
 
-        if (resultUser != null) {
-            currentUser.setId(newUser.getId());
-            currentUser.setUserType(newUser.getUserType());
-            currentUser.setDni(newUser.getDni());
-            currentUser.setUsername(newUser.getUsername());
-            currentUser.setName(newUser.getName());
-            currentUser.setSurname(newUser.getSurname());
-            if(!currentUser.getPass().equals(hashPass(newUser.getPass()))){
-            currentUser.setPass(hashPass(newUser.getPass()));
+            if (resultUser != null) {
+                currentUser.setId(newUser.getId());
+                currentUser.setUserType(newUser.getUserType());
+                currentUser.setDni(newUser.getDni());
+                currentUser.setUsername(newUser.getUsername());
+                currentUser.setName(newUser.getName());
+                currentUser.setSurname(newUser.getSurname());
+                if (!currentUser.getPass().equals(hashPass(newUser.getPass()))) {
+                    currentUser.setPass(hashPass(newUser.getPass()));
+                }
+                currentUser.setPhoneLines(newUser.getPhoneLines());
+                currentUser.setBills(newUser.getBills());
+
+                userRepository.save(currentUser);
             }
-            currentUser.setPhoneLines(newUser.getPhoneLines());
-            currentUser.setBills(newUser.getBills());
-
-            userRepository.save(currentUser);
+        }catch(NoSuchElementException e){
+            throw new ResourceNotExistException("The user you want to update does not exist");
         }
 
     }
@@ -105,36 +117,45 @@ public class UserService {
         return userRepository.findReduceById(idUser);
     }
 
-    public UserResponseDTO getOneDTOUser(Integer idUser) {
+    public UserResponseDTO getOneDTOUser(Integer idUser) throws ResourceNotExistException {
 
-        UserResponseDTO userResponseDTO = new UserResponseDTO();
+        try {
+            UserResponseDTO userResponseDTO = new UserResponseDTO();
 
-        Optional<User> resultUser = getOneUser(idUser);
-        User currentUser = resultUser.get();
+            Optional<User> resultUser = getOneUser(idUser);
 
-        List<BillForUserDTO> billForUserDTO = billService.getBillsForUserDTO(idUser);
-        List<PhoneLineForUserDTO> phoneLineForUserDTO = phoneLineService.getPhoneLinesForUserDTO(idUser);
+            User currentUser = resultUser.get();
 
-        // We set the info to our response dto
-        userResponseDTO.setDni(currentUser.getDni());
-        userResponseDTO.setName(currentUser.getName());
-        userResponseDTO.setSurname(currentUser.getSurname());
-        userResponseDTO.setUsername(currentUser.getUsername());
-        userResponseDTO.setBills(billForUserDTO);
-        userResponseDTO.setPhoneLines(phoneLineForUserDTO);
-        return userResponseDTO;
+            List<BillForUserDTO> billForUserDTO = billService.getBillsForUserDTO(idUser);
+            List<PhoneLineForUserDTO> phoneLineForUserDTO = phoneLineService.getPhoneLinesForUserDTO(idUser);
+
+            // We set the info to our response dto
+            userResponseDTO.setDni(currentUser.getDni());
+            userResponseDTO.setName(currentUser.getName());
+            userResponseDTO.setSurname(currentUser.getSurname());
+            userResponseDTO.setUsername(currentUser.getUsername());
+            userResponseDTO.setBills(billForUserDTO);
+            userResponseDTO.setPhoneLines(phoneLineForUserDTO);
+            return userResponseDTO;
+
+        } catch (NoSuchElementException e) {
+            throw new ResourceNotExistException("The user you are trying to serach does not exists. Verify the user id and try again");
+        }
     }
 
-    public void activeUser(Integer idUser) throws NoSuchAlgorithmException, ResourceNotExistException {
-        Optional<User> resultUser = getOneUser(idUser);
-        User currentUser = resultUser.get();
-        if (resultUser != null) {
-            if (currentUser.getSuspended()) {
-                currentUser.setSuspended(false);
-            } else currentUser.setSuspended(true);
-            userRepository.save(currentUser);
+    public void activeUser(Integer idUser) throws ResourceNotExistException {
+        try {
+            Optional<User> resultUser = getOneUser(idUser);
+            User currentUser = resultUser.get();
+            if (resultUser != null) {
+                if (currentUser.getSuspended()) {
+                    currentUser.setSuspended(false);
+                } else currentUser.setSuspended(true);
+                userRepository.save(currentUser);
+            }
+        }catch(NoSuchElementException e){
+            throw new ResourceNotExistException("The user you want to activate does not exist");
         }
-
     }
 
 }

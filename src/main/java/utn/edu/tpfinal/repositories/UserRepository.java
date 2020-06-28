@@ -17,24 +17,13 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     @Query(value = "select * from users where username = ?1 and pass = ?2", nativeQuery = true)
     User userExists(String username, String password);
 
-    @Query(value = "select u.dni, u.username, u.name, u.surname, p.line_number\n" +
-            "from users u\n" +
-            "inner join phone_lines p\n" +
-            "on u.id = p.id_line\n" +
-            "where id = ?1;\n", nativeQuery = true)
-    IReduceUser findReduceById(Integer idUser);
+    @Query(value = "select u.dni, u.username, u.name, u.surname\n" +
+                    "from users u\n" +
+                    "where id = :idUser ;\n", nativeQuery = true)
+    IReduceUser findReduceById(@Param("idUser") Integer idUser);
 
-
-  /*@Query(value = "select total_price as totalPrice," +
-                  " emittion_date as emittionDate," +
-                  " expiration_date as expiratioDate," +
-                  " bill_status as billStatus" +
-                  " from bills" +
-                  " where id_user = :idUser ;", nativeQuery = true)
-  List<BillForUserDTO> getUserBillInfo(@Param("idUser") Integer idUser);*/
-
-    @Query(value = "SELECT new utn.edu.tpfinal.dto.BillForUserDTO(b.totalPrice, b.emittionDate, b.expirationDate, b.billStatus) from bills where id_user = :idUser ;", nativeQuery = true)
-    List<BillForUserDTO> getUserBillInfo(@Param("idUser") Integer idUser);
+    @Query(value = "select dni, username, name, surname from users ;\n", nativeQuery = true)
+    List<IReduceUser> findAllUsersReduce();
 
     Optional<User> findByDni(Integer dni);
 }

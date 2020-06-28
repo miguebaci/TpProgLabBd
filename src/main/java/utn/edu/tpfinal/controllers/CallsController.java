@@ -47,12 +47,12 @@ public class CallsController {
     }
 
     // POST CALL.
-    public ResponseEntity<Call> addCall(CallsForUserDTO newCall) throws ResourceNotExistException {
+    public Call addCall(CallsForUserDTO newCall) throws ResourceNotExistException {
         return callsService.addCall(newCall);
     }
 
     // Get all calls between two ranges of dates
-    public ResponseEntity<List<CallsForUserDTO>> getCallsByUser(Integer idUser, String lineNumber) throws ResourceNotExistException {
+    public List<CallsForUserDTO> getCallsByUser(Integer idUser, String lineNumber) throws ResourceNotExistException {
         try {
             PhoneLine line = phoneLineService.getOnePhoneLineByUser(lineNumber, idUser);
 
@@ -60,11 +60,7 @@ public class CallsController {
 
                 List<CallsForUserDTO> callsForUserDTO;
                 callsForUserDTO = callsService.getCallsForUserDTO(lineNumber, true);
-                if (callsForUserDTO.size() > 0) {
-                    return ResponseEntity.ok(callsForUserDTO);
-                } else {
-                    throw new ResourceNotExistException("The user has no calls");
-                }
+                return callsForUserDTO;
             } else {
                 throw new ResourceNotExistException("This user does not owns this line");
             }
@@ -74,10 +70,8 @@ public class CallsController {
     }
 
     // Get all calls between two ranges of dates
-    public ResponseEntity<List<CallsForUserDTO>> getCallsBetweenRangeOfDates(String sessionToken, String fromDate, String toDate, String lineNumber, Boolean caller) throws ResourceNotExistException, ValidationException {
+    public List<CallsForUserDTO> getCallsBetweenRangeOfDates(User currentUser, String fromDate, String toDate, String lineNumber, Boolean caller) throws ValidationException {
         try {
-            User currentUser = sessionManager.getCurrentUser(sessionToken);
-
             // Check if the current log user its the owner of the line ( in the case they have access to a valid token and they want to view information that they do not have access)
             if (phoneLineService.getOnePhoneLineByUser(lineNumber, currentUser.getId()) == null) {
                 throw new ValidationException("You can view your calls because you dont own this phone line. Please verify your phone line number.");
@@ -92,32 +86,15 @@ public class CallsController {
                 callsForUserDTO = callsService.getCallsForUserDTO(lineNumber, caller);
             }
 
-            if (callsForUserDTO.size() > 0) {
-                return ResponseEntity.ok(callsForUserDTO);
-            } else {
-                throw new ResourceNotExistException("The calls between the ranges of dates you have provided has not been found");
-            }
-        } catch (ResourceNotExistException | ValidationException e) {
+            return callsForUserDTO;
+        } catch (ValidationException e) {
             throw e;
         }
     }
 
     // Get top 10 destination most called
     @GetMapping("/Top10DestinationCalled")
-    public List<ITop10DestinationCalled> getTop10DestinationWithNumberOfCalls(String sessionToken) throws ResourceNotExistException {
-        try {
-            // Verify token
-            User currentUser = sessionManager.getCurrentUser(sessionToken);
-
-            List<ITop10DestinationCalled> listTop10DestinationsCalled = callsService.getTop10DestinationsWithNumberOfCalls(currentUser.getId());
-
-            if (listTop10DestinationsCalled.size() > 0) {
-                return listTop10DestinationsCalled;
-            } else {
-                throw new ResourceNotExistException("We couldnt generate the top 10 destinations called by you, because you dont have any calls yet!");
-            }
-        } catch (ResourceNotExistException e) {
-            throw e;
-        }
+    public List<ITop10DestinationCalled> getTop10DestinationWithNumberOfCalls(User currentUser)  {
+        return callsService.getTop10DestinationsWithNumberOfCalls(currentUser.getId());
     }
 }
