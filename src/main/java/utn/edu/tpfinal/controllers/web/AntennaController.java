@@ -26,8 +26,8 @@ public class AntennaController {
     @PostMapping("/calls")
     public ResponseEntity<Call> makeCall(@RequestHeader("Authorization") String sessionToken, @RequestBody CallsForUserDTO newCall) throws ResourceNotExistException {
         ResponseEntity response;
-        URI location = getLocation(this.callsController.addCall(newCall).getBody());
-        response = ResponseEntity.created(location).build();
+        Call call = callsController.addCall(newCall);
+        response = ResponseEntity.created(getLocation(call)).build();
         return response;
     }
 

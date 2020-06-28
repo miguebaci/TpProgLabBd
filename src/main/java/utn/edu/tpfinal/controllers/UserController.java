@@ -1,9 +1,8 @@
 package utn.edu.tpfinal.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import utn.edu.tpfinal.Exceptions.ResourceAlreadyExistException;
 import utn.edu.tpfinal.Exceptions.ResourceNotExistException;
 import utn.edu.tpfinal.Exceptions.ValidationException;
 import utn.edu.tpfinal.dto.UserResponseDTO;
@@ -13,6 +12,7 @@ import utn.edu.tpfinal.services.UserService;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Controller
@@ -31,18 +31,22 @@ public class UserController {
     }
 
     // GET ALL USERS.
-    public List<User> getUsers() {
+    public List<IReduceUser> getUsers() {
         return userService.getAllUsers();
     }
 
     // POST USER.
-    public ResponseEntity<User> addUser(User newUser) throws ResourceNotExistException, NoSuchAlgorithmException {
+    public User addUser(User newUser) throws ResourceAlreadyExistException, NoSuchAlgorithmException {
         return userService.addUser(newUser);
     }
 
     // DELETE ONE USER BY ID.
-    public void deleteUser(Integer idUser) {
-        userService.deleteOneUser(idUser);
+    public void deleteUser(Integer idUser) throws ResourceNotExistException {
+        try {
+            userService.deleteOneUser(idUser);
+        }catch(NoSuchElementException e){
+            throw new ResourceNotExistException("The user id you want to delete does not exist.");
+        }
     }
 
     // UPDATE USER.
@@ -51,11 +55,6 @@ public class UserController {
     }
 
     public User login(String username, String password) throws NoSuchAlgorithmException, ResourceNotExistException, ValidationException {
-        /*if ((username != null) && (password != null)) {
-            return userService.login(username, password);
-        } else {
-            throw new RuntimeException("username and password must have a value");
-        }*/
         User u = null;
 
         try {
@@ -75,21 +74,11 @@ public class UserController {
         return userService.getOneReduceUser(idUser);
     }
 
-    public ResponseEntity<UserResponseDTO> getOneUserDTO(Integer idUser) {
-        ResponseEntity<UserResponseDTO> responseEntity;
-
-        // Get the dto of the user
-        UserResponseDTO userResponseDTO = userService.getOneDTOUser(idUser);
-
-        if (userResponseDTO != null) {
-            responseEntity = ResponseEntity.ok(userResponseDTO);
-        } else {
-            responseEntity = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
-        return responseEntity;
+    public UserResponseDTO getOneUserDTO(Integer idUser) throws ResourceNotExistException {
+        return userService.getOneDTOUser(idUser);
     }
 
-    public void activeUser(Integer idUser) throws NoSuchAlgorithmException, ResourceNotExistException {
+    public void activeUser(Integer idUser) throws ResourceNotExistException {
         userService.activeUser(idUser);
     }
 }

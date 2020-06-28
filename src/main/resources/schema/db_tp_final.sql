@@ -118,7 +118,7 @@ BEGIN
     SET new.profit = (new.price - new.cost);
 END//
 
-DROP TRIGGER ai_calls;
+DROP TRIGGER bi_calls;
 SHOW TRIGGERS;
 
 # After insert en bill trigger  : que hace un update de la tabla calls , se busca el id de la bill dependiendo del
@@ -260,6 +260,10 @@ VALUES (3, '32154684', 'antenna', 'Antenna','Antenna', 'F212100E38F782E152EBFAB7
 
 #pass=antenna
 
+INSERT INTO users (user_type, dni, username, name, surname, pass)
+VALUES (1, '32154684', 'test', 'test','test', 'test');
+
+
 # Dos lineas : Dema
 INSERT INTO phone_lines (id_user, prefix, line_type, line_number)
 VALUES (1, '223', 2, '155210762');
@@ -277,6 +281,8 @@ VALUES (2, '3541', 2, '155201031');
 INSERT INTO phone_lines (id_user, prefix, line_type, line_number)
 VALUES (2, '226', 2, '1551111111');
 
+INSERT INTO phone_lines (id_user, prefix, line_type, line_number)
+VALUES (10, '226', 2, '1552222222');
 
 # Llamo desde dema a baci:
 

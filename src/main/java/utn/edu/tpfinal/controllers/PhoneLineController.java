@@ -2,6 +2,7 @@ package utn.edu.tpfinal.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import utn.edu.tpfinal.Exceptions.ResourceNotExistException;
 import utn.edu.tpfinal.models.PhoneLine;
 import utn.edu.tpfinal.services.PhoneLineService;
 import utn.edu.tpfinal.session.SessionManager;
@@ -45,7 +46,7 @@ public class PhoneLineController {
         phoneLineService.updateOnePhoneLine(phoneLine, idPhoneLine);
     }
 
-    public void activePhoneLine(Integer idPhoneLine) {
+    public void activePhoneLine(Integer idPhoneLine) throws ResourceNotExistException {
         phoneLineService.activePhoneLine(idPhoneLine);
     }
 }

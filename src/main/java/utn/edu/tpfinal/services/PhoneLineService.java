@@ -14,6 +14,7 @@ import utn.edu.tpfinal.repositories.RateRepository;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -95,17 +96,21 @@ public class PhoneLineService {
         return phoneLineRepository.getPhoneLineByUserId(lineNumber, idUser);
     }
 
-    public void activePhoneLine(Integer idPhoneLine) {
-        Optional<PhoneLine> resultPhoneLine = getOnePhoneLine(idPhoneLine);
-        PhoneLine currentPhoneLine = resultPhoneLine.get();
+    public void activePhoneLine(Integer idPhoneLine) throws ResourceNotExistException {
+        try {
+            Optional<PhoneLine> resultPhoneLine = getOnePhoneLine(idPhoneLine);
+            PhoneLine currentPhoneLine = resultPhoneLine.get();
 
-        if (resultPhoneLine != null) {
             if (resultPhoneLine != null) {
-                if (currentPhoneLine.getSuspended()) {
-                    currentPhoneLine.setSuspended(false);
-                } else currentPhoneLine.setSuspended(true);
-                phoneLineRepository.save(currentPhoneLine);
+                if (resultPhoneLine != null) {
+                    if (currentPhoneLine.getSuspended()) {
+                        currentPhoneLine.setSuspended(false);
+                    } else currentPhoneLine.setSuspended(true);
+                    phoneLineRepository.save(currentPhoneLine);
+                }
             }
+        }catch (NoSuchElementException e){
+            throw new ResourceNotExistException("The phone line you want to activate does not exist");
         }
     }
 }

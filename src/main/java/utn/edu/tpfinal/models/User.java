@@ -23,11 +23,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-
     @NotNull
-    private enum UserType {backoffice, client, antenna}
-
-    ;
     @Enumerated(EnumType.STRING)
     private UserType userType;
 
