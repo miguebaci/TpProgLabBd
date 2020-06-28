@@ -224,6 +224,29 @@ from phone_lines a
 limit 1;
 
 
+
+create user 'backoffice'@'localhost' identified by 'passwordback';
+GRANT SELECT on db_tp_final.phone_lines to 'backoffice'@'localhost';
+GRANT UPDATE on db_tp_final.phone_lines to 'backoffice'@'localhost';
+GRANT DELETE on db_tp_final.phone_lines to 'backoffice'@'localhost';
+GRANT INSERT on db_tp_final.phone_lines to 'backoffice'@'localhost';
+GRANT SELECT on db_tp_final.users to 'backoffice'@'localhost';
+GRANT UPDATE on db_tp_final.users to 'backoffice'@'localhost';
+GRANT DELETE on db_tp_final.users to 'backoffice'@'localhost';
+GRANT INSERT on db_tp_final.users to 'backoffice'@'localhost';
+
+create user 'client'@'%' identified by 'passwordclient';
+GRANT SELECT on db_tp_final.calls to 'client'@'%';
+GRANT SELECT on db_tp_final.bills to 'client'@'%';
+
+create user 'infrastructure'@'localhost' identified by 'passwordinfra';
+GRANT INSERT(number_origin, number_destiny, date_call, duration) on db_tp_final.calls to 'infrastructure'@'localhost';
+
+create user 'billing'@'localhost' identified by 'passwordbilling';
+GRANT EXECUTE ON PROCEDURE db_tp_final.billing_sp TO 'billing'@'localhost';
+
+
+
 INSERT INTO provinces (province_name) VALUES ('Buenos Aires');
 INSERT INTO provinces (province_name) VALUES ('Cordoba');
 
