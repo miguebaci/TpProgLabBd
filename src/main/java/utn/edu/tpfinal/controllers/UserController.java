@@ -13,7 +13,6 @@ import utn.edu.tpfinal.services.UserService;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
 @Controller
 public class UserController {
@@ -25,10 +24,10 @@ public class UserController {
         this.userService = userService;
     }
 
-    // GET ONE USER BY ID.
+    /*// GET ONE USER BY ID.
     public Optional<User> getUser(Integer idUser) {
         return userService.getOneUser(idUser);
-    }
+    }*/
 
     // GET ALL USERS.
     public List<IReduceUser> getUsers() {
