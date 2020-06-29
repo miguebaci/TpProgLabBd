@@ -25,7 +25,7 @@ public class User {
 
     @NotNull
     @Enumerated(EnumType.STRING)
-    private UserType userType;
+    public UserType userType;
 
     @NotNull
     private Integer dni;
