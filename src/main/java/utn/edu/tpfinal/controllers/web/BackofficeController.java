@@ -45,24 +45,28 @@ public class BackofficeController {
     }
 
     // GET ALL USERS. ( Hago que retorne una projection de todos los usuarios)
-    @GetMapping("/")
+    @GetMapping("/users/")
     public ResponseEntity<List<IReduceUser>> getUsers(@RequestHeader("Authorization") String sessionToken) throws ResourceNotExistException {
+        ResponseEntity responseEntity;
         try {
             User currentUser = sessionManager.getCurrentUser(sessionToken);
             List<IReduceUser> listAllUserProfiles =  userController.getUsers();
 
             if(listAllUserProfiles.size() > 0){
-                return ResponseEntity.ok(listAllUserProfiles);
+                responseEntity = ResponseEntity.ok(listAllUserProfiles);
             }else{
+                responseEntity = ResponseEntity.status(HttpStatus.NO_CONTENT).build();
                 throw new ResourceNotExistException("There is no users in the database to retrieve yet.");
             }
         } catch (ResourceNotExistException e) {
             throw e;
         }
+        return responseEntity;
+
     }
 
     // POST USER.
-    @PostMapping("/")
+    @PostMapping("/users/")
     public ResponseEntity addUser(@RequestHeader("Authorization") String sessionToken, @RequestBody User newUser) throws NoSuchAlgorithmException, ResourceNotExistException, ResourceAlreadyExistException {
         ResponseEntity response;
         try {
@@ -76,7 +80,7 @@ public class BackofficeController {
     }
 
     // DELETE ONE USER BY ID.
-    @DeleteMapping("/{idUser}")
+    @DeleteMapping("/users/{idUser}")
     public ResponseEntity deleteUser(@RequestHeader("Authorization") String sessionToken, @PathVariable Integer idUser) throws ResourceNotExistException {
         try {
             User currentUser = sessionManager.getCurrentUser(sessionToken);
@@ -88,7 +92,7 @@ public class BackofficeController {
     }
 
     // SUSPEND OR REACTIVATE USER.
-    @PutMapping("/activate/users/{idUser}")
+    @PutMapping("/users/activate/{idUser}")
     public ResponseEntity suspendUser(@RequestHeader("Authorization") String sessionToken, @PathVariable Integer idUser) throws ResourceNotExistException {
         try {
             User currentUser = sessionManager.getCurrentUser(sessionToken);
@@ -100,7 +104,7 @@ public class BackofficeController {
     }
 
     // SUSPEND OR REACTIVATE PHONELINE.
-    @PutMapping("/activate/phoneline/{idPhone}")
+    @PutMapping("/phonelines/activate/{idPhone}")
     public ResponseEntity suspendphoneline(@RequestHeader("Authorization") String sessionToken, @PathVariable Integer idPhone) throws ResourceNotExistException {
         try{
             User currentUser = sessionManager.getCurrentUser(sessionToken);
@@ -112,7 +116,7 @@ public class BackofficeController {
     }
 
     // UPDATE USER.
-    @PutMapping("/{idUser}")
+    @PutMapping("/users/{idUser}")
     public ResponseEntity updateUser(@RequestHeader("Authorization") String sessionToken, @RequestBody User user, @PathVariable Integer idUser) throws NoSuchAlgorithmException, ResourceNotExistException {
         try {
             User currentUser = sessionManager.getCurrentUser(sessionToken);
@@ -151,7 +155,7 @@ public class BackofficeController {
 
 
     // GET ONE REDUCE USER BY ID.
-    @GetMapping("/userProfile/{idUser}")
+    @GetMapping("/users/userProfile/{idUser}")
     public ResponseEntity<IReduceUser> getReduceUser(@RequestHeader("Authorization") String sessionToken, @PathVariable Integer idUser) throws ResourceNotExistException {
         try {
             User currentUser = sessionManager.getCurrentUser(sessionToken);
@@ -173,7 +177,7 @@ public class BackofficeController {
 
 
     // Response user with DTO
-    @GetMapping("/fullUserProfile/{idUser}")
+    @GetMapping("/users/fullUserProfile/{idUser}")
     public ResponseEntity<UserResponseDTO> getOneUserDTO(@RequestHeader("Authorization") String sessionToken, @PathVariable Integer idUser) throws SQLException, ResourceNotExistException {
 
         try {

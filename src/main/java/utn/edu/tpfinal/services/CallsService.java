@@ -38,14 +38,18 @@ public class CallsService {
     public Call addCall(CallsForUserDTO callDto) throws ResourceNotExistException {
         PhoneLine from = phoneLineService.getByLineNumber(callDto.getNumberOrigin());
         PhoneLine to = phoneLineService.getByLineNumber(callDto.getNumberDestiny());
+        Call call = new Call();
         if (!from.getSuspended() && !to.getSuspended()) {
-            Call call = new Call();
-            call.setDateCall(callDto.getDateCall());
-            call.setDuration(callDto.getDuration());
-            call.setNumberOrigin(callDto.getNumberOrigin());
-            call.setNumberDestiny(callDto.getNumberDestiny());
-            return callRepository.save(call);
-        } else throw new ResourceNotExistException("Verify suspension of the phonelines.");
+            if (callDto.getDuration() > 0) {
+                call.setDateCall(callDto.getDateCall());
+                call.setDuration(callDto.getDuration());
+                call.setNumberOrigin(callDto.getNumberOrigin());
+                call.setNumberDestiny(callDto.getNumberDestiny());
+                return callRepository.save(call);
+            }
+            else return call;
+        }
+        else throw new ResourceNotExistException("Verify suspension of the phonelines.");
     }
 
     public List<CallsForUserDTO> geCallsBetweenRange(String from, String to, String lineNumber, Boolean caller) {
