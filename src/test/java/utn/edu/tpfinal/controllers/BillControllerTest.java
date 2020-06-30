@@ -33,7 +33,7 @@ public class BillControllerTest {
     @Test
     public void getBillTest() {
         User u = new User(1, UserType.client,37867266,"dema","felipe","demaria","dema22",false,null,null);
-        Bill b = new Bill(null, u, (float)150.2, Date.valueOf("2020-10-22"), Date.valueOf("2020-10-22"), false, (float)100, (float)50,null);
+        Bill b = new Bill(1, u, (float)150.2, Date.valueOf("2020-10-22"), Date.valueOf("2020-10-22"), false, (float)100, (float)50,null);
         Mockito.when(billService.getOneBill(b.getIdBill())).thenReturn(Optional.ofNullable(b));
         Optional<Bill> response =  billController.getBill(b.getIdBill());
         Assertions.assertNotNull(response);
@@ -44,8 +44,8 @@ public class BillControllerTest {
     public void getBillsTest() {
         List<Bill> myBills = new ArrayList<>();
         User u = new User(1, UserType.client,37867266,"dema","felipe","demaria","dema22",false,null,null);
-        Bill b = new Bill(null, u, (float)150.2, Date.valueOf("2020-10-22"), Date.valueOf("2020-10-22"), false, (float)100, (float)50,null);
-        Bill b1 = new Bill(null, u, (float)150.2, Date.valueOf("2020-01-22"), Date.valueOf("2020-02-22"), false, (float)100, (float)50,null);
+        Bill b = new Bill(1, u, (float)150.2, Date.valueOf("2020-10-22"), Date.valueOf("2020-10-22"), false, (float)100, (float)50,null);
+        Bill b1 = new Bill(2, u, (float)150.2, Date.valueOf("2020-01-22"), Date.valueOf("2020-02-22"), false, (float)100, (float)50,null);
         myBills.add(b);
         myBills.add(b1);
 
@@ -58,7 +58,7 @@ public class BillControllerTest {
     @Test
     public void addBillTest() {
         User u = new User(1, UserType.client,37867266,"dema","felipe","demaria","dema22",false,null,null);
-        Bill b = new Bill(null, u, (float)150.2, Date.valueOf("2020-10-22"), Date.valueOf("2020-10-22"), false, (float)100, (float)50,null);
+        Bill b = new Bill(1, u, (float)150.2, Date.valueOf("2020-10-22"), Date.valueOf("2020-10-22"), false, (float)100, (float)50,null);
         Mockito.doNothing().when(billService).addBill(b);
         billController.addBill(b);
         Mockito.verify(billService, Mockito.times(1)).addBill(b);
@@ -67,7 +67,7 @@ public class BillControllerTest {
     @Test
     public void deleteBillTest () {
         User u = new User(1, UserType.client,37867266,"dema","felipe","demaria","dema22",false,null,null);
-        Bill b = new Bill(null, u, (float)150.2, Date.valueOf("2020-10-22"), Date.valueOf("2020-10-22"), false, (float)100, (float)50,null);
+        Bill b = new Bill(1, u, (float)150.2, Date.valueOf("2020-10-22"), Date.valueOf("2020-10-22"), false, (float)100, (float)50,null);
         Mockito.doNothing().when(billService).deleteOneBill(b.getIdBill());
         billController.deleteBill(b.getIdBill());
         Mockito.verify(billService, Mockito.times(1)).deleteOneBill(b.getIdBill());
@@ -76,7 +76,7 @@ public class BillControllerTest {
     @Test
     public void updateBillTest () {
         User u = new User(1, UserType.client,37867266,"dema","felipe","demaria","dema22",false,null,null);
-        Bill b = new Bill(null, u, (float)150.2, Date.valueOf("2020-10-22"), Date.valueOf("2020-10-22"), false, (float)100, (float)50,null);
+        Bill b = new Bill(1, u, (float)150.2, Date.valueOf("2020-10-22"), Date.valueOf("2020-10-22"), false, (float)100, (float)50,null);
         Mockito.doNothing().when(billService).updateOneBill(b, b.getIdBill());
         billController.updateBill(b, b.getIdBill());
         Mockito.verify(billService, Mockito.times(1)).updateOneBill(b, b.getIdBill());

@@ -9,10 +9,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import utn.edu.tpfinal.Exceptions.ResourceNotExistException;
-import utn.edu.tpfinal.models.LineType;
-import utn.edu.tpfinal.models.PhoneLine;
-import utn.edu.tpfinal.models.User;
-import utn.edu.tpfinal.models.UserType;
+import utn.edu.tpfinal.models.*;
 import utn.edu.tpfinal.services.PhoneLineService;
 import utn.edu.tpfinal.session.SessionManager;
 
@@ -35,5 +32,14 @@ public class PhoneLineControllerTest {
         phoneLineController.activePhoneLine(phoneLineToUpdate.getIdLine());
         Mockito.verify(phoneLineService, Mockito.times(1)).activePhoneLine(phoneLineToUpdate.getIdLine());
     }
+
+    @Test
+    public void deletePhoneLineTest() {
+        PhoneLine pl = new PhoneLine(1, new User(), new Locality(), LineType.mobile, "223155123456", false, null);
+        Mockito.doNothing().when(phoneLineService).deleteOnePhoneLine(pl.getIdLine());
+        phoneLineController.deletePhoneLine(pl.getIdLine());
+        Mockito.verify(phoneLineService, Mockito.times(1)).deleteOnePhoneLine(pl.getIdLine());
+    }
 }
+
 
