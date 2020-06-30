@@ -4,18 +4,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import utn.edu.tpfinal.Exceptions.ResourceNotExistException;
 import utn.edu.tpfinal.models.Rate;
-import utn.edu.tpfinal.services.RateService;
+import utn.edu.tpfinal.services.RatesService;
 
 @Controller
 public class RatesController {
-    private final RateService rateService;
+    private final RatesService ratesService;
 
     @Autowired
-    public RatesController(RateService rateService) {
-        this.rateService = rateService;
+    public RatesController(RatesService ratesService) {
+        this.ratesService = ratesService;
     }
 
     public Rate getRatesByLocality(Integer idLocalityOrigin, Integer idLocalityDestiny) throws ResourceNotExistException {
-        return this.rateService.getRatesByLocality(idLocalityOrigin, idLocalityDestiny);
+        return this.ratesService.getRatesByLocality(idLocalityOrigin, idLocalityDestiny);
     }
 }

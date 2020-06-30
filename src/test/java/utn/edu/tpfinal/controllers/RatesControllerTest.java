@@ -13,7 +13,7 @@ import utn.edu.tpfinal.Exceptions.ResourceNotExistException;
 import utn.edu.tpfinal.models.Locality;
 import utn.edu.tpfinal.models.Province;
 import utn.edu.tpfinal.models.Rate;
-import utn.edu.tpfinal.services.RateService;
+import utn.edu.tpfinal.services.RatesService;
 
 import java.sql.Date;
 
@@ -24,7 +24,7 @@ public class RatesControllerTest {
     private RatesController ratesController;
 
     @Mock
-    private RateService rateService;
+    private RatesService ratesService;
 
     @Test
     public void getRatesByLocalityTest() throws ResourceNotExistException {
@@ -32,7 +32,7 @@ public class RatesControllerTest {
         Locality l = new Locality(223, "Mar del Plata", p, null, null);
         Locality l2 = new Locality(226, "Miramar", p, null, null);
         Rate r = new Rate(null, l, l2, (float) 12, Date.valueOf("2020-01-10"), Date.valueOf("2020-02-10"), (float)5, null);
-        Mockito.when(rateService.getRatesByLocality(l.getPrefix(),l2.getPrefix())).thenReturn(r);
+        Mockito.when(ratesService.getRatesByLocality(l.getPrefix(),l2.getPrefix())).thenReturn(r);
         Rate response =  ratesController.getRatesByLocality(l.getPrefix(),l2.getPrefix());
         Assertions.assertNotNull(response);
         Assertions.assertEquals(r,response);

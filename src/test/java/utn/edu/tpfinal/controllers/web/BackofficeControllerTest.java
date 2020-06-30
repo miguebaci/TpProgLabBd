@@ -54,7 +54,7 @@ public class BackofficeControllerTest {
 
     @Test
     public void getUsersTest() throws ResourceNotExistException {
-        User u = new User(1, UserType.client, 37867266, "dema", "felipe", "demaria", "dema22", false, null, null);
+        User u = new User(1, UserType.backoffice, 37867266, "dema", "felipe", "demaria", "dema22", false, null, null);
         String token = "asfsgegegeg";
         List<IReduceUser> list = new ArrayList<>();
         list.add(reduceUser);
@@ -84,7 +84,7 @@ public class BackofficeControllerTest {
 
     @Test
     public void deleteUserTest() throws ResourceNotExistException, NoSuchAlgorithmException, ResourceAlreadyExistException, URISyntaxException {
-        User u = new User(1, UserType.client, 37867266, "dema", "felipe", "demaria", "dema22", false, null, null);
+        User u = new User(1, UserType.backoffice, 37867266, "dema", "felipe", "demaria", "dema22", false, null, null);
         String token = "asfsgegegeg";
 
         when(sessionManager.getCurrentUser(token)).thenReturn(u);
@@ -105,7 +105,7 @@ public class BackofficeControllerTest {
 
     @Test
     public void suspendUser() throws ResourceNotExistException {
-        User u = new User(1, UserType.client, 37867266, "dema", "felipe", "demaria", "dema22", false, null, null);
+        User u = new User(1, UserType.backoffice, 37867266, "dema", "felipe", "demaria", "dema22", false, null, null);
         String token = "asfsgegegeg";
 
         when(sessionManager.getCurrentUser(token)).thenReturn(u);
@@ -126,7 +126,7 @@ public class BackofficeControllerTest {
 
     @Test
     public void suspendphonelineTest() throws ResourceNotExistException {
-        User u = new User(1, UserType.client, 37867266, "dema", "felipe", "demaria", "dema22", false, null, null);
+        User u = new User(1, UserType.backoffice, 37867266, "dema", "felipe", "demaria", "dema22", false, null, null);
         String token = "asfsgegegeg";
 
         when(sessionManager.getCurrentUser(token)).thenReturn(u);
@@ -147,7 +147,7 @@ public class BackofficeControllerTest {
 
     @Test
     public void updateUserTest() throws ResourceNotExistException, NoSuchAlgorithmException {
-        User u = new User(1, UserType.client, 37867266, "dema", "felipe", "demaria", "dema22", false, null, null);
+        User u = new User(1, UserType.backoffice, 37867266, "dema", "felipe", "demaria", "dema22", false, null, null);
         String token = "asfsgegegeg";
 
         when(sessionManager.getCurrentUser(token)).thenReturn(u);
@@ -168,7 +168,7 @@ public class BackofficeControllerTest {
 
     @Test
     public void getRatesByLocalitiesTest() throws ResourceNotExistException {
-        User u = new User(1, UserType.client, 37867266, "dema", "felipe", "demaria", "dema22", false, null, null);
+        User u = new User(1, UserType.backoffice, 37867266, "dema", "felipe", "demaria", "dema22", false, null, null);
         String token = "asfsgegegeg";
         Rate rate = new Rate();
 
@@ -189,7 +189,7 @@ public class BackofficeControllerTest {
 
     @Test
     public void getCallsOfUserTest() throws ResourceNotExistException, NoDataAvailable {
-        User u = new User(1, UserType.client, 37867266, "dema", "felipe", "demaria", "dema22", false, null, null);
+        User u = new User(1, UserType.backoffice, 37867266, "dema", "felipe", "demaria", "dema22", false, null, null);
         String token = "asfsgegegeg";
         CallsForUserDTO callsForUserDTO = new CallsForUserDTO(new Date(), 1, "223123456", "2231234321");
         List<CallsForUserDTO> list = new ArrayList<>();
@@ -220,7 +220,7 @@ public class BackofficeControllerTest {
 
     @Test
     public void getReduceUserTest() throws ResourceNotExistException {
-        User u = new User(1, UserType.client, 37867266, "dema", "felipe", "demaria", "dema22", false, null, null);
+        User u = new User(1, UserType.backoffice, 37867266, "dema", "felipe", "demaria", "dema22", false, null, null);
         String token = "asfsgegegeg";
 
         when(sessionManager.getCurrentUser(token)).thenReturn(u);
@@ -247,7 +247,7 @@ public class BackofficeControllerTest {
 
     @Test
     public void getOneUserDTOTest() throws ResourceNotExistException, SQLException {
-        User u = new User(1, UserType.client, 37867266, "dema", "felipe", "demaria", "dema22", false, null, null);
+        User u = new User(1, UserType.backoffice, 37867266, "dema", "felipe", "demaria", "dema22", false, null, null);
         String token = "asfsgegegeg";
         UserResponseDTO responseDTO = new UserResponseDTO();
 
