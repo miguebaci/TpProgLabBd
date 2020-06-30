@@ -41,12 +41,12 @@ public class BillController {
     }
 
     // DELETE ONE BILL BY ID.
-    public void deleteProvince(Integer idBill) {
+    public void deleteBill(Integer idBill) {
         billService.deleteOneBill(idBill);
     }
 
     // UPDATE BILL BY ID.
-    public void updateProvince(Bill bill, Integer idBill) {
+    public void updateBill(Bill bill, Integer idBill) {
         billService.updateOneBill(bill, idBill);
     }
 

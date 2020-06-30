@@ -55,6 +55,8 @@ CREATE TABLE bills (
 	constraint fk_id_user_for_bill foreign key (id_user) references users (id)
 );
 
+CREATE INDEX index_bills USING BTREE ON bills (emittion_date);
+
 CREATE TABLE rates (
 	id_rate int auto_increment not null,
     prefix_origin int not null,#varchar(11)
@@ -89,6 +91,8 @@ CREATE TABLE calls(
 	constraint fk_id_bill foreign key (id_bill) references bills (id_bill),
 	constraint fk_id_rate foreign key (id_rate) references rates (id_rate)
 );
+
+CREATE INDEX index_calls USING BTREE ON calls (number_origin, date_call);
 
 DELIMITER //
 CREATE TRIGGER bi_calls BEFORE INSERT ON calls FOR EACH ROW
@@ -226,14 +230,8 @@ limit 1;
 
 
 create user 'backoffice'@'localhost' identified by 'passwordback';
-GRANT SELECT on db_tp_final.phone_lines to 'backoffice'@'localhost';
-GRANT UPDATE on db_tp_final.phone_lines to 'backoffice'@'localhost';
-GRANT DELETE on db_tp_final.phone_lines to 'backoffice'@'localhost';
-GRANT INSERT on db_tp_final.phone_lines to 'backoffice'@'localhost';
-GRANT SELECT on db_tp_final.users to 'backoffice'@'localhost';
-GRANT UPDATE on db_tp_final.users to 'backoffice'@'localhost';
-GRANT DELETE on db_tp_final.users to 'backoffice'@'localhost';
-GRANT INSERT on db_tp_final.users to 'backoffice'@'localhost';
+GRANT SELECT, UPDATE, DELETE, INSERT on db_tp_final.phone_lines to 'backoffice'@'localhost';
+GRANT SELECT, UPDATE, DELETE, INSERT on db_tp_final.users to 'backoffice'@'localhost';
 
 create user 'client'@'%' identified by 'passwordclient';
 GRANT SELECT on db_tp_final.calls to 'client'@'%';

@@ -1,6 +1,7 @@
 package utn.edu.tpfinal.controllers.web;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -27,7 +28,12 @@ public class AntennaController {
     public ResponseEntity<Call> makeCall(@RequestHeader("Authorization") String sessionToken, @RequestBody CallsForUserDTO newCall) throws ResourceNotExistException {
         ResponseEntity response;
         Call call = callsController.addCall(newCall);
-        response = ResponseEntity.created(getLocation(call)).build();
+        if (call.getIdCall()!=null) {
+            response = ResponseEntity.created(getLocation(call)).build();
+        }
+        else{
+            response = ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
         return response;
     }
 

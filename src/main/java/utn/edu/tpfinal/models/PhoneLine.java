@@ -28,10 +28,9 @@ public class PhoneLine {
     @JoinColumn(name = "prefix")
     private Locality locality;
 
+    /*@NotNull
+    private enum LineType {landline, mobile};*/
     @NotNull
-    private enum LineType {landline, mobile}
-
-    ;
     @Enumerated(EnumType.STRING)
     private LineType lineType;
 

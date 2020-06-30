@@ -105,7 +105,7 @@ public class UserService {
         return Optional.ofNullable(user).orElseThrow(() -> new ResourceNotExistException("There is no user with the information you have provided."));
     }
 
-    private String hashPass(String pass) throws NoSuchAlgorithmException {
+    protected String hashPass(String pass) throws NoSuchAlgorithmException {
         MessageDigest m = MessageDigest.getInstance("MD5");
         byte[] data = pass.getBytes();
         m.update(data, 0, data.length);

@@ -4,37 +4,36 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import utn.edu.tpfinal.Exceptions.ResourceNotExistException;
 import utn.edu.tpfinal.models.Rate;
-import utn.edu.tpfinal.repositories.RateRepository;
+import utn.edu.tpfinal.repositories.RatesRepository;
 
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
-public class RateService {
-    private final RateRepository rateRepository;
+public class RatesService {
+    private final RatesRepository ratesRepository;
 
     @Autowired
-    public RateService(RateRepository rateRepository) {
-        this.rateRepository = rateRepository;
+    public RatesService(RatesRepository ratesRepository) {
+        this.ratesRepository = ratesRepository;
     }
 
     public Optional<Rate> getOneRate(Integer idRate) {
-        return rateRepository.findById(idRate);
+        return ratesRepository.findById(idRate);
     }
 
     public List<Rate> getAllRates() {
-        return rateRepository.findAll();
+        return ratesRepository.findAll();
     }
 
     public Rate getRatesByLocality(Integer idLocalityOrigin, Integer idLocalityDestiny) throws ResourceNotExistException {
         try{
-            Optional<Rate> optionalRate = this.rateRepository.getRatesByLocality(idLocalityOrigin, idLocalityDestiny);
+            Optional<Rate> optionalRate = this.ratesRepository.getRatesByLocality(idLocalityOrigin, idLocalityDestiny);
             Rate rate = optionalRate.get();
             return rate;
         }catch (NoSuchElementException e){
             throw new ResourceNotExistException("The rate you want to search does not exist.");
         }
-        //return this.rateRepository.getRatesByLocality(idLocalityOrigin, idLocalityDestiny).orElseThrow(ResourceNotExistException::new);
     }
 }

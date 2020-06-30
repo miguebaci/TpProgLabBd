@@ -82,7 +82,6 @@ public class UserControllerTest {
         Assertions.assertNotNull(response);
     }
 
-
     @Test
     public void activeUserTest() throws ResourceNotExistException {
         User userToUpdate = new User(1, UserType.client,37867266,"dema","felipe","demaria","dema22",false,null,null);

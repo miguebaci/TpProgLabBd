@@ -9,7 +9,7 @@ import utn.edu.tpfinal.models.Rate;
 import java.util.Optional;
 
 @Repository
-public interface RateRepository extends JpaRepository<Rate, Integer> {
+public interface RatesRepository extends JpaRepository<Rate, Integer> {
 
     @Query(value = "select * from rates where rates.prefix_origin = :idLocalityOrigin and rates.prefix_destiny = :idLocalityDestiny", nativeQuery = true)
     Optional<Rate> getRatesByLocality(@Param("idLocalityOrigin")Integer idLocalityOrigin, @Param("idLocalityDestiny") Integer idLocalityDestiny);

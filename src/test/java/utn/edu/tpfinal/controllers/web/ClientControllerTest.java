@@ -171,8 +171,8 @@ public class ClientControllerTest {
         String token = "123456";
 
         List<ITop10DestinationCalled> listItop10 = new ArrayList<>();
-        listItop10.add(null);
-        listItop10.add(null);
+        listItop10.add(iTop10DestinationCalled);
+        listItop10.add(iTop10DestinationCalled);
         System.out.println(listItop10.size());
 
         Mockito.when(sessionManager.getCurrentUser(token)).thenReturn(u);

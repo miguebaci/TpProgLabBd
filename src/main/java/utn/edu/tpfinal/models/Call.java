@@ -11,7 +11,6 @@ import java.util.Date;
 @NoArgsConstructor
 @Data
 @Builder
-@ToString
 @Table(name = "calls")
 @Entity
 
