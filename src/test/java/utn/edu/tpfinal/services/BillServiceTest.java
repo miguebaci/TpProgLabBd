@@ -1,92 +1,116 @@
 package utn.edu.tpfinal.services;
 
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
+import utn.edu.tpfinal.dto.BillForUserDTO;
+import utn.edu.tpfinal.models.Bill;
+import utn.edu.tpfinal.models.User;
+import utn.edu.tpfinal.repositories.BillRepository;
+
+import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
+
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.WARN)
 public class BillServiceTest {
 
+    @InjectMocks
+    private BillService billService;
+    @Mock
+    private BillRepository billRepository;
 
 
+    @Test
+    public void getOneBillTest() {
+        Bill bill = new Bill();
+        Mockito.when(billRepository.findById(1)).thenReturn(Optional.of(bill));
+        Optional<Bill> response = billService.getOneBill(1);
 
-    /**
-     public BillService(BillRepository billRepository) {
-     this.billRepository = billRepository;
-     }
+        Assertions.assertNotNull(response);
+        Assertions.assertEquals(bill, response.get());
+    }
 
-     public Optional<Bill> getOneBill(Integer idBill) {
-     return billRepository.findById(idBill);
-     }
+    @Test
+    public void getAllBillsTest() {
+        List<Bill> list = new ArrayList<>();
+        list.add(new Bill());
+        when(billRepository.findAll()).thenReturn(list);
+        List<Bill> response = billService.getAllBills();
+        Assertions.assertNotNull(list);
+        Assertions.assertEquals(list, response);
+    }
 
-     public List<Bill> getAllBills() {
-     return billRepository.findAll();
-     }
+    @Test
+    public void addBillTest() {
+        Bill b = new Bill();
+        when(billRepository.save(b)).thenReturn(b);
+        billService.addBill(b);
+        verify(billRepository, times(1)).save(b);
+    }
 
-     public void addBill(Bill newBill) {
-     billRepository.save(newBill);
-     }
+    @Test
+    public void deleteOnePhoneLineTest() {
+        Integer id = 1;
+        doNothing().when(billRepository).deleteById(id);
+        billService.deleteOneBill(id);
 
-     public void deleteOneBill(Integer idBill) {
-     billRepository.deleteById(idBill);
-     }
+        Mockito.verify(billRepository, times(1)).deleteById(1);
+    }
 
-     public void updateOneBill(Bill newBill, Integer idBill) {
-     Optional<Bill> resultBill = getOneBill(idBill);
-     Bill currentBill = resultBill.get();
+    @Test
+    public void updateOneBillTest() {
+        Bill b = new Bill(1, new User(), (float) 10.00, new java.sql.Date(2020), new java.sql.Date(2020), false, (float) 5.00, (float) 5.00, null);
+        Bill updated = new Bill(1, new User(), (float) 20.00, new java.sql.Date(2020), new java.sql.Date(2020), false, (float) 5.00, (float) 5.00, null);
+        when(billRepository.findById(1)).thenReturn(Optional.of(b));
+        when(billRepository.save(b)).thenReturn(b);
+        billService.updateOneBill(updated, 1);
 
-     if (resultBill != null) {
-     currentBill.setIdBill(newBill.getIdBill());
-     currentBill.setUser(newBill.getUser());
-     currentBill.setTotalPrice(newBill.getTotalPrice());
-     currentBill.setEmittionDate(newBill.getEmittionDate());
-     currentBill.setExpirationDate(newBill.getExpirationDate());
-     currentBill.setBillStatus(newBill.isBillStatus());
-     currentBill.setTotalCost(newBill.getTotalCost());
-     currentBill.setTotalProfit(newBill.getTotalProfit());
-     currentBill.setCalls(newBill.getCalls());
-     addBill(currentBill);
-     }
-     }
+        verify(billRepository, times(1)).findById(1);
+        verify(billRepository, times(1)).save(updated);
 
-     public List<BillForUserDTO> getBillsBetweenRange(Integer idUser, String dateOne, String dateTwo) {
-
-     // converting a string to a sql date
-     Date dateFrom = Date.valueOf(dateOne);
-     Date dateTo = Date.valueOf(dateTwo);
+        when(billService.getOneBill(1)).thenThrow(NoSuchElementException.class);
+        Assertions.assertThrows(NoSuchElementException.class, () -> {
+            billService.getOneBill(1);
+        });
+    }
 
 
-     // Convert the date to mysql type date
-     //java.sql.Date from = new java.sql.Date(dateOne.getTime());
-     //java.sql.Date to = new java.sql.Date(dateTwo.getTime());
+    @Test
+    public void getBillsBetweenRangeTest() {
+        Date dateFrom = Date.valueOf("2020-06-06");
+        Date dateTo = Date.valueOf("2020-06-07");
+        List<Bill> list = new ArrayList<>();
+        List<BillForUserDTO> list2 = new ArrayList<>();
+        list.add(new Bill(1, new User(), (float) 10.00, new java.sql.Date(2020), new java.sql.Date(2020), false, (float) 5.00, (float) 5.00, null));
+        list2.add(new BillForUserDTO((float) 10.00, new java.sql.Date(2020), new java.sql.Date(2020), false));
+        when(billRepository.getBillsFromUserBetweenDates(1, dateFrom, dateTo)).thenReturn(list);
+        List<BillForUserDTO> response = billService.getBillsBetweenRange(1, "2020-06-06", "2020-06-07");
+        Assertions.assertNotNull(list);
+        Assertions.assertEquals(list2, response);
+    }
 
-     List<Bill> userBills = billRepository.getBillsFromUserBetweenDates(idUser, dateFrom, dateTo);
-     List<BillForUserDTO> userDtoBills = new ArrayList<>();
 
-     // we pass the info to the bill dto
-     for (Bill b : userBills) {
-     userDtoBills.add(new BillForUserDTO(b.getTotalPrice(), b.getEmittionDate(), b.getExpirationDate(), b.isBillStatus()));
-     }
-
-     return userDtoBills;
-     }
-
-     public List<BillForUserDTO> getBillsForUserDTO(Integer idUser) {
-     // We get the user bills searching with its id.
-     // Then we wrap them in a dto.
-
-     List<Bill> userBills = billRepository.getUserBillInfo(idUser);
-     List<BillForUserDTO> userDtoBills = new ArrayList<>();
-
-     // we pass the info to the bill dto
-     for (Bill b : userBills) {
-     userDtoBills.add(new BillForUserDTO(b.getTotalPrice(), b.getEmittionDate(), b.getExpirationDate(), b.isBillStatus()));
-     }
-
-     return userDtoBills;
-     }
-
-     */
+    @Test
+    public void getBillsForUserDTOTest() {
+        List<Bill> list = new ArrayList<>();
+        List<BillForUserDTO> list2 = new ArrayList<>();
+        list.add(new Bill(1, new User(), (float) 10.00, new java.sql.Date(2020), new java.sql.Date(2020), false, (float) 5.00, (float) 5.00, null));
+        list2.add(new BillForUserDTO((float) 10.00, new java.sql.Date(2020), new java.sql.Date(2020), false));
+        when(billRepository.getUserBillInfo(1)).thenReturn(list);
+        List<BillForUserDTO> response = billService.getBillsForUserDTO(1);
+        Assertions.assertNotNull(list);
+        Assertions.assertEquals(list2, response);
+    }
 }

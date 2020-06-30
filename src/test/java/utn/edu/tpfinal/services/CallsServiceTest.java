@@ -1,25 +1,73 @@
 package utn.edu.tpfinal.services;
 
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
+import utn.edu.tpfinal.Exceptions.ResourceNotExistException;
+import utn.edu.tpfinal.dto.CallsForUserDTO;
+import utn.edu.tpfinal.models.*;
+import utn.edu.tpfinal.repositories.CallRepository;
+import utn.edu.tpfinal.repositories.PhoneLineRepository;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
+
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.WARN)
 public class CallsServiceTest {
 
+    @InjectMocks
+    private CallsService callsService;
+    @Mock
+    private CallRepository callsRepository;
+    @Mock
+    private PhoneLineService phoneLineService;
 
+    @Test
+    public void getOneCallTest() {
+        Call calls = new Call();
+        Mockito.when(callsRepository.findById(1)).thenReturn(Optional.of(calls));
+        Optional<Call> response = callsService.getOneCall(1);
 
+        Assertions.assertNotNull(response);
+        Assertions.assertEquals(calls, response.get());
+    }
+
+    @Test
+    public void getAllCallsTest() {
+        List<Call> list = new ArrayList<>();
+        list.add(new Call());
+        when(callsRepository.findAll()).thenReturn(list);
+        List<Call> response = callsService.getAllCalls();
+        Assertions.assertNotNull(response);
+        Assertions.assertEquals(list, response);
+    }/*
+    @Test
+    public void addCallTest() throws ResourceNotExistException {
+        CallsForUserDTO c = new CallsForUserDTO(new Date(),10,"2237654321","2231234567");
+        Call call = new Call();
+        PhoneLine origin = new PhoneLine(1,new User(),new Locality(),LineType.landline,"2237654321",false, null);
+        PhoneLine destiny = new PhoneLine(2,new User(),new Locality(),LineType.landline,"2231234567",false, null);
+        when(phoneLineService.getByLineNumber(c.getNumberOrigin())).thenReturn(origin);
+        when(phoneLineService.getByLineNumber(c.getNumberDestiny())).thenReturn(destiny);
+        when(callsRepository.save(call)).thenReturn(call);
+        //when(origin.getSuspended()).thenReturn(false);
+        //when(destiny.getSuspended()).thenReturn(false);
+        Call response = callsService.addCall(c);
+
+        Assertions.assertNotNull(response);
+    }*/
     /**
-     public Optional<Call> getOneCall(Integer idCall) {
-     return callRepository.findById(idCall);
-     }
-
-     public List<Call> getAllCalls() {
-     return callRepository.findAll();
-     }
-
      public Call addCall(CallsForUserDTO callDto) throws ResourceNotExistException {
      PhoneLine from = phoneLineService.getByLineNumber(callDto.getNumberOrigin());
      PhoneLine to = phoneLineService.getByLineNumber(callDto.getNumberDestiny());
@@ -35,8 +83,11 @@ public class CallsServiceTest {
      else return call;
      }
      else throw new ResourceNotExistException("Verify suspension of the phonelines.");
-     }
+     }*/
 
+
+
+    /**
      public List<CallsForUserDTO> getCallsBetweenRange(String from, String to, String lineNumber, Boolean caller) {
 
      // converting a string to a sql date

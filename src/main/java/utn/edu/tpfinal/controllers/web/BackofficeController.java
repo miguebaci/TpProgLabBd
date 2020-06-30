@@ -14,6 +14,7 @@ import utn.edu.tpfinal.controllers.RatesController;
 import utn.edu.tpfinal.controllers.UserController;
 import utn.edu.tpfinal.dto.CallsForUserDTO;
 import utn.edu.tpfinal.dto.UserResponseDTO;
+import utn.edu.tpfinal.models.PhoneLine;
 import utn.edu.tpfinal.models.Rate;
 import utn.edu.tpfinal.models.User;
 import utn.edu.tpfinal.projections.IReduceUser;
@@ -23,7 +24,6 @@ import java.net.URI;
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/backoffice")
@@ -103,12 +103,38 @@ public class BackofficeController {
         }
     }
 
+    // POST PHONELINE.
+    @PostMapping("/phoneline/")
+    public ResponseEntity addPhoneline(@RequestHeader("Authorization") String sessionToken, @RequestBody PhoneLine newLine) throws  ResourceNotExistException{
+        ResponseEntity response;
+        try {
+            User currentUser = sessionManager.getCurrentUser(sessionToken);
+            PhoneLine line = phoneLineController.addPhoneLine(newLine);
+            response = ResponseEntity.created(getLocation(line)).build();
+        } catch (ResourceNotExistException e) {
+            throw e;
+        }
+        return response;
+    }
+
+    // DELETE ONE PHONELINE BY ID.
+    @DeleteMapping("/phonelines/{idLine}")
+    public ResponseEntity deletePhoneline(@RequestHeader("Authorization") String sessionToken, @PathVariable Integer idLine) throws ResourceNotExistException {
+        try {
+            User currentUser = sessionManager.getCurrentUser(sessionToken);
+            phoneLineController.deletePhoneLine(idLine);
+            return ResponseEntity.ok().build();
+        } catch (ResourceNotExistException e) {
+            throw e;
+        }
+    }
+
     // SUSPEND OR REACTIVATE PHONELINE.
-    @PutMapping("/phonelines/activate/{idPhone}")
-    public ResponseEntity suspendphoneline(@RequestHeader("Authorization") String sessionToken, @PathVariable Integer idPhone) throws ResourceNotExistException {
+    @PutMapping("/phonelines/activate/{idLine}")
+    public ResponseEntity suspendphoneline(@RequestHeader("Authorization") String sessionToken, @PathVariable Integer idLine) throws ResourceNotExistException {
         try{
             User currentUser = sessionManager.getCurrentUser(sessionToken);
-            phoneLineController.activePhoneLine(idPhone);
+            phoneLineController.activePhoneLine(idLine);
             return ResponseEntity.ok().build();
         } catch(ResourceNotExistException e){
             throw e;
@@ -196,6 +222,14 @@ public class BackofficeController {
                 .fromCurrentRequest()
                 .path("/{id}")
                 .buildAndExpand(user.getId())
+                .toUri();
+    }
+
+    private URI getLocation(PhoneLine phoneLine) {
+        return ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(phoneLine.getIdLine())
                 .toUri();
     }
 

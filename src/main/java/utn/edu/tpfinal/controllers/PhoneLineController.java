@@ -3,6 +3,7 @@ package utn.edu.tpfinal.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import utn.edu.tpfinal.Exceptions.ResourceNotExistException;
+import utn.edu.tpfinal.models.PhoneLine;
 import utn.edu.tpfinal.services.PhoneLineService;
 import utn.edu.tpfinal.session.SessionManager;
 
@@ -15,6 +16,10 @@ public class PhoneLineController {
     public PhoneLineController(PhoneLineService phoneLineService, SessionManager sessionManager) {
         this.phoneLineService = phoneLineService;
         this.sessionManager = sessionManager;
+    }
+
+    public PhoneLine addPhoneLine(PhoneLine newPhoneLine){
+        return phoneLineService.addPhoneLine(newPhoneLine);
     }
 
     // DELETE ONE PHONE LINE BY ID.

@@ -34,13 +34,7 @@ public class CallsControllerTest {
     private CallsService callsService;
 
     @Mock
-    private SessionManager sessionManager;
-
-    @Mock
     private PhoneLineService phoneLineService;
-
-    @Mock
-    private UserService userService;
 
     @Mock
     private ITop10DestinationCalled iTop10DestinationCalled;

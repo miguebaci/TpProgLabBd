@@ -16,12 +16,10 @@ import java.util.Optional;
 @Service
 public class PhoneLineService {
     private final PhoneLineRepository phoneLineRepository;
-    private final RatesRepository ratesRepository;
 
     @Autowired
-    public PhoneLineService(PhoneLineRepository phoneLineRepository, RatesRepository ratesRepository) {
+    public PhoneLineService(PhoneLineRepository phoneLineRepository) {
         this.phoneLineRepository = phoneLineRepository;
-        this.ratesRepository = ratesRepository;
     }
 
     public Optional<PhoneLine> getOnePhoneLine(Integer idPhoneLine) {
@@ -32,8 +30,8 @@ public class PhoneLineService {
         return phoneLineRepository.findByLineNumber(lineNumber).get();
     }
 
-    public void addPhoneLine(PhoneLine phoneLine) {
-        phoneLineRepository.save(phoneLine);
+    public PhoneLine addPhoneLine(PhoneLine phoneLine) {
+       return phoneLineRepository.save(phoneLine);
     }
 
     public void deleteOnePhoneLine(Integer idPhoneLine) {

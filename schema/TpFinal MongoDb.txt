@@ -1,0 +1,229 @@
+//use: crea la base de datos si no existe
+
+use db_tp_final;
+
+
+//insertOne crea la collection (lo que seria table en sql) si no existe
+
+//en mongoDB no deja asignarle id a los documentos
+
+db.provinces.insertOne(
+  {
+    name : "Buenos Aires"
+  })
+
+db.localities.InsertOne({
+    prefix : "223",
+    name : "Mar del Plata",
+    province" : {
+      name : "Buenos Aires"
+    }
+})
+
+
+db.phoneLines.InsertOne({
+    phoneNumber : "2235123456",
+    suspended: false
+})
+
+db.users.InsertOne({
+    name : "Miguel",
+    lastname : "Bacigaluppi",
+    userName : "miguebaci",
+    password : "123456",
+    userType : "client"
+    suspended: false
+    phonelines : [
+    {
+    phoneNumber : "2235123456",
+    active : true
+    }],
+    bills:[{
+    user:{
+    	name : "Miguel",
+	lastname : "Bacigaluppi",
+    	userName : "miguebaci",
+	password : "123456",
+	userType : "client"
+    	suspended : false
+	}
+    total_profit : 0.0,
+    total_cost : 0.0,
+    total_price : 0.0,
+    emittion_date : "2020-06-20T09:30:00.000+0000",
+    dueDate : "2020-06-30",
+    bill_status: false,
+    call : {
+    rate: {
+      localityOrigin : {
+        province : {
+          name : "Buenos aires"
+        },
+	prefix : "223",
+        name : "Mar del Plata"  
+      },
+      localityDestiny: {
+        province : {
+          name : "Buenos aires"
+        },
+        prefix : "221",
+        name : "La Plata"
+      },
+      costPrice : 2.5,
+      price : 5.0
+    }]
+
+})
+
+db.bills.InsertOne({
+    user:{
+    	name : "Miguel",
+	lastname : "Bacigaluppi",
+    	userName : "miguebaci",
+	password : "123456",
+	userType : "client"
+    	suspended : false
+	phonelines : [
+    	{
+    	phoneNumber : "2235123456",
+    	suspended: false
+    	}]
+	},
+    total_profit : 0.0,
+    total_cost : 0.0,
+    total_price : 0.0,
+    emittion_date : "2020-06-20T09:30:00.000+0000",
+    dueDate : "2020-06-30",
+    bill_status: false,
+    call : {
+    id : 1,
+    rate: {
+    id : 1,
+      localityOrigin : {
+	id : 1,
+        province : {
+	  id : 1,
+          name : "Buenos aires"
+        },
+	prefix : "223",
+        name : "Mar del Plata"  
+      },
+      localityDestiny: {
+	id : 1,
+        province : {
+	  id : 1,
+          name : "Buenos aires"
+        },
+        prefix : "221",
+        name : "La Plata"
+      },
+	}
+    phonelineOrigin : {
+	id : 1,
+    	phoneNumber : "2235123456",
+    	suspended: false
+    }
+    phonelineDestiny : {
+	id : 2,
+    	phoneNumber : "2235654321",
+    	suspended: false
+    }
+      costPrice : 2.5,
+      price : 5.0
+    }
+    
+})
+
+db.rates.InsertOne({
+    localityOrigin : {
+    id : 1,
+      province : {
+	  id : 1,
+          name : "Buenos aires"
+        },
+	prefix : "223",
+        name : "Mar del Plata"  
+      },
+    localityDestiny : {
+       id : 2,
+       province : {
+	  id : 1,
+          name : "Buenos aires"
+        },
+        prefix : "221",
+        name : "La Plata"
+      },
+    costPrice : 2.5,
+    price : 5.0
+})
+
+db.calls.InsertOne({
+    rates : {
+      id : 1,
+      localityOrigin : {
+      id : 1,
+      province : {
+	  id : 1,
+          name : "Buenos aires"
+        },
+      prefix : "223",
+      name : "Mar del Plata"  
+      },
+    localityDestiny : {
+	id : 2,
+       province : {
+	  id : 1,
+          name : "Buenos aires"
+        },
+        prefix : "221",
+        name : "La Plata"
+      },
+    costPrice : 2.5,
+    price : 5.0
+    },
+    bill : {
+    id : 1,
+	}
+    phonelineOrigin : {
+	id : 1,
+    	phoneNumber : "2235123456",
+    	suspended: false,
+	user:{
+	id : 1,
+    	name : "Miguel",
+	lastname : "Bacigaluppi",
+    	userName : "miguebaci",
+	password : "123456",
+	userType : "client"
+    	suspended : false,
+	phonelines :
+    	{
+    	phoneNumber : "2235123456",
+    	suspended: false
+    }
+    }
+    phonelineDestiny : {
+	id : 2,
+    	phoneNumber : "2235654321",
+    	suspended: false,
+	user:{
+	id : 2,
+    	name : "Felipe",
+	lastname : "Demaria",
+    	userName : "dema",
+	password : "123456",
+	userType : "client"
+    	suspended : false,
+	phonelines :
+    	{
+    	phoneNumber : "2235654321",
+    	suspended: false
+    },
+    }
+    total_profit : 0.0,
+    total_cost : 0.0,
+    total_price : 0.0,
+    emittion_date : "2020-06-20T09:30:00.000+0000",
+    dueDate : "2020-06-30",
+    bill_status: false,    
+})

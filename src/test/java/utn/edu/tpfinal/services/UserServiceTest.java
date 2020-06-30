@@ -106,11 +106,11 @@ public class UserServiceTest {
         User updated = new User(1, UserType.client, 12345678, "dema22", "felipe", "demaria", userService.hashPass("dema22"), false, null, null);
         int id = 1;
         when(userRepository.findById(id)).thenReturn(Optional.of(u));
-        u.setUsername("dema22");
         when(userRepository.save(u)).thenReturn(u);
-        userService.updateOneUser(u, id);
+        userService.updateOneUser(updated, id);
 
-        Assertions.assertEquals(u, updated);
+        verify(userRepository,times(1)).findById(1);
+        verify(userRepository,times(1)).save(u);
 
         when(userService.getOneUser(1)).thenThrow(NoSuchElementException.class);
         Assertions.assertThrows(NoSuchElementException.class, () -> {
@@ -164,9 +164,9 @@ public class UserServiceTest {
 
     @Test
     public void getOneDTOUserExceptionTest() {
-        when(userService.getOneUser(1)).thenReturn(null);
+        when(userRepository.getOne(1)).thenReturn(null);
 
-        Assertions.assertThrows(NullPointerException.class, () -> {
+        Assertions.assertThrows(ResourceNotExistException.class, () -> {
             userService.getOneDTOUser(1);
         });
     }
@@ -174,12 +174,11 @@ public class UserServiceTest {
     @Test
     public void activeUserTest() throws ResourceNotExistException, NoSuchAlgorithmException {
         User u = new User(1, UserType.client, 12345678, "dema", "felipe", "demaria", "dema22", false, null, null);
-        User updated = new User(1, UserType.client, 12345678, "dema", "felipe", "demaria", userService.hashPass("dema22"), true, null, null);
+        User updated = new User(1, UserType.client, 12345678, "dema", "felipe", "demaria", "dema22", true, null, null);
         int id = 1;
         when(userRepository.findById(id)).thenReturn(Optional.of(u));
-        u.setSuspended(true);
-        when(userRepository.save(u)).thenReturn(u);
-        userService.updateOneUser(u, id);
+        when(userRepository.save(u)).thenReturn(updated);
+        userService.activeUser(id);
 
         Assertions.assertEquals(u, updated);
 
@@ -192,18 +191,17 @@ public class UserServiceTest {
     @Test
     public void activeUserTest2() throws ResourceNotExistException, NoSuchAlgorithmException {
         User u = new User(1, UserType.client, 12345678, "dema", "felipe", "demaria", "dema22", true, null, null);
-        User updated = new User(1, UserType.client, 12345678, "dema", "felipe", "demaria", userService.hashPass("dema22"), false, null, null);
+        User updated = new User(1, UserType.client, 12345678, "dema", "felipe", "demaria", "dema22", false, null, null);
         int id = 1;
         when(userRepository.findById(id)).thenReturn(Optional.of(u));
-        u.setSuspended(false);
-        when(userRepository.save(u)).thenReturn(u);
-        userService.updateOneUser(u, id);
+        when(userRepository.save(u)).thenReturn(updated);
+        userService.activeUser(id);
 
         Assertions.assertEquals(u, updated);
 
-        when(userService.getOneUser(1)).thenThrow(NoSuchElementException.class);
+        when(userRepository.findById(id)).thenThrow(NoSuchElementException.class);
         Assertions.assertThrows(NoSuchElementException.class, () -> {
-            userService.getOneUser(1);
+            userService.getOneUser(id);
         });
     }
 }

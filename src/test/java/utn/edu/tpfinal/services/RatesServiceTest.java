@@ -53,13 +53,10 @@ public class RatesServiceTest {
         Rate response = ratesService.getRatesByLocality(1,2);
 
         Assertions.assertEquals(rate, response);
-    }
-/*
-    @Test
-    public void getRatesByLocalityTest2() throws ResourceNotExistException {
-        Mockito.when(ratesService.getRatesByLocality(1,2)).thenReturn(null);
+
+        when(ratesRepository.getRatesByLocality(1,2)).thenThrow(NoSuchElementException.class);
         Assertions.assertThrows(ResourceNotExistException.class, () -> {
             ratesService.getRatesByLocality(1,2);
         });
-    }*/
+    }
 }
