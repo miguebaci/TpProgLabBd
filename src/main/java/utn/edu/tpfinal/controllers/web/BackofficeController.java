@@ -91,18 +91,6 @@ public class BackofficeController {
         }
     }
 
-    // SUSPEND OR REACTIVATE USER.
-    @PutMapping("/users/activate/{idUser}")
-    public ResponseEntity suspendUser(@RequestHeader("Authorization") String sessionToken, @PathVariable Integer idUser) throws ResourceNotExistException {
-        try {
-            User currentUser = sessionManager.getCurrentUser(sessionToken);
-            userController.activeUser(idUser);
-            return ResponseEntity.ok().build();
-        }catch (ResourceNotExistException e){
-            throw e;
-        }
-    }
-
     // POST PHONELINE.
     @PostMapping("/phoneline/")
     public ResponseEntity addPhoneline(@RequestHeader("Authorization") String sessionToken, @RequestBody PhoneLine newLine) throws  ResourceNotExistException{
@@ -125,18 +113,6 @@ public class BackofficeController {
             phoneLineController.deletePhoneLine(idLine);
             return ResponseEntity.ok().build();
         } catch (ResourceNotExistException e) {
-            throw e;
-        }
-    }
-
-    // SUSPEND OR REACTIVATE PHONELINE.
-    @PutMapping("/phonelines/activate/{idLine}")
-    public ResponseEntity suspendphoneline(@RequestHeader("Authorization") String sessionToken, @PathVariable Integer idLine) throws ResourceNotExistException {
-        try{
-            User currentUser = sessionManager.getCurrentUser(sessionToken);
-            phoneLineController.activePhoneLine(idLine);
-            return ResponseEntity.ok().build();
-        } catch(ResourceNotExistException e){
             throw e;
         }
     }

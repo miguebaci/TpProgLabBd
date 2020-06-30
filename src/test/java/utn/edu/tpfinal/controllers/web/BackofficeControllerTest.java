@@ -103,7 +103,7 @@ public class BackofficeControllerTest {
         });
     }
 
-    @Test
+    /*@Test
     public void suspendUser() throws ResourceNotExistException {
         User u = new User(1, UserType.backoffice, 37867266, "dema", "felipe", "demaria", "dema22", false, null, null);
         String token = "asfsgegegeg";
@@ -143,7 +143,7 @@ public class BackofficeControllerTest {
         Assertions.assertThrows(ResourceNotExistException.class, () -> {
             backofficeController.suspendphoneline("abcde", 1);
         });
-    }
+    }*/
 
     @Test
     public void updateUserTest() throws ResourceNotExistException, NoSuchAlgorithmException {
