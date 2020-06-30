@@ -9,18 +9,20 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
-import utn.edu.tpfinal.Exceptions.ResourceNotExistException;
 import utn.edu.tpfinal.dto.CallsForUserDTO;
-import utn.edu.tpfinal.models.*;
+import utn.edu.tpfinal.models.Bill;
+import utn.edu.tpfinal.models.Call;
+import utn.edu.tpfinal.models.PhoneLine;
+import utn.edu.tpfinal.models.Rate;
+import utn.edu.tpfinal.projections.ITop10DestinationCalled;
 import utn.edu.tpfinal.repositories.CallRepository;
-import utn.edu.tpfinal.repositories.PhoneLineRepository;
 
+import java.sql.Date;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.WARN)
@@ -31,7 +33,7 @@ public class CallsServiceTest {
     @Mock
     private CallRepository callsRepository;
     @Mock
-    private PhoneLineService phoneLineService;
+    private ITop10DestinationCalled top10;
 
     @Test
     public void getOneCallTest() {
@@ -67,25 +69,50 @@ public class CallsServiceTest {
 
         Assertions.assertNotNull(response);
     }*/
+
     /**
-     public Call addCall(CallsForUserDTO callDto) throws ResourceNotExistException {
-     PhoneLine from = phoneLineService.getByLineNumber(callDto.getNumberOrigin());
-     PhoneLine to = phoneLineService.getByLineNumber(callDto.getNumberDestiny());
-     Call call = new Call();
-     if (!from.getSuspended() && !to.getSuspended()) {
-     if (callDto.getDuration() > 0) {
-     call.setDateCall(callDto.getDateCall());
-     call.setDuration(callDto.getDuration());
-     call.setNumberOrigin(callDto.getNumberOrigin());
-     call.setNumberDestiny(callDto.getNumberDestiny());
-     return callRepository.save(call);
-     }
-     else return call;
-     }
-     else throw new ResourceNotExistException("Verify suspension of the phonelines.");
-     }*/
+     * public Call addCall(CallsForUserDTO callDto) throws ResourceNotExistException {
+     * PhoneLine from = phoneLineService.getByLineNumber(callDto.getNumberOrigin());
+     * PhoneLine to = phoneLineService.getByLineNumber(callDto.getNumberDestiny());
+     * Call call = new Call();
+     * if (!from.getSuspended() && !to.getSuspended()) {
+     * if (callDto.getDuration() > 0) {
+     * call.setDateCall(callDto.getDateCall());
+     * call.setDuration(callDto.getDuration());
+     * call.setNumberOrigin(callDto.getNumberOrigin());
+     * call.setNumberDestiny(callDto.getNumberDestiny());
+     * return callRepository.save(call);
+     * }
+     * else return call;
+     * }
+     * else throw new ResourceNotExistException("Verify suspension of the phonelines.");
+     * }
+     */
 
 
+    @Test
+    public void getCallsBetweenRangeTest() {
+        java.sql.Date dateFrom = java.sql.Date.valueOf("2020-06-06");
+        java.sql.Date dateTo = Date.valueOf("2020-06-06");
+        List<Call> list = new ArrayList<>();
+        List<CallsForUserDTO> listUserDtoCalls = new ArrayList<>();
+        list.add(new Call(1, new PhoneLine(), new PhoneLine(), new Bill(), new Rate(), (float) 20.00, (float) 5.00, (float) 15.00, dateFrom, dateTo, 10, "22351234567", "22357654321"));
+        listUserDtoCalls.add(new CallsForUserDTO(dateFrom, 10, "22351234567", "22357654321"));
+        when(callsRepository.getCallsFromUserAsCallerBetweenDates(dateFrom, dateTo, "22351234567")).thenReturn(list);
+        List<CallsForUserDTO> response = callsService.getCallsBetweenRange("2020-06-06", "2020-06-06", "22351234567", true);
+        Assertions.assertNotNull(response);
+        Assertions.assertEquals(listUserDtoCalls, response);
+    }
+
+    @Test
+    public void getTop10DestinationsWithNumberOfCallsTest() {
+        List<ITop10DestinationCalled> list = new ArrayList<>();
+        list.add(top10);
+        when(callsRepository.getTop10Info(1)).thenReturn(list);
+        List<ITop10DestinationCalled> response = callsService.getTop10DestinationsWithNumberOfCalls(1);
+        Assertions.assertNotNull(response);
+        Assertions.assertEquals(list, response);
+    }
 
     /**
      public List<CallsForUserDTO> getCallsBetweenRange(String from, String to, String lineNumber, Boolean caller) {
@@ -141,12 +168,6 @@ public class CallsServiceTest {
      }
 
      return listUserDtoCalls;
-     }
-
-
-     public List<ITop10DestinationCalled> getTop10DestinationsWithNumberOfCalls(Integer idUser){
-     List<ITop10DestinationCalled> list = callRepository.getTop10Info(idUser);
-     return list;
      }
      */
 }
