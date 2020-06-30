@@ -36,45 +36,12 @@ public class PhoneLineService {
         return phoneLineRepository.findByLineNumber(lineNumber).get();
     }
 
-    public List<PhoneLine> getAllPhoneLines() {
-        return phoneLineRepository.findAll();
-    }
-
     public void addPhoneLine(PhoneLine phoneLine) {
         phoneLineRepository.save(phoneLine);
     }
 
-    public ResponseEntity<PhoneLine> addUser(PhoneLine newPhoneLine) throws NoSuchAlgorithmException, ResourceNotExistException {
-        Boolean exists = phoneLineRepository.findByLineNumber(newPhoneLine.getLineNumber()).isPresent();
-        if (!exists) {
-            PhoneLine created = phoneLineRepository.save(PhoneLine.builder()
-                    .user(newPhoneLine.getUser())
-                    .locality(newPhoneLine.getLocality())
-                    .lineType(newPhoneLine.getLineType())
-                    .lineNumber(newPhoneLine.getLineNumber())
-                    .suspended(false)
-                    .build());
-            return ResponseEntity.ok(created);
-        } else throw new ResourceNotExistException();
-    }
-
     public void deleteOnePhoneLine(Integer idPhoneLine) {
         phoneLineRepository.deleteById(idPhoneLine);
-    }
-
-    public void updateOnePhoneLine(PhoneLine newPhoneLine, Integer idPhoneLine) {
-        Optional<PhoneLine> resultPhoneLine = getOnePhoneLine(idPhoneLine);
-        PhoneLine currentPhoneLine = resultPhoneLine.get();
-
-        if (resultPhoneLine != null) {
-            currentPhoneLine.setIdLine(newPhoneLine.getIdLine());
-            currentPhoneLine.setUser(newPhoneLine.getUser());
-            currentPhoneLine.setLocality(newPhoneLine.getLocality());
-            currentPhoneLine.setLineType(newPhoneLine.getLineType());
-            currentPhoneLine.setLineNumber(newPhoneLine.getLineNumber());
-            currentPhoneLine.setCalls(newPhoneLine.getCalls());
-            phoneLineRepository.save(currentPhoneLine);
-        }
     }
 
     public List<PhoneLineForUserDTO> getPhoneLinesForUserDTO(Integer idUser) {

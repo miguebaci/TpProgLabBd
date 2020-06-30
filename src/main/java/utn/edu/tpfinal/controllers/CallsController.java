@@ -1,13 +1,11 @@
 package utn.edu.tpfinal.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import utn.edu.tpfinal.Exceptions.ResourceNotExistException;
 import utn.edu.tpfinal.Exceptions.ValidationException;
 import utn.edu.tpfinal.dto.CallsForUserDTO;
-import utn.edu.tpfinal.dto.Top10DestinationCalledDTO;
 import utn.edu.tpfinal.models.Call;
 import utn.edu.tpfinal.models.PhoneLine;
 import utn.edu.tpfinal.models.User;
@@ -80,7 +78,7 @@ public class CallsController {
             List<CallsForUserDTO> callsForUserDTO;
 
             if (fromDate != null && toDate != null) {
-                callsForUserDTO = callsService.geCallsBetweenRange(fromDate, toDate, lineNumber, caller);
+                callsForUserDTO = callsService.getCallsBetweenRange(fromDate, toDate, lineNumber, caller);
             } else {
                 // we return all calls for the line
                 callsForUserDTO = callsService.getCallsForUserDTO(lineNumber, caller);

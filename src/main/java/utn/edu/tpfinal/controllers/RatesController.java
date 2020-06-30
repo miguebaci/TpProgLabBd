@@ -6,9 +6,6 @@ import utn.edu.tpfinal.Exceptions.ResourceNotExistException;
 import utn.edu.tpfinal.models.Rate;
 import utn.edu.tpfinal.services.RateService;
 
-import java.util.List;
-import java.util.Optional;
-
 @Controller
 public class RatesController {
     private final RateService rateService;
@@ -16,16 +13,6 @@ public class RatesController {
     @Autowired
     public RatesController(RateService rateService) {
         this.rateService = rateService;
-    }
-
-    // GET ONE RATE BY ID.
-    public Optional<Rate> getUser(Integer idRate) {
-        return rateService.getOneRate(idRate);
-    }
-
-    // GET ALL RATES.
-    public List<Rate> getRates() {
-        return rateService.getAllRates();
     }
 
     public Rate getRatesByLocality(Integer idLocalityOrigin, Integer idLocalityDestiny) throws ResourceNotExistException {
